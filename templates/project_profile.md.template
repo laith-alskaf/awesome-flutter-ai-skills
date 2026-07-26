@@ -1,0 +1,44 @@
+# PROJECT_PROFILE.md — Static Project Identity & Technical Stack Specification
+
+```yaml
+# Core Project Metadata
+ProjectName: "awesome_flutter_app"
+Purpose: "Production Mobile, Web & Desktop Application"
+TargetPlatforms: ["iOS", "Android", "Web", "macOS", "Windows", "Linux"]
+LastUpdated: "{{DATE}}"
+
+# Technology Stack Specifications
+FlutterVersion: "3.44.x Stable"
+DartVersion: "3.12.x"
+RenderingEngine: "Impeller"
+DesignSystem: "Material 3 (useMaterial3: true)"
+ArchitecturePattern: "Clean Architecture + Feature-First Layer Separation"
+
+# Domain & Infrastructure Choices
+StateManagement: "Riverpod 3.x / Bloc 9.x / Cubit / GetX 5.x"
+Routing: "go_router with go_router_builder"
+Networking: "Dio with custom interceptor chain"
+LocalDatabase: "Drift (Type-safe SQL) / Hive / SharedPreferences"
+SecureStorage: "flutter_secure_storage"
+Serialization: "freezed + json_serializable"
+DependencyInjection: "Riverpod Providers / get_it + injectable"
+Localization: "flutter_localizations (ARB files, RTL/LTR sound support)"
+
+# Quality & Verification Baseline
+TestingFrameworks: ["flutter_test", "integration_test", "alchemist", "mocktail"]
+CICDPipeline: "GitHub Actions / Codemagic / Fastlane"
+SigningStrategy: "Android App Bundle (AAB) & iOS IPA with SwiftPM"
+```
+
+## 📐 Architecture Layer Boundaries
+
+```text
+lib/
+├── core/                → Shared utilities, network client, base error types, theme
+├── shared/              → Shared reusable UI widgets, dialogs, extensions
+└── features/            → Feature-First Modules
+    └── <feature_name>/
+        ├── data/        → DTOs, Data Sources, Repository Concrete Implementations
+        ├── domain/      → Entities, UseCases, Repository Abstract Interfaces (ZERO Flutter)
+        └── presentation/→ UI Pages, Widgets, Notifiers/Blocs/Controllers
+```

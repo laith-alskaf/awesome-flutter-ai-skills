@@ -91,6 +91,7 @@ Before generating presentation layer code or wiring dependency injection, check 
 | Managing git branching, commits, or versioning | `flutter-git` | Semantic versioning, conventional commits, PR workflows |
 | Setting up CI/CD pipelines (GitHub Actions, Fastlane) | `flutter-ci-cd` | Automated analysis, formatting, testing, and build artifacts |
 | Preparing store release (Play Store / App Store) | `flutter-release` | App signing, metadata, bundle generation, post-release monitoring |
+| Managing project memory, state, & health ledger | `flutter-agent-memory` | 8-Step Context Protocol, Confidence Matrix, Lessons Learned |
 
 ---
 

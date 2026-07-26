@@ -115,8 +115,17 @@
 - Paginate API responses. Debounce search inputs.
 - Dispose controllers and subscriptions in dispose().
 
-## AI Agent Behavior
+## AI Agent Behavior & Context Protocol
 
+- Follow the **8-Step Context Recovery Priority Protocol**:
+  1. `PROJECT_PROFILE.md` (Static Project Identity & Stack)
+  2. `AGENTS.md` (Governance Laws, Behavioral Constraints & Quality Standards)
+  3. `CURRENT_STATE.md` (Active Goal, Context, Assumptions & Confidence Matrix)
+  4. `KNOWLEDGE_INDEX.md` (Fast Map to ADRs, Skills & Source Folders)
+  5. `AGENTS_MEMORY.md` (Working Ledger, Milestones, Health Meter & Lessons Learned)
+  6. Relevant ADRs (`decisions/`)
+  7. Relevant Skills (`skills/`)
+  8. `SESSION_LOG.md` (Chronological History Ledger)
 - Think before coding. Follow: Understand → Analyze → Plan → Implement → Review.
 - Never generate code immediately. Always understand the problem first.
 - Never skip error handling, loading states, or empty states.

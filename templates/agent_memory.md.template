@@ -1,0 +1,49 @@
+# AGENTS_MEMORY.md — Project Working Ledger & Health Meter
+
+---
+
+## 🩺 Project Health Meter
+
+```yaml
+Health:
+  Architecture: "Excellent"   # [Excellent, Good, Fair, Poor]
+  Tests: "Good"               # [Excellent, Good, Fair, Poor]
+  Documentation: "Good"       # [Excellent, Good, Fair, Poor]
+  TechnicalDebt: "Low"        # [None, Low, Moderate, High]
+  Security: "Excellent"       # [Excellent, Good, Fair, Poor]
+  Performance: "Excellent"    # [Excellent, Good, Fair, Poor]
+  LastVerifiedDate: "{{DATE}}"
+```
+
+---
+
+## 🟢 Completed Milestones (`[x]`)
+
+- [x] **Milestone 1: Clean Architecture Foundation & DI Setup** (Verified: {{DATE}})
+- [x] **Milestone 2: Pluggable State Management & Base Error Handling** (Verified: {{DATE}})
+
+---
+
+## 🔴 Project Backlog & Future Work (`[ ]`)
+
+- [ ] **Task 1: Offline DB Caching via Drift** (Priority: High)
+- [ ] **Task 2: Golden Visual Regression Matrix** (Priority: Medium)
+- [ ] **Task 3: CI/CD Pipeline Automation** (Priority: Medium)
+
+---
+
+## 💡 Lessons Learned & Anti-Regression Log
+
+*This log records project-specific post-mortems and gotchas to prevent repeating past mistakes.*
+
+- 💡 **Lesson 1:** *Dio interceptor must remain a singleton in `lib/core/network/` to prevent token refreshing race conditions.*
+- 💡 **Lesson 2:** *Always use `const` constructors on static `Icon` and `Text` widgets inside `ListView.builder` to maintain 120 FPS scrolling.*
+- 💡 **Lesson 3:** *Never store authentication JWT tokens in `SharedPreferences`; use `flutter_secure_storage`.*
+
+---
+
+## 💡 AI Agent Recommendations
+
+- **Next High Priority:** Implement offline caching using Drift database for network failover.
+- **Suggested Refactoring:** Extract custom dialogs in `features/auth/presentation` to `shared/widgets/dialogs`.
+- **Suggested Testing:** Add unit tests for `AuthRepositoryImpl` network failure scenarios.
