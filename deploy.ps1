@@ -1,5 +1,5 @@
 # Universal Flutter AI Agent Skills — Multi-Agent & IDE Deployment Script
-# Deploys 45 skills + _resources across ALL AI Agents & IDEs (Antigravity, Gemini, Claude, OpenAI Codex, Cursor, Windsurf, Roo Code, Copilot)
+# Deploys 48 skills + _resources across ALL AI Agents & IDEs (Antigravity, Gemini, Claude, OpenAI Codex, Cursor, Windsurf, Roo Code, Copilot)
 # Usage: .\deploy.ps1
 # One-Line Remote Usage: irm https://raw.githubusercontent.com/laith-alskaf/awesome-flutter-ai-skills/main/deploy.ps1 | iex
 

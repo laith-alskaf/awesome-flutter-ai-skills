@@ -31,8 +31,16 @@ Systematically verify code quality across architecture, performance, security, a
 6. **Testing** — Unit tests for business logic? Widget tests for UI?
 7. **Accessibility** — Semantics? Touch targets? Contrast?
 8. **Documentation** — Public APIs documented? Complex logic explained?
+9. **👑 Principal Engineer Review** — Does code align with PRD? Any overengineering? Is technical debt minimized? Will this scale to 100k DAU?
 
 ## Master Checklist
+
+### 👑 Principal Engineer & Product Alignment
+- [ ] Code directly serves the Product Requirements Document (`PRODUCT_REQUIREMENTS.md`)
+- [ ] Rich Domain Models used only when business rules/transitions exist (no overengineered DTOs)
+- [ ] Zero overengineering or speculative complexity (YAGNI & KISS respected)
+- [ ] Technical debt explicitly documented in `AGENTS_MEMORY.md` if shortcuts taken
+- [ ] Scalability verified: Database queries and state trees scale to 100,000+ DAU without rewriting
 
 ### Architecture
 - [ ] Feature-first organization

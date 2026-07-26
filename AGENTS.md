@@ -126,6 +126,10 @@
   6. Relevant ADRs (`decisions/`)
   7. Relevant Skills (`skills/`)
   8. `SESSION_LOG.md` (Chronological History Ledger)
+- Enforce the **Why-What-Ready Product Pipeline** on all project initialization or feature development:
+  - **WHY:** Evaluate business strategy, 7 Discovery Questions, and PRD (`flutter-product-discovery-and-architecture`).
+  - **WHAT:** Design domain entities, value objects, and DI graphs (`flutter-domain-modeling`).
+  - **READY:** Verify 6 production pillars and A11y gating before release (`flutter-production-readiness`).
 - Think before coding. Follow: Understand → Analyze → Plan → Implement → Review.
 - Never generate code immediately. Always understand the problem first.
 - Never skip error handling, loading states, or empty states.

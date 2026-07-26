@@ -23,6 +23,8 @@ Before generating presentation layer code or wiring dependency injection, check 
 ### 🏗️ Sector 1: Core Architecture & Foundations (`core-architecture/`)
 | User Intent / Problem Domain | Authoritative Skill | What It Enforces |
 |---|---|---|
+| Evaluating product ideas, user journeys, PRD, or strategy | `flutter-product-discovery-and-architecture` | 7 Discovery Questions, PRD scaffolding, Why-What-Ready pipeline |
+| Designing domain entities, aggregates, or value objects | `flutter-domain-modeling` | Domain Mapping Pipeline, Rich Entities vs Simple DTO rules, DI graphs |
 | Setting up a new project or selecting packages | `flutter-project-architect` | Folder structure, package selection, project complexity tiers |
 | Organizing feature folders and boundaries | `flutter-feature-first` | Feature-based modularity, shared vs local code rules |
 | Designing architecture or layer boundaries | `flutter-clean-architecture` | Presentation → Domain → Data separation; zero Flutter in Domain |
@@ -92,6 +94,7 @@ Before generating presentation layer code or wiring dependency injection, check 
 | Setting up CI/CD pipelines (GitHub Actions, Fastlane) | `flutter-ci-cd` | Automated analysis, formatting, testing, and build artifacts |
 | Preparing store release (Play Store / App Store) | `flutter-release` | App signing, metadata, bundle generation, post-release monitoring |
 | Managing project memory, state, & health ledger | `flutter-agent-memory` | 8-Step Context Protocol, Confidence Matrix, Lessons Learned |
+| Auditing SaaS/Mobile production readiness & release gates | `flutter-production-readiness` | 6 Readiness Pillars (Security, Testing, Analytics, Monetization, Release, Observability) & A11y gate |
 
 ---
 
@@ -103,3 +106,5 @@ Before generating presentation layer code or wiring dependency injection, check 
   👉 **Route:** `flutter-performance` + `flutter-ui-engineering` + `flutter-web-desktop`.
 * **Scenario C: "Review this pull request that adds background location tracking."**
   👉 **Route:** `flutter-code-review` + `flutter-background-processing` + `flutter-media-hardware` + `flutter-security`.
+* **Scenario D: "Start a new project or build an app from scratch." (Why-What-Ready Pipeline)**
+  👉 **Route:** `flutter-product-discovery-and-architecture` (WHY) ➔ `flutter-domain-modeling` (WHAT) ➔ `flutter-project-architect` (DESIGN) ➔ `flutter-feature-planner` (PLAN) ➔ Implementation Skills (CODE) ➔ `flutter-production-readiness` (READY) ➔ `flutter-code-review` (REVIEW).
