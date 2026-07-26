@@ -136,9 +136,12 @@ class LocalNotificationService {
 }
 ```
 
-## Surviving OS Battery Optimization (Doze Mode)
+## Surviving OS Battery Optimization (Doze Mode & OEM Killers)
 
-- **Android:** Do not request `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` unless your app is an alarm clock, fitness tracker, or medical device (Google Play policy restriction). Instead, rely on `Constraints` in WorkManager.
+- **Hybrid Resilient Blueprint:** Do not rely solely on `WorkManager` for guaranteed or time-critical execution. For continuous tasks (e.g., live location, audio, VoIP), combine `workmanager` (for opportunistic periodic sync) with **Foreground Services** (`flutter_foreground_task`) and sticky notifications.
+- **OEM Battery Killers (Xiaomi MIUI/HyperOS, Samsung OneUI, Huawei):** OEM skins often kill background tasks aggressively despite standard WorkManager constraints. Provide an explicit in-app UI prompting users to disable battery optimizations (`disableBatteryOptimizations` / `requestIgnoreBatteryOptimizations` via `permission_handler`) when critical background reliability is needed.
+- **Fallback Foreground Sync:** Always attach an `AppLifecycleListener` in the presentation root to trigger an immediate fallback sync when the app transitions back from background (`AppLifecycleState.resumed`).
+- **Android:** Rely on explicit WorkManager `Constraints` (`requiresBatteryNotLow`, `NetworkType.connected`) for non-critical jobs.
 - **iOS:** Must configure `BGTaskSchedulerPermittedIdentifiers` in `Info.plist` and enable `Background fetch` and `Background processing` in Xcode Capabilities.
 
 ## Master Checklist

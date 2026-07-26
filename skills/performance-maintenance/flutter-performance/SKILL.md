@@ -140,6 +140,12 @@ class CounterDisplay extends ConsumerWidget {
 final result = await Isolate.run(() => parseHugeJson(rawData));
 ```
 
+### Impeller Shader Warmup & Rendering Gotchas
+
+- **Custom Shaders & Paint:** On Impeller (Metal/Vulkan), pre-warm complex custom shaders during app startup or splash screen to prevent shader compilation stutter on first frame render.
+- **SaveLayer Penalties:** Avoid unnecessary `Canvas.saveLayer()` calls in custom rendering; Impeller handles opacity and blending more efficiently when applied directly to paint objects or using alpha properties.
+- **Multi-Platform Verification:** Always verify visual rendering and raster cache performance across both iOS (Metal/Impeller) and Android (Vulkan/Impeller) using alchemist golden regression tests.
+
 ### Golden Rules
 
 1. Architecture affects performance more than widget count

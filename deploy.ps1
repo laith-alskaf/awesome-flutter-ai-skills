@@ -58,51 +58,83 @@ $totalDeployed = 0
 $totalPurged = 0
 $resourceFolders = @("templates", "checklists", "anti-patterns", "decisions")
 
-# Step 1: Deploy Global Skills & _resources to All AI Agent Paths
+# Step 1: Deploy Global Skills & _resources to All AI Agent Paths (Atomic Staging Rollback Engine)
 foreach ($destBase in $targetBases) {
     Write-Host "----------------------------------------------------------" -ForegroundColor DarkGray
     Write-Host "[*] Target Path: $destBase" -ForegroundColor Yellow
 
-    if (-not (Test-Path $destBase)) {
-        New-Item -ItemType Directory -Path $destBase -Force | Out-Null
-        Write-Host "    [+] Created directory: $destBase" -ForegroundColor Green
-    }
+    $stagingDir = $null
+    try {
+        $parentDir = Split-Path $destBase -Parent
+        if (-not (Test-Path $parentDir)) { New-Item -ItemType Directory -Path $parentDir -Force | Out-Null }
 
-    # Purge deprecated or ghost skill directories
-    Get-ChildItem -Path $destBase -Directory | ForEach-Object {
-        if ($_.Name -notin $validSkillNames) {
-            Remove-Item -Path $_.FullName -Recurse -Force
-            Write-Host "    [PURGE] Removed deprecated ghost skill: $($_.Name)" -ForegroundColor Magenta
-            $totalPurged++
+        # Create unique staging directory
+        $stagingDir = Join-Path $parentDir (".staging_" + (Split-Path $destBase -Leaf) + "_" + [Guid]::NewGuid().ToString("N").Substring(0, 8))
+        if (Test-Path $stagingDir) { Remove-Item -Path $stagingDir -Recurse -Force }
+        New-Item -ItemType Directory -Path $stagingDir -Force | Out-Null
+        Write-Host "    [STAGING] Preparing atomic staging build: $stagingDir" -ForegroundColor DarkGray
+
+        # Copy clean valid skills to staging
+        $deployedForPath = 0
+        foreach ($skillDir in $skillDirs) {
+            $skillName = Split-Path $skillDir -Leaf
+            $destDir = Join-Path $stagingDir $skillName
+            Copy-Item -Path $skillDir -Destination $destDir -Recurse -Force
+            $deployedForPath++
+        }
+
+        # Bundle supporting framework resources (_resources/) in staging
+        $destResources = Join-Path $stagingDir "_resources"
+        New-Item -ItemType Directory -Path $destResources -Force | Out-Null
+
+        foreach ($resFolder in $resourceFolders) {
+            $srcRes = Join-Path $rootDir $resFolder
+            if (Test-Path $srcRes) {
+                $destResFolder = Join-Path $destResources $resFolder
+                Copy-Item -Path $srcRes -Destination $destResFolder -Recurse -Force
+            }
+        }
+
+        # Verify Staging Build Integrity (Count check)
+        $stagingSkillCount = (Get-ChildItem -Path $stagingDir -Directory | Where-Object { $_.Name -ne "_resources" }).Count
+        if ($stagingSkillCount -ne $skillDirs.Count) {
+            throw "Staging verification failed: Expected $($skillDirs.Count) skills, but found $stagingSkillCount in staging."
+        }
+
+        # Atomic Commit: Create target if missing and purge ghost skills
+        if (-not (Test-Path $destBase)) {
+            New-Item -ItemType Directory -Path $destBase -Force | Out-Null
+            Write-Host "    [+] Created directory: $destBase" -ForegroundColor Green
+        }
+
+        Get-ChildItem -Path $destBase -Directory | ForEach-Object {
+            if ($_.Name -notin $validSkillNames) {
+                Remove-Item -Path $_.FullName -Recurse -Force
+                Write-Host "    [PURGE] Removed deprecated ghost skill: $($_.Name)" -ForegroundColor Magenta
+                $totalPurged++
+            }
+        }
+
+        # Move each verified skill and resource folder from staging to destBase
+        Get-ChildItem -Path $stagingDir | ForEach-Object {
+            $targetItem = Join-Path $destBase $_.Name
+            if (Test-Path $targetItem) { Remove-Item -Path $targetItem -Recurse -Force }
+            Move-Item -Path $_.FullName -Destination $targetItem -Force
+        }
+
+        Write-Host "    [+] Synced _resources (templates, checklists, anti-patterns, decisions)" -ForegroundColor Cyan
+        Write-Host "    [OK] Successfully deployed $deployedForPath skills via Atomic Rollback Engine to $destBase" -ForegroundColor Green
+        $totalDeployed += $deployedForPath
+    }
+    catch {
+        Write-Host "    [RED ALERT - ATOMIC ROLLBACK] Failed deploying to $destBase : $_" -ForegroundColor Red
+        Write-Host "    [ROLLBACK] Active directory preserved without corruption." -ForegroundColor Red
+    }
+    finally {
+        if ($stagingDir -and (Test-Path $stagingDir)) {
+            Remove-Item -Path $stagingDir -Recurse -Force
         }
     }
-
-    # Copy clean valid skills
-    $deployedForPath = 0
-    foreach ($skillDir in $skillDirs) {
-        $skillName = Split-Path $skillDir -Leaf
-        $destDir = Join-Path $destBase $skillName
-
-        if (Test-Path $destDir) { Remove-Item -Path $destDir -Recurse -Force }
-        Copy-Item -Path $skillDir -Destination $destDir -Recurse -Force
-        $deployedForPath++
-    }
-
-    # Bundle supporting framework resources (_resources/)
-    $destResources = Join-Path $destBase "_resources"
-    if (Test-Path $destResources) { Remove-Item -Path $destResources -Recurse -Force }
-    New-Item -ItemType Directory -Path $destResources -Force | Out-Null
-
-    foreach ($resFolder in $resourceFolders) {
-        $srcRes = Join-Path $rootDir $resFolder
-        if (Test-Path $srcRes) {
-            $destResFolder = Join-Path $destResources $resFolder
-            Copy-Item -Path $srcRes -Destination $destResFolder -Recurse -Force
-        }
-    }
-    Write-Host "    [+] Synced _resources (templates, checklists, anti-patterns, decisions)" -ForegroundColor Cyan
-    Write-Host "    [OK] Successfully deployed $deployedForPath skills to $destBase" -ForegroundColor Green
-    $totalDeployed += $deployedForPath
 }
 
 # Step 2: Inject Local IDE & Cloud Agent Rules in Current Directory
@@ -114,12 +146,12 @@ $currentDir = Get-Location
 # Cursor Rules (.cursorrules)
 $cursorRules = @"
 # Cursor Rules — Flutter AI Agent Skill Framework 2026
-- Flutter 3.44.x Stable & Dart 3.12.x Sound Null Safety
-- Clean Architecture with Feature-First structure
-- Impeller rendering engine & Material 3 (useMaterial3: true)
-- Pluggable State Management: Riverpod 3.x (@riverpod), Bloc 9.x, Cubit, GetX 5.x
-- Zero dynamic types & zero raw unhandled exceptions
-- Mandatory const constructors & immutable domain entities
+- ZERO HALLUCINATION GATEKEEPER: Before writing code, output a "Context Parity Header" confirming reading of .ai/PROJECT_PROFILE.md and active layer rules. If requirements are ambiguous or Confidence < 0.80, activate Grill-Me Mode (flutter-grill-me) and interrogate the user before generating code.
+- STATE MATRIX FIREWALL: Check pubspec.yaml as step zero. If Riverpod is detected, NEVER call Cubit/Bloc/GetX skills. If Bloc is detected, NEVER call Riverpod/GetX skills.
+- Enforce Clean Architecture: Presentation -> Domain -> Data. Zero Flutter UI or state imports in Domain layer.
+- Flutter 3.44.x Stable & Dart 3.12.x Sound Null Safety, Material 3, Impeller Engine.
+- Zero dynamic types & zero raw unhandled exceptions. Sealed classes & pattern matching for async states.
+- Mandatory const constructors & immutable domain entities.
 "@
 Set-Content -Path (Join-Path $currentDir ".cursorrules") -Value $cursorRules -Force
 Write-Host "    [+] Created .cursorrules in current path" -ForegroundColor Green
@@ -127,10 +159,12 @@ Write-Host "    [+] Created .cursorrules in current path" -ForegroundColor Green
 # Windsurf Rules (.windsurfrules)
 $windsurfRules = @"
 # Windsurf Cascade Rules — Flutter AI Agent Skill Framework 2026
-- Enforce Clean Architecture: Presentation -> Domain -> Data
-- Target: Flutter 3.44.x Stable, Dart 3.12.x, Material 3, Impeller Engine
-- Sealed classes & pattern matching for async states (AsyncValue / BlocState)
-- Never mix business logic in UI widgets
+- ZERO HALLUCINATION GATEKEEPER: Before writing code, output a "Context Parity Header" confirming reading of .ai/PROJECT_PROFILE.md and active layer rules. If requirements are ambiguous or Confidence < 0.80, activate Grill-Me Mode (flutter-grill-me) and interrogate the user before generating code.
+- STATE MATRIX FIREWALL: Check pubspec.yaml as step zero. If Riverpod is detected, NEVER call Cubit/Bloc/GetX skills. If Bloc is detected, NEVER call Riverpod/GetX skills.
+- Enforce Clean Architecture: Presentation -> Domain -> Data. Zero Flutter UI or state imports in Domain layer.
+- Target: Flutter 3.44.x Stable, Dart 3.12.x, Material 3, Impeller Engine.
+- Sealed classes & pattern matching for async states (AsyncValue / BlocState).
+- Never mix business logic in UI widgets.
 "@
 Set-Content -Path (Join-Path $currentDir ".windsurfrules") -Value $windsurfRules -Force
 Write-Host "    [+] Created .windsurfrules in current path" -ForegroundColor Green
@@ -138,10 +172,11 @@ Write-Host "    [+] Created .windsurfrules in current path" -ForegroundColor Gre
 # Roo Code / Cline Rules (.clinerules)
 $clineRules = @"
 # Roo Code & Cline Rules — Flutter AI Agent Skill Framework 2026
-- Flutter 3.44.x Stable + Dart 3.12.x Sound Null Safety
-- Clean Architecture (Feature-First)
-- Use const constructors everywhere possible
-- State Management: Riverpod 3.x / Bloc 9.x / Cubit / GetX 5.x
+- ZERO HALLUCINATION GATEKEEPER: Before writing code, output a "Context Parity Header" confirming reading of .ai/PROJECT_PROFILE.md and active layer rules. If requirements are ambiguous or Confidence < 0.80, activate Grill-Me Mode (flutter-grill-me) and interrogate the user before generating code.
+- STATE MATRIX FIREWALL: Check pubspec.yaml as step zero. If Riverpod is detected, NEVER call Cubit/Bloc/GetX skills. If Bloc is detected, NEVER call Riverpod/GetX skills.
+- Enforce Clean Architecture: Presentation -> Domain -> Data. Zero Flutter UI or state imports in Domain layer.
+- Flutter 3.44.x Stable + Dart 3.12.x Sound Null Safety.
+- Use const constructors everywhere possible.
 "@
 Set-Content -Path (Join-Path $currentDir ".clinerules") -Value $clineRules -Force
 Write-Host "    [+] Created .clinerules in current path" -ForegroundColor Green
@@ -151,12 +186,12 @@ $codexPath = Join-Path $currentDir ".codex"
 if (-not (Test-Path $codexPath)) { New-Item -ItemType Directory -Path $codexPath -Force | Out-Null }
 $codexRules = @"
 # OpenAI Codex Rules — Flutter AI Agent Skill Framework 2026
-- Flutter 3.44.x Stable & Dart 3.12.x Sound Null Safety
-- Clean Architecture with Feature-First structure
-- Impeller rendering engine & Material 3 (useMaterial3: true)
-- Pluggable State Management: Riverpod 3.x (@riverpod), Bloc 9.x, Cubit, GetX 5.x
-- Zero dynamic types & zero raw unhandled exceptions
-- Mandatory const constructors & immutable domain entities
+- ZERO HALLUCINATION GATEKEEPER: Before writing code, output a "Context Parity Header" confirming reading of .ai/PROJECT_PROFILE.md and active layer rules. If requirements are ambiguous or Confidence < 0.80, activate Grill-Me Mode (flutter-grill-me) and interrogate the user before generating code.
+- STATE MATRIX FIREWALL: Check pubspec.yaml as step zero. If Riverpod is detected, NEVER call Cubit/Bloc/GetX skills. If Bloc is detected, NEVER call Riverpod/GetX skills.
+- Enforce Clean Architecture: Presentation -> Domain -> Data. Zero Flutter UI or state imports in Domain layer.
+- Flutter 3.44.x Stable & Dart 3.12.x Sound Null Safety, Material 3, Impeller Engine.
+- Zero dynamic types & zero raw unhandled exceptions.
+- Mandatory const constructors & immutable domain entities.
 "@
 Set-Content -Path (Join-Path $codexPath "instructions.md") -Value $codexRules -Force
 Write-Host "    [+] Created .codex/instructions.md for Cloud Codex Agents" -ForegroundColor Green
@@ -166,12 +201,12 @@ $githubPath = Join-Path $currentDir ".github"
 if (-not (Test-Path $githubPath)) { New-Item -ItemType Directory -Path $githubPath -Force | Out-Null }
 $copilotRules = @"
 # GitHub Copilot Rules — Flutter AI Agent Skill Framework 2026
-- Flutter 3.44.x Stable & Dart 3.12.x Sound Null Safety
-- Clean Architecture with Feature-First structure
-- Impeller rendering engine & Material 3 (useMaterial3: true)
-- Pluggable State Management: Riverpod 3.x (@riverpod), Bloc 9.x, Cubit, GetX 5.x
-- Zero dynamic types & zero raw unhandled exceptions
-- Mandatory const constructors & immutable domain entities
+- ZERO HALLUCINATION GATEKEEPER: Before writing code, output a "Context Parity Header" confirming reading of .ai/PROJECT_PROFILE.md and active layer rules. If requirements are ambiguous or Confidence < 0.80, activate Grill-Me Mode (flutter-grill-me) and interrogate the user before generating code.
+- STATE MATRIX FIREWALL: Check pubspec.yaml as step zero. If Riverpod is detected, NEVER call Cubit/Bloc/GetX skills. If Bloc is detected, NEVER call Riverpod/GetX skills.
+- Enforce Clean Architecture: Presentation -> Domain -> Data. Zero Flutter UI or state imports in Domain layer.
+- Flutter 3.44.x Stable & Dart 3.12.x Sound Null Safety, Material 3, Impeller Engine.
+- Zero dynamic types & zero raw unhandled exceptions.
+- Mandatory const constructors & immutable domain entities.
 "@
 Set-Content -Path (Join-Path $githubPath "copilot-instructions.md") -Value $copilotRules -Force
 Write-Host "    [+] Created .github/copilot-instructions.md for Copilot & Codex" -ForegroundColor Green

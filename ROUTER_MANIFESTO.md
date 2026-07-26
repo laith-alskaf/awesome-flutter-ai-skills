@@ -3,11 +3,17 @@
 This document is the authoritative **Router Manifesto** for the **Flutter AI Agent Skill Framework 2026**.
 When an AI Agent or Staff Engineer receives a task, requirement, bug report, or pull request, they **must check this capability matrix first** to instantly map the user's intent to the exact orthogonal skill(s) and code template(s).
 
+> [!IMPORTANT]
+> **ZERO HALLUCINATION GATEKEEPER (Context Parity Header):** Before generating or modifying any Dart/Flutter code, an AI Agent MUST output a mandatory "Context Parity Header" in their response confirming reading of `.ai/PROJECT_PROFILE.md` and identifying the target architectural layer boundaries. No code shall be generated until this verification is explicit.
+
 ---
 
-## ⚡ 1. The Pluggable State Management Router
+## ⚡ 1. The Pluggable State Management Router & State Matrix Firewall
 
-Before generating presentation layer code or wiring dependency injection, check `pubspec.yaml` or user instructions to determine the active state library:
+Before generating presentation layer code or wiring dependency injection, check `pubspec.yaml` or user instructions to determine the active state library.
+
+> [!WARNING]
+> **STATE MATRIX FIREWALL (Zero Overlap Rule):** Once a state management library is detected in `pubspec.yaml` (e.g., `flutter_riverpod`), all orthogonal state management skills and templates (such as Bloc, Cubit, or GetX) are strictly **locked and banned** from the active agent context. NEVER mix or import conflicting state libraries in the same workspace.
 
 | Detected Library / Intent | Required Skill | Required Code Template(s) | Key Architectural Rule |
 |---|---|---|---|
@@ -88,6 +94,7 @@ Before generating presentation layer code or wiring dependency injection, check 
 | User Intent / Problem Domain | Authoritative Skill | What It Enforces |
 |---|---|---|
 | Planning a new feature, sprint backlog, or milestones | `flutter-feature-planner` | Engineering task breakdown, dependency graphs, estimation |
+| Interrogating user, auditing requirements, or preventing hallucination when confidence < 0.80 | `flutter-grill-me` | Grill-Me Anti-Hallucination Interrogation Protocol across 5 engineering dimensions |
 | Creating a new feature end-to-end across all layers | `flutter-create-feature` | Vertical-slice workflow from domain analysis to UI and testing |
 | Reviewing code or auditing a pull request | `flutter-code-review` | 6-step PR audit (analysis, architecture, state, UI, security, tests) |
 | Managing git branching, commits, or versioning | `flutter-git` | Semantic versioning, conventional commits, PR workflows |
@@ -108,3 +115,5 @@ Before generating presentation layer code or wiring dependency injection, check 
   👉 **Route:** `flutter-code-review` + `flutter-background-processing` + `flutter-media-hardware` + `flutter-security`.
 * **Scenario D: "Start a new project or build an app from scratch." (Why-What-Ready Pipeline)**
   👉 **Route:** `flutter-product-discovery-and-architecture` (WHY) ➔ `flutter-domain-modeling` (WHAT) ➔ `flutter-project-architect` (DESIGN) ➔ `flutter-feature-planner` (PLAN) ➔ Implementation Skills (CODE) ➔ `flutter-production-readiness` (READY) ➔ `flutter-code-review` (REVIEW).
+* **Scenario E: "We want to add an offline data sync feature, but specifications and state rules are unclear." (Anti-Hallucination Gate)**
+  👉 **Route:** `flutter-grill-me` (INTERROGATE & LOCK SPEC) ➔ `flutter-agent-memory` (UPDATE CONFIDENCE ≥ 0.80) ➔ `flutter-background-processing` + `flutter-local-database` + `flutter-clean-architecture` (IMPLEMENT).

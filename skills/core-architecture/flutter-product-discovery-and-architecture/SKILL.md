@@ -38,11 +38,14 @@ Before designing any system architecture or writing Dart code, the AI Agent MUST
 6. **What are the main user journeys?** (Step-by-step interactive progression from onboarding to core habit loop).
 7. **What are the success metrics?** (Daily Active Users DAU, retention rate, conversion rate, crash-free user sessions).
 
+> [!WARNING]
+> **GRILL-ME DISCOVERY FALLBACK GATE:** If the user's initial prompt or available context does not provide sufficient clarity to answer all 7 Discovery Questions with high confidence (`score >= 0.80`), the AI Agent MUST NOT fabricate or guess answers. Instead, immediately trigger **`flutter-grill-me`** to interrogate the user and lock down the missing strategic decisions before scaffolding `.ai/PRODUCT_REQUIREMENTS.md`.
+
 ---
 
-## 📄 Scaffolding `PRODUCT_REQUIREMENTS.md` (PRD)
+## 📄 Scaffolding `.ai/PRODUCT_REQUIREMENTS.md` (PRD)
 
-Upon completing the Discovery Phase, the AI Agent MUST scaffold a comprehensive Product Requirements Document inside the project workspace (`PRODUCT_REQUIREMENTS.md` or `docs/PRODUCT_REQUIREMENTS.md`):
+Upon completing the Discovery Phase, the AI Agent MUST scaffold a comprehensive Product Requirements Document inside the `.ai/` workspace directory (`.ai/PRODUCT_REQUIREMENTS.md`):
 
 ```markdown
 # PRODUCT_REQUIREMENTS.md — Product Strategy & Architecture Blueprint
@@ -79,5 +82,5 @@ graph TD
 
 ## 🧭 Next Pipeline Phase Routing
 
-Once `PRODUCT_REQUIREMENTS.md` is approved by the user, the AI Agent immediately routes to:
+Once `.ai/PRODUCT_REQUIREMENTS.md` is approved by the user, the AI Agent immediately routes to:
 👉 **Skill #47:** `flutter-domain-modeling` (To transform business requirements into rich domain entities and use cases).

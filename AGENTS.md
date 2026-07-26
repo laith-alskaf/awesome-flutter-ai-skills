@@ -118,18 +118,19 @@
 ## AI Agent Behavior & Context Protocol
 
 - Follow the **8-Step Context Recovery Priority Protocol**:
-  1. `PROJECT_PROFILE.md` (Static Project Identity & Stack)
+  1. `.ai/PROJECT_PROFILE.md` (Static Project Identity & Stack)
   2. `AGENTS.md` (Governance Laws, Behavioral Constraints & Quality Standards)
-  3. `CURRENT_STATE.md` (Active Goal, Context, Assumptions & Confidence Matrix)
-  4. `KNOWLEDGE_INDEX.md` (Fast Map to ADRs, Skills & Source Folders)
-  5. `AGENTS_MEMORY.md` (Working Ledger, Milestones, Health Meter & Lessons Learned)
-  6. Relevant ADRs (`decisions/`)
+  3. `.ai/CURRENT_STATE.md` (Active Goal, Context, Assumptions & Confidence Matrix)
+  4. `.ai/KNOWLEDGE_INDEX.md` (Fast Map to ADRs, Skills & Source Folders)
+  5. `.ai/AGENTS_MEMORY.md` (Working Ledger, Milestones, Health Meter & Lessons Learned)
+  6. Relevant ADRs (`decisions/` or `.ai/decisions/`)
   7. Relevant Skills (`skills/`)
-  8. `SESSION_LOG.md` (Chronological History Ledger)
+  8. `.ai/SESSION_LOG.md` (Chronological History Ledger)
 - Enforce the **Why-What-Ready Product Pipeline** on all project initialization or feature development:
-  - **WHY:** Evaluate business strategy, 7 Discovery Questions, and PRD (`flutter-product-discovery-and-architecture`).
-  - **WHAT:** Design domain entities, value objects, and DI graphs (`flutter-domain-modeling`).
-  - **READY:** Verify 6 production pillars and A11y gating before release (`flutter-production-readiness`).
+  - **WHY:** Evaluate business strategy, 7 Discovery Questions, and PRD (`.ai/PRODUCT_REQUIREMENTS.md` via `flutter-product-discovery-and-architecture`).
+  - **WHAT:** Design domain entities, value objects, and DI graphs (`.ai/DOMAIN_MAP.md` via `flutter-domain-modeling`).
+  - **READY:** Verify 6 production pillars and A11y gating before release (`.ai/PRODUCTION_CHECKLIST.md` via `flutter-production-readiness`).
+- **Enforce the Anti-Hallucination Interrogation Gate (`grill-me`):** If project requirements, architectural boundaries, or state management rules are ambiguous, incomplete, or if the agent's calculated reasoning confidence in `.ai/CURRENT_STATE.md` is below `0.80`, the AI Agent MUST NOT generate code. Instead, immediately trigger `flutter-grill-me` to interrogate the user across 5 engineering dimensions.
 - Think before coding. Follow: Understand → Analyze → Plan → Implement → Review.
 - Never generate code immediately. Always understand the problem first.
 - Never skip error handling, loading states, or empty states.

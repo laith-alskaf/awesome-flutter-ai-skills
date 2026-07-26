@@ -36,10 +36,10 @@ Systematically verify code quality across architecture, performance, security, a
 ## Master Checklist
 
 ### 👑 Principal Engineer & Product Alignment
-- [ ] Code directly serves the Product Requirements Document (`PRODUCT_REQUIREMENTS.md`)
+- [ ] Code directly serves the Product Requirements Document (`.ai/PRODUCT_REQUIREMENTS.md`)
 - [ ] Rich Domain Models used only when business rules/transitions exist (no overengineered DTOs)
 - [ ] Zero overengineering or speculative complexity (YAGNI & KISS respected)
-- [ ] Technical debt explicitly documented in `AGENTS_MEMORY.md` if shortcuts taken
+- [ ] Technical debt explicitly documented in `.ai/AGENTS_MEMORY.md` if shortcuts taken
 - [ ] Scalability verified: Database queries and state trees scale to 100,000+ DAU without rewriting
 
 ### Architecture

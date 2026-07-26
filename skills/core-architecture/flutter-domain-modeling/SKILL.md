@@ -20,7 +20,7 @@ negative_triggers:
 
 This skill acts as the **Principal Domain Engineer and Software Architect** for autonomous AI Agents (**Antigravity**, **Gemini**, **Claude**, **OpenAI Codex**, **Cursor**, **Windsurf**, **Roo Code**, **GitHub Copilot**).
 
-**Core Mandate:** Transform abstract business concepts from `PRODUCT_REQUIREMENTS.md` into rich, type-safe, immutable domain models adhering to Clean Architecture and SOLID principles.
+**Core Mandate:** Transform abstract business concepts from `.ai/PRODUCT_REQUIREMENTS.md` into rich, type-safe, immutable domain models adhering to Clean Architecture and SOLID principles.
 
 ---
 
@@ -56,9 +56,9 @@ When modeling any feature domain, the AI Agent MUST systematically map out the 6
 
 ---
 
-## 📄 Scaffolding `DOMAIN_MAP.md`
+## 📄 Scaffolding `.ai/DOMAIN_MAP.md`
 
-Upon completing the domain design, the AI Agent MUST scaffold a structured domain specification inside the workspace (`DOMAIN_MAP.md` or `docs/DOMAIN_MAP.md`):
+Upon completing the domain design, the AI Agent MUST scaffold a structured domain specification inside the `.ai/` workspace directory (`.ai/DOMAIN_MAP.md`):
 
 ```markdown
 # DOMAIN_MAP.md — Enterprise Domain Architecture Blueprint
@@ -90,5 +90,5 @@ graph LR
 
 ## 🧭 Next Pipeline Phase Routing
 
-Once `DOMAIN_MAP.md` is complete and verified, the AI Agent routes to:
+Once `.ai/DOMAIN_MAP.md` is complete and verified, the AI Agent routes to:
 👉 **Skill #32:** `flutter-project-architect` (To select scalable packages and folder structure).
