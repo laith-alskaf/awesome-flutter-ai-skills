@@ -149,13 +149,31 @@ Write-Host "    [+] Created .clinerules in current path" -ForegroundColor Green
 # OpenAI Codex Cloud Agent Instructions (.codex/instructions.md)
 $codexPath = Join-Path $currentDir ".codex"
 if (-not (Test-Path $codexPath)) { New-Item -ItemType Directory -Path $codexPath -Force | Out-Null }
-Set-Content -Path (Join-Path $codexPath "instructions.md") -Value $cursorRules -Force
+$codexRules = @"
+# OpenAI Codex Rules — Flutter AI Agent Skill Framework 2026
+- Flutter 3.44.x Stable & Dart 3.12.x Sound Null Safety
+- Clean Architecture with Feature-First structure
+- Impeller rendering engine & Material 3 (useMaterial3: true)
+- Pluggable State Management: Riverpod 3.x (@riverpod), Bloc 9.x, Cubit, GetX 5.x
+- Zero dynamic types & zero raw unhandled exceptions
+- Mandatory const constructors & immutable domain entities
+"@
+Set-Content -Path (Join-Path $codexPath "instructions.md") -Value $codexRules -Force
 Write-Host "    [+] Created .codex/instructions.md for Cloud Codex Agents" -ForegroundColor Green
 
 # GitHub Copilot Instructions (.github/copilot-instructions.md)
 $githubPath = Join-Path $currentDir ".github"
 if (-not (Test-Path $githubPath)) { New-Item -ItemType Directory -Path $githubPath -Force | Out-Null }
-Set-Content -Path (Join-Path $githubPath "copilot-instructions.md") -Value $cursorRules -Force
+$copilotRules = @"
+# GitHub Copilot Rules — Flutter AI Agent Skill Framework 2026
+- Flutter 3.44.x Stable & Dart 3.12.x Sound Null Safety
+- Clean Architecture with Feature-First structure
+- Impeller rendering engine & Material 3 (useMaterial3: true)
+- Pluggable State Management: Riverpod 3.x (@riverpod), Bloc 9.x, Cubit, GetX 5.x
+- Zero dynamic types & zero raw unhandled exceptions
+- Mandatory const constructors & immutable domain entities
+"@
+Set-Content -Path (Join-Path $githubPath "copilot-instructions.md") -Value $copilotRules -Force
 Write-Host "    [+] Created .github/copilot-instructions.md for Copilot & Codex" -ForegroundColor Green
 
 # Cleanup temporary clone if used

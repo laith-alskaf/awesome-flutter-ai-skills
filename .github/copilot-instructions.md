@@ -1,4 +1,4 @@
-# Cursor Rules — Flutter AI Agent Skill Framework 2026
+# GitHub Copilot Rules — Flutter AI Agent Skill Framework 2026
 - Flutter 3.44.x Stable & Dart 3.12.x Sound Null Safety
 - Clean Architecture with Feature-First structure
 - Impeller rendering engine & Material 3 (useMaterial3: true)
