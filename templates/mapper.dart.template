@@ -1,0 +1,22 @@
+// Mapper Extension Template
+// Place in: lib/features/<feature_name>/data/mappers/{{entity_name}}_mapper.dart
+// Rule: Explicitly map between DTOs and Entities at the repository boundary!
+
+import '../../domain/entities/{{entity_name}}.dart';
+import '../models/{{entity_name}}_dto.dart';
+
+extension {{EntityName}}DtoMapper on {{EntityName}}Dto {
+  {{EntityName}} toEntity() => {{EntityName}}(
+        id: id,
+        name: name,
+        createdAt: DateTime.tryParse(createdAt) ?? DateTime.now(),
+      );
+}
+
+extension {{EntityName}}Mapper on {{EntityName}} {
+  {{EntityName}}Dto toDto() => {{EntityName}}Dto(
+        id: id,
+        name: name,
+        createdAt: createdAt.toIso8601String(),
+      );
+}

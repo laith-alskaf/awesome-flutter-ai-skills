@@ -1,0 +1,65 @@
+// TEMPLATE: Presentation UI Page for GetX Controller
+// Usage: Copy this template to lib/features/<feature>/presentation/pages/<name>_page.dart
+// Replace: <Feature>, <feature> with actual names.
+// Requires: get
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../controllers/<feature>_controller.dart';
+
+class <Feature>Page extends GetView<<Feature>Controller> {
+  const <Feature>Page({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('<Feature> List'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () => controller.loadItems(forceRefresh: true),
+          ),
+        ],
+      ),
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (controller.errorMessage.value != null) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  controller.errorMessage.value!,
+                  style: const TextStyle(color: Colors.red),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => controller.loadItems(forceRefresh: true),
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
+          );
+        }
+
+        if (controller.isEmpty.value) {
+          return const Center(child: Text('No items found.'));
+        }
+
+        return ListView.builder(
+          itemCount: controller.items.length,
+          itemBuilder: (context, index) {
+            final item = controller.items[index];
+            return ListTile(
+              title: Text(item.toString()),
+            );
+          },
+        );
+      }),
+    );
+  }
+}

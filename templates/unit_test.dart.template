@@ -1,0 +1,60 @@
+// Unit Test Template (AAA Pattern + mocktail)
+// Place in: test/features/<feature_name>/domain/usecases/get_{{entity_name}}_usecase_test.dart
+// Rule: Follow Arrange-Act-Assert pattern!
+
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:app/features/{{feature_name}}/domain/entities/{{entity_name}}.dart';
+import 'package:app/features/{{feature_name}}/domain/failures/{{feature_name}}_failure.dart';
+import 'package:app/features/{{feature_name}}/domain/repositories/{{feature_name}}_repository.dart';
+import 'package:app/features/{{feature_name}}/domain/usecases/get_{{entity_name}}_usecase.dart';
+
+class Mock{{FeatureName}}Repository extends Mock implements {{FeatureName}}Repository {}
+
+void main() {
+  late Get{{EntityName}}UseCase useCase;
+  late Mock{{FeatureName}}Repository mockRepository;
+
+  setUp(() {
+    mockRepository = Mock{{FeatureName}}Repository();
+    useCase = Get{{EntityName}}UseCase(mockRepository);
+  });
+
+  const tId = 'test_id_123';
+  final tEntity = {{EntityName}}(
+    id: tId,
+    name: 'Test Name',
+    createdAt: DateTime(2026, 7, 26),
+  );
+
+  group('Get{{EntityName}}UseCase', () {
+    test('should return {{EntityName}} from repository when call succeeds', () async {
+      // Arrange
+      when(() => mockRepository.get{{EntityName}}(tId))
+          .thenAnswer((_) async => Success(tEntity));
+
+      // Act
+      final result = await useCase(id: tId);
+
+      // Assert
+      expect(result, equals(Success<{{EntityName}}, {{FeatureName}}Failure>(tEntity)));
+      verify(() => mockRepository.get{{EntityName}}(tId)).called(1);
+      verifyNoMoreInteractions(mockRepository);
+    });
+
+    test('should return {{FeatureName}}NotFoundFailure when item does not exist', () async {
+      // Arrange
+      const tFailure = {{FeatureName}}NotFoundFailure();
+      when(() => mockRepository.get{{EntityName}}(tId))
+          .thenAnswer((_) async => const Failure(tFailure));
+
+      // Act
+      final result = await useCase(id: tId);
+
+      // Assert
+      expect(result, equals(const Failure<{{EntityName}}, {{FeatureName}}Failure>(tFailure)));
+      verify(() => mockRepository.get{{EntityName}}(tId)).called(1);
+      verifyNoMoreInteractions(mockRepository);
+    });
+  });
+}

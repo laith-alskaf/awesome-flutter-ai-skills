@@ -1,0 +1,7 @@
+# Antigravity AI Agent Index Ignore
+# Exclude legacy archive and build outputs from AI search indexing
+
+archive/
+.git/
+build/
+.dart_tool/

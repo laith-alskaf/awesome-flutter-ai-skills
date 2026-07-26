@@ -1,0 +1,81 @@
+// TEMPLATE: Presentation UI Page for Bloc / Cubit
+// Usage: Copy this template to lib/features/<feature>/presentation/pages/<name>_page.dart
+// Replace: <Feature>, <feature> with actual names.
+// Requires: flutter_bloc
+
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/di/injection.dart';
+import '../cubit/<feature>_cubit.dart';
+import '../cubit/<feature>_state.dart';
+
+class <Feature>Page extends StatelessWidget {
+  const <Feature>Page({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => getIt<<Feature>Cubit>()..loadItems(),
+      child: const _UserView(),
+    );
+  }
+}
+
+class _UserView extends StatelessWidget {
+  const _UserView();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('<Feature> List'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () => context.read<<Feature>Cubit>().loadItems(forceRefresh: true),
+          ),
+        ],
+      ),
+      body: BlocConsumer<<Feature>Cubit, <Feature>State>(
+        listener: (context, state) {
+          state.mapOrNull(
+            error: (s) => ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(s.message)),
+            ),
+          );
+        },
+        builder: (context, state) => state.when(
+          initial: () => const SizedBox.shrink(),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          loaded: (items) {
+            if (items.isEmpty) {
+              return const Center(child: Text('No items found.'));
+            }
+            return ListView.builder(
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                final item = items[index];
+                return ListTile(
+                  title: Text(item.toString()),
+                );
+              },
+            );
+          },
+          error: (msg) => Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(msg, style: const TextStyle(color: Colors.red)),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => context.read<<Feature>Cubit>().loadItems(forceRefresh: true),
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

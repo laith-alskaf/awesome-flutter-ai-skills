@@ -1,0 +1,45 @@
+// TEMPLATE: GetX Controller State Management
+// Usage: Copy this template to lib/features/<feature>/presentation/controllers/<name>_controller.dart
+// Replace: <Feature>, <feature> with actual feature names.
+// Requires: get
+
+import 'package:get/get.dart';
+import '../../domain/entities/<feature>.dart';
+import '../../domain/usecases/get_<feature>_usecase.dart';
+
+class <Feature>Controller extends GetxController {
+  <Feature>Controller(this._get<Feature>UseCase);
+
+  final Get<Feature>UseCase _get<Feature>UseCase;
+
+  // --- REACTIVE STATE VARIABLES (.obs) ---
+  final isLoading = false.obs;
+  final errorMessage = RxnString();
+  final items = <<Feature>>[].obs;
+  final isEmpty = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadItems();
+  }
+
+  Future<void> loadItems({bool forceRefresh = false}) async {
+    isLoading.value = true;
+    errorMessage.value = null;
+
+    final result = await _get<Feature>UseCase(forceRefresh: forceRefresh);
+
+    result.when(
+      success: (data) {
+        items.assignAll(data);
+        isEmpty.value = data.isEmpty;
+      },
+      failure: (failure) {
+        errorMessage.value = failure.userMessage;
+      },
+    );
+
+    isLoading.value = false;
+  }
+}

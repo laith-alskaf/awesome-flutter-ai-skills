@@ -1,0 +1,77 @@
+// Widget Test Template (ProviderScope Override + mocktail)
+// Place in: test/features/<feature_name>/presentation/pages/{{feature_name}}_page_test.dart
+// Rule: Test all states (loading, error, empty, data) and user interactions!
+
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:app/features/{{feature_name}}/domain/entities/{{entity_name}}.dart';
+import 'package:app/features/{{feature_name}}/domain/failures/{{feature_name}}_failure.dart';
+import 'package:app/features/{{feature_name}}/presentation/notifiers/{{feature_name}}_notifier.dart';
+import 'package:app/features/{{feature_name}}/presentation/pages/{{feature_name}}_page.dart';
+
+void main() {
+  final tList = [
+    {{EntityName}}(id: '1', name: 'Item 1', createdAt: DateTime.now()),
+    {{EntityName}}(id: '2', name: 'Item 2', createdAt: DateTime.now()),
+  ];
+
+  Widget createTestableWidget(AsyncValue<List<{{EntityName}}>> state) {
+    return ProviderScope(
+      overrides: [
+        {{featureName}}NotifierProvider.overrideWith((_) => _Fake{{FeatureName}}Notifier(state)),
+      ],
+      child: const MaterialApp(
+        home: {{FeatureName}}Page(),
+      ),
+    );
+  }
+
+  group('{{FeatureName}}Page', () {
+    testWidgets('shows loading indicator when state is AsyncLoading', (tester) async {
+      await tester.pumpWidget(createTestableWidget(const AsyncLoading()));
+
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    });
+
+    testWidgets('shows list items when state is AsyncData with items', (tester) async {
+      await tester.pumpWidget(createTestableWidget(AsyncData(tList)));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Item 1'), findsOneWidget);
+      expect(find.text('Item 2'), findsOneWidget);
+    });
+
+    testWidgets('shows empty view when state is AsyncData with empty list', (tester) async {
+      await tester.pumpWidget(createTestableWidget(const AsyncData([])));
+      await tester.pumpAndSettle();
+
+      expect(find.text('No items found.'), findsOneWidget);
+    });
+
+    testWidgets('shows error message and retry button when state is AsyncError', (tester) async {
+      await tester.pumpWidget(createTestableWidget(
+        AsyncError(const {{FeatureName}}NetworkFailure(), StackTrace.current),
+      ));
+      await tester.pumpAndSettle();
+
+      expect(find.text('No internet connection. Please check your network.'), findsOneWidget);
+      expect(find.text('Try Again'), findsOneWidget);
+    });
+  });
+}
+
+class _Fake{{FeatureName}}Notifier extends_${{FeatureName}}Notifier {
+  _Fake{{FeatureName}}Notifier(this._initialState);
+  final AsyncValue<List<{{EntityName}}>> _initialState;
+
+  @override
+  Future<List<{{EntityName}}>> build() async {
+    return switch (_initialState) {
+      AsyncData(:final value) => value,
+      AsyncError(:final error, :final stackTrace) => throw error,
+      _ => Future.delayed(const Duration(seconds: 999), () => []),
+    };
+  }
+}

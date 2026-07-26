@@ -1,0 +1,68 @@
+// TEMPLATE: Bloc State Management with Freezed Events & States
+// Usage: Copy this template to lib/features/<feature>/presentation/bloc/<name>_bloc.dart
+// Replace: <Feature>, <feature>, <Entity> with actual feature names.
+// Requires: flutter_bloc, freezed_annotation
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import '../../domain/entities/<feature>.dart';
+import '../../domain/usecases/get_<feature>_usecase.dart';
+
+part '<feature>_event.dart';
+part '<feature>_state.dart';
+part '<feature>_bloc.freezed.dart';
+
+// --- EVENTS ---
+@freezed
+sealed class <Feature>Event with _$<Feature>Event {
+  const factory <Feature>Event.started() = _Started;
+  const factory <Feature>Event.refreshRequested() = _RefreshRequested;
+}
+
+// --- STATES ---
+@freezed
+sealed class <Feature>State with _$<Feature>State {
+  const factory <Feature>State.initial() = _Initial;
+  const factory <Feature>State.loading() = _Loading;
+  const factory <Feature>State.loaded(List<<Feature>> items) = _Loaded;
+  const factory <Feature>State.error(String message) = _Error;
+}
+
+// --- BLOC IMPLEMENTATION ---
+class <Feature>Bloc extends Bloc<<Feature>Event, <Feature>State> {
+  <Feature>Bloc(this._get<Feature>UseCase) : super(const <Feature>State.initial()) {
+    on<_Started>(_onStarted);
+    on<_RefreshRequested>(_onRefreshRequested);
+  }
+
+  final Get<Feature>UseCase _get<Feature>UseCase;
+
+  Future<void> _onStarted(_Started event, Emitter<<Feature>State> emit) async {
+    emit(const <Feature>State.loading());
+    final result = await _get<Feature>UseCase();
+
+    result.when(
+      success: (items) {
+        if (items.isEmpty) {
+          emit(const <Feature>State.loaded([]));
+        } else {
+          emit(<Feature>State.loaded(items));
+        }
+      },
+      failure: (failure) => emit(<Feature>State.error(failure.userMessage)),
+    );
+  }
+
+  Future<void> _onRefreshRequested(
+    _RefreshRequested event,
+    Emitter<<Feature>State> emit,
+  ) async {
+    // Keep showing loading or keep current data while refreshing
+    final result = await _get<Feature>UseCase(forceRefresh: true);
+
+    result.when(
+      success: (items) => emit(<Feature>State.loaded(items)),
+      failure: (failure) => emit(<Feature>State.error(failure.userMessage)),
+    );
+  }
+}

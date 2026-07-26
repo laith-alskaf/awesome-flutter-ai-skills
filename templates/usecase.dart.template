@@ -1,0 +1,24 @@
+// Domain Use Case Template
+// Place in: lib/features/<feature_name>/domain/usecases/<action>_{{entity_name}}_usecase.dart
+// Rule: Single business action per UseCase class!
+
+import '../entities/{{entity_name}}.dart';
+import '../failures/{{feature_name}}_failure.dart';
+import '../repositories/{{feature_name}}_repository.dart';
+
+class {{Action}}{{EntityName}}UseCase {
+  const {{Action}}{{EntityName}}UseCase(this._repository);
+
+  final {{FeatureName}}Repository _repository;
+
+  Future<Result<{{ReturnType}}, {{FeatureName}}Failure>> call({
+    required {{ParameterType}} param,
+  }) async {
+    // Optional domain validation before calling repository
+    if (param.isEmpty) {
+      return const Failure({{FeatureName}}ValidationFailure('Parameter cannot be empty'));
+    }
+
+    return _repository.{{repositoryMethod}}(param);
+  }
+}

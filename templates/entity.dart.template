@@ -1,0 +1,42 @@
+// Pure Dart Domain Entity Template
+// Place in: lib/features/<feature_name>/domain/entities/<entity_name>.dart
+// Rule: Zero Flutter or external framework imports!
+
+class {{EntityName}} {
+  const {{EntityName}}({
+    required this.id,
+    required this.name,
+    required this.createdAt,
+  });
+
+  final String id;
+  final String name;
+  final DateTime createdAt;
+
+  {{EntityName}} copyWith({
+    String? id,
+    String? name,
+    DateTime? createdAt,
+  }) {
+    return {{EntityName}}(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is {{EntityName}} &&
+        other.id == id &&
+        other.name == name &&
+        other.createdAt == createdAt;
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name, createdAt);
+
+  @override
+  String toString() => '{{EntityName}}(id: $id, name: $name, createdAt: $createdAt)';
+}

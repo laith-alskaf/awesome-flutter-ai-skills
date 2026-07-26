@@ -1,0 +1,25 @@
+name: AI Engineering OS
+version: 1.0.0
+description: An operating system for AI software engineering agents, utilizing a Planner, Scheduler, Orchestrator, and Validator architecture.
+status: experimental
+
+engine:
+  version: "1.0.0"
+  components:
+    - planner
+    - scheduler
+    - orchestrator
+    - validator
+    - policy-engine
+    - reasoning-engine
+    - capability-providers
+  
+modules:
+  flutter:
+    version: "1.0.0"
+    status: experimental
+    layers:
+      - foundation
+      - specialists
+      - cross-cutting
+      - release

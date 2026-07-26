@@ -1,0 +1,44 @@
+// Sealed Failure Class Template (Dart 3.12+)
+// Place in: lib/features/<feature_name>/domain/failures/<feature_name>_failure.dart
+
+sealed class {{FeatureName}}Failure {
+  const {{FeatureName}}Failure();
+
+  String get userMessage => switch (this) {
+        {{FeatureName}}NetworkFailure() => 'No internet connection. Please check your network.',
+        {{FeatureName}}ServerFailure(:final code, :final message) => 
+            'Server error ($code): ${message ?? "Please try again later."}',
+        {{FeatureName}}UnauthorizedFailure() => 'You are not authorized to perform this action.',
+        {{FeatureName}}ValidationFailure(:final message) => message,
+        {{FeatureName}}NotFoundFailure() => 'The requested resource was not found.',
+        {{FeatureName}}UnknownFailure() => 'An unexpected error occurred. Please try again.',
+      };
+}
+
+final class {{FeatureName}}NetworkFailure extends {{FeatureName}}Failure {
+  const {{FeatureName}}NetworkFailure();
+}
+
+final class {{FeatureName}}ServerFailure extends {{FeatureName}}Failure {
+  const {{FeatureName}}ServerFailure(this.code, [this.message]);
+  final int code;
+  final String? message;
+}
+
+final class {{FeatureName}}UnauthorizedFailure extends {{FeatureName}}Failure {
+  const {{FeatureName}}UnauthorizedFailure();
+}
+
+final class {{FeatureName}}ValidationFailure extends {{FeatureName}}Failure {
+  const {{FeatureName}}ValidationFailure(this.message);
+  final String message;
+}
+
+final class {{FeatureName}}NotFoundFailure extends {{FeatureName}}Failure {
+  const {{FeatureName}}NotFoundFailure();
+}
+
+final class {{FeatureName}}UnknownFailure extends {{FeatureName}}Failure {
+  const {{FeatureName}}UnknownFailure([this.error]);
+  final Object? error;
+}

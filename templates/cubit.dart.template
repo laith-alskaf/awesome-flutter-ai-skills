@@ -1,0 +1,47 @@
+// TEMPLATE: Cubit State Management with Freezed State
+// Usage: Copy this template to lib/features/<feature>/presentation/cubit/<name>_cubit.dart
+// Replace: <Feature>, <feature> with actual feature names.
+// Requires: flutter_bloc, freezed_annotation
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import '../../domain/entities/<feature>.dart';
+import '../../domain/usecases/get_<feature>_usecase.dart';
+
+part '<feature>_state.dart';
+part '<feature>_cubit.freezed.dart';
+
+// --- STATES ---
+@freezed
+sealed class <Feature>State with _$<Feature>State {
+  const factory <Feature>State.initial() = _Initial;
+  const factory <Feature>State.loading() = _Loading;
+  const factory <Feature>State.loaded(List<<Feature>> items) = _Loaded;
+  const factory <Feature>State.error(String message) = _Error;
+}
+
+// --- CUBIT IMPLEMENTATION ---
+class <Feature>Cubit extends Cubit<<Feature>State> {
+  <Feature>Cubit(this._get<Feature>UseCase) : super(const <Feature>State.initial());
+
+  final Get<Feature>UseCase _get<Feature>UseCase;
+
+  Future<void> loadItems({bool forceRefresh = false}) async {
+    if (isClosed) return;
+    emit(const <Feature>State.loading());
+
+    final result = await _get<Feature>UseCase(forceRefresh: forceRefresh);
+    if (isClosed) return;
+
+    result.when(
+      success: (items) {
+        if (items.isEmpty) {
+          emit(const <Feature>State.loaded([]));
+        } else {
+          emit(<Feature>State.loaded(items));
+        }
+      },
+      failure: (failure) => emit(<Feature>State.error(failure.userMessage)),
+    );
+  }
+}

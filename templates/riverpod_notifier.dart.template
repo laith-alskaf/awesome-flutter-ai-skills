@@ -1,0 +1,46 @@
+// Riverpod Code Generation Notifier Template
+// Place in: lib/features/<feature_name>/presentation/notifiers/{{feature_name}}_notifier.dart
+// Rule: Use @riverpod annotation; handle async loading/error states cleanly!
+
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../../domain/entities/{{entity_name}}.dart';
+import '../../domain/repositories/{{feature_name}}_repository.dart';
+import '../../domain/usecases/get_{{entity_name}}_list_usecase.dart';
+
+part '{{feature_name}}_notifier.g.dart';
+
+@riverpod
+class {{FeatureName}}Notifier extends_${{FeatureName}}Notifier {
+  @override
+  Future<List<{{EntityName}}>> build() async {
+    return _fetch{{EntityName}}List();
+  }
+
+  Future<List<{{EntityName}}>> _fetch{{EntityName}}List({bool forceRefresh = false}) async {
+    final useCase = ref.watch(get{{EntityName}}ListUseCaseProvider);
+    final result = await useCase(forceRefresh: forceRefresh);
+    
+    return switch (result) {
+      Success(value: final list) => list,
+      Failure(error: final failure) => throw failure,
+    };
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => _fetch{{EntityName}}List(forceRefresh: true));
+  }
+
+  Future<void> add{{EntityName}}({{EntityName}} entity) async {
+    final previousState = state;
+    state = const AsyncLoading();
+    
+    final saveUseCase = ref.read(save{{EntityName}}UseCaseProvider);
+    final result = await saveUseCase(entity);
+    
+    switch (result) {
+      Success() => await refresh(),
+      Failure(error: final failure) => state = AsyncError(failure, StackTrace.current),
+    }
+  }
+}

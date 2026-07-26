@@ -1,0 +1,103 @@
+// Concrete Repository Implementation Template
+// Place in: lib/features/<feature_name>/data/repositories/<feature_name>_repository_impl.dart
+// Rule: Catch raw exceptions and convert them to domain Failures!
+
+import 'package:dio/dio.dart';
+import '../../domain/entities/{{entity_name}}.dart';
+import '../../domain/failures/{{feature_name}}_failure.dart';
+import '../../domain/repositories/{{feature_name}}_repository.dart';
+import '../datasources/{{feature_name}}_remote_datasource.dart';
+import '../datasources/{{feature_name}}_local_datasource.dart';
+import '../mappers/{{entity_name}}_mapper.dart';
+
+class {{FeatureName}}RepositoryImpl implements {{FeatureName}}Repository {
+  const {{FeatureName}}RepositoryImpl({
+    required this.remoteDatasource,
+    required this.localDatasource,
+  });
+
+  final {{FeatureName}}RemoteDatasource remoteDatasource;
+  final {{FeatureName}}LocalDatasource localDatasource;
+
+  @override
+  Future<Result<{{EntityName}}, {{FeatureName}}Failure>> get{{EntityName}}(String id) async {
+    try {
+      // 1. Try remote fetch
+      final dto = await remoteDatasource.get{{EntityName}}(id);
+      
+      // 2. Update local cache
+      await localDatasource.cache{{EntityName}}(dto);
+
+      // 3. Map to Entity and return
+      return Success(dto.toEntity());
+    } on DioException catch (e) {
+      // Try fallback to local cache on network error
+      final localDto = await localDatasource.get{{EntityName}}(id);
+      if (localDto != null) {
+        return Success(localDto.toEntity());
+      }
+      return Failure(_mapDioException(e));
+    } catch (_) {
+      return const Failure({{FeatureName}}UnknownFailure());
+    }
+  }
+
+  @override
+  Future<Result<List<{{EntityName}}>, {{FeatureName}}Failure>> get{{EntityName}}List({
+    bool forceRefresh = false,
+  }) async {
+    try {
+      if (!forceRefresh) {
+        final localList = await localDatasource.get{{EntityName}}List();
+        if (localList.isNotEmpty) {
+          return Success(localList.map((dto) => dto.toEntity()).toList());
+        }
+      }
+      final remoteList = await remoteDatasource.get{{EntityName}}List();
+      await localDatasource.cache{{EntityName}}List(remoteList);
+      return Success(remoteList.map((dto) => dto.toEntity()).toList());
+    } on DioException catch (e) {
+      return Failure(_mapDioException(e));
+    } catch (_) {
+      return const Failure({{FeatureName}}UnknownFailure());
+    }
+  }
+
+  @override
+  Future<Result<void, {{FeatureName}}Failure>> save{{EntityName}}({{EntityName}} entity) async {
+    try {
+      final dto = entity.toDto();
+      await remoteDatasource.save{{EntityName}}(dto);
+      await localDatasource.cache{{EntityName}}(dto);
+      return const Success(null);
+    } on DioException catch (e) {
+      return Failure(_mapDioException(e));
+    } catch (_) {
+      return const Failure({{FeatureName}}UnknownFailure());
+    }
+  }
+
+  @override
+  Future<Result<void, {{FeatureName}}Failure>> delete{{EntityName}}(String id) async {
+    try {
+      await remoteDatasource.delete{{EntityName}}(id);
+      await localDatasource.delete{{EntityName}}(id);
+      return const Success(null);
+    } on DioException catch (e) {
+      return Failure(_mapDioException(e));
+    } catch (_) {
+      return const Failure({{FeatureName}}UnknownFailure());
+    }
+  }
+
+  {{FeatureName}}Failure _mapDioException(DioException e) => switch (e.response?.statusCode) {
+        401 => const {{FeatureName}}UnauthorizedFailure(),
+        404 => const {{FeatureName}}NotFoundFailure(),
+        >= 500 => {{FeatureName}}ServerFailure(e.response!.statusCode!, e.response?.statusMessage),
+        _ => switch (e.type) {
+            DioExceptionType.connectionError => const {{FeatureName}}NetworkFailure(),
+            DioExceptionType.connectionTimeout => const {{FeatureName}}NetworkFailure(),
+            _ => const {{FeatureName}}UnknownFailure(),
+          },
+      };
+}

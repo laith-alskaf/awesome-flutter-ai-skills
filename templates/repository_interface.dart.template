@@ -1,0 +1,25 @@
+// Domain Repository Interface Template
+// Place in: lib/features/<feature_name>/domain/repositories/<feature_name>_repository.dart
+// Rule: Returns Result<T, Failure>, never throws exceptions!
+
+import '../entities/{{entity_name}}.dart';
+import '../failures/{{feature_name}}_failure.dart';
+
+sealed class Result<S, F> {
+  const Result();
+}
+final class Success<S, F> extends Result<S, F> {
+  const Success(this.value);
+  final S value;
+}
+final class Failure<S, F> extends Result<S, F> {
+  const Failure(this.error);
+  final F error;
+}
+
+abstract class {{FeatureName}}Repository {
+  Future<Result<{{EntityName}}, {{FeatureName}}Failure>> get{{EntityName}}(String id);
+  Future<Result<List<{{EntityName}}>, {{FeatureName}}Failure>> get{{EntityName}}List({bool forceRefresh = false});
+  Future<Result<void, {{FeatureName}}Failure>> save{{EntityName}}({{EntityName}} entity);
+  Future<Result<void, {{FeatureName}}Failure>> delete{{EntityName}}(String id);
+}
