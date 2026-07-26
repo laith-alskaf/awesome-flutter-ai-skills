@@ -1,4 +1,4 @@
-# Flutter AI Agent Skill Framework 2026
+# Awesome Flutter AI Agent Skills 2026
 
 ![Flutter Version](https://img.shields.io/badge/Flutter-3.44.x%20Stable-02569B?logo=flutter&logoColor=white)
 ![Dart Version](https://img.shields.io/badge/Dart-3.12.x-0175C2?logo=dart&logoColor=white)
@@ -7,33 +7,41 @@
 ![Audit Status](https://img.shields.io/badge/Audit-100%2F100%20Gold%20Certified-gold)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-An enterprise-grade, contract-first **AI Engineering Operating System (OS)** designed to orchestrate autonomous AI Agents (**Antigravity**, **Claude Opus 4.6**, **Gemini CLI**, **Cursor**) for production Flutter application engineering.
+An enterprise-grade, contract-first **AI Engineering Skill Framework & Multi-IDE Rules Generator** designed to orchestrate autonomous AI Agents (**Antigravity**, **Gemini**, **Claude**, **OpenAI Codex**, **Cursor**, **Windsurf**, **Roo Code**, **GitHub Copilot**) for production Flutter application engineering.
 
 It turns AI Coding Assistants into disciplined Senior Staff Software Engineers adhering to sound Clean Architecture, SOLID principles, zero-hallucination routing, and 2026 production standards.
 
 ---
 
-## 📑 Table of Contents
+## ⚡ Universal One-Line Quick Start (For ALL AI Agents & IDEs)
 
-- [Key Features](#-key-features)
-- [Target Technology Stack](#-target-technology-stack)
-- [Framework Architecture & 7 Sectors](#-framework-architecture--7-sectors)
-- [The 44 Skills Directory](#-the-44-skills-directory)
-- [Pluggable State Management Matrix](#-pluggable-state-management-matrix)
-- [Global Installation & Deployment](#-global-installation--deployment)
-- [How to Integrate in a Flutter Project](#-how-to-integrate-in-a-flutter-project)
-- [Authoritative Router Manifesto](#-authoritative-router-manifesto)
-- [License](#-license)
+Install and activate all 44 skills and IDE rules globally across **Antigravity**, **Gemini**, **Claude**, **OpenAI Codex**, **Cursor**, **Windsurf**, and **GitHub Copilot** with a single command:
+
+### PowerShell (Windows)
+```powershell
+irm https://raw.githubusercontent.com/laith-alskaf/awesome-flutter-ai-skills/main/deploy.ps1 | iex
+```
+
+### Local Repository Deployment
+```powershell
+.\deploy.ps1
+```
 
 ---
 
-## 🌟 Key Features
+## 🌐 Supported AI Agents & IDE Matrix
 
-* **Zero-Hallucination Routing:** Powered by `ROUTER_MANIFESTO.md` for instant, deterministic skill matching.
-* **7 Orthogonal Engineering Sectors:** 44 core skills categorized across clean architecture, state management, UI, networking, quality, performance, and DevOps.
-* **Pluggable State Matrix:** State-holder agnostic architecture supporting **Riverpod 3.x**, **Bloc 9.x**, **Cubit**, and **GetX 5.x**.
-* **Global Self-Cleaning Deployment:** Multi-target PowerShell script (`deploy.ps1`) synchronizes skills and global supporting resources (`_resources/`) across all AI environments.
-* **Modern Flutter 3.44 & Dart 3.12 Rules:** Native support for sound null safety, Impeller rendering, Material 3, sealed classes, pattern matching, records, and private named parameters.
+`deploy.ps1` automatically synchronizes skills and global supporting resources (`_resources/`) to **6 Global AI Agent Paths** and injects project-level rules:
+
+| Agent / IDE Platform | Target Path / Rule File | Supported Format |
+|---|---|---|
+| **Antigravity AI Agent** | `~/.gemini/antigravity/skills/` | Native `SKILL.md` + `_resources/` |
+| **Gemini CLI Agent** | `~/.gemini/config/skills/` | Native `SKILL.md` + `_resources/` |
+| **Claude & Universal Agents** | `~/.agents/skills/` | Native `SKILL.md` + `_resources/` |
+| **OpenAI Codex Cloud Agent** | `~/.codex/skills/` & `.codex/instructions.md` | Codex Cloud Agent Rules |
+| **Cursor IDE** | `~/.cursor/skills/` & `.cursorrules` | Project Rules & MDC |
+| **Windsurf IDE** | `~/.windsurf/skills/` & `.windsurfrules` | Cascade System Rules |
+| **Roo Code / Cline / VS Code**| `.clinerules` & `.github/copilot-instructions.md` | Copilot & Custom Modes |
 
 ---
 
@@ -55,11 +63,11 @@ It turns AI Coding Assistants into disciplined Senior Staff Software Engineers a
 ## 🏗️ Framework Architecture & 7 Sectors
 
 ```text
-flutter-skills/
+awesome-flutter-ai-skills/
 ├── AGENTS.md                    → Root policy instructions for Flutter workspace
 ├── ROUTER_MANIFESTO.md          → Capability matrix & zero-ambiguity AI skill routing
-├── HOW_TO_USE.md                → Integration guide & 3 deployment workflows
-├── deploy.ps1                   → Multi-target self-cleaning deployment script
+├── HOW_TO_USE.md                → Integration guide & deployment workflows
+├── deploy.ps1                   → Universal multi-agent & multi-IDE deployment script
 ├── skills/                      → 44 orthogonal SKILL.md files grouped into 7 sectors
 │   ├── core-architecture/       → Clean Architecture, DI, Feature-First, Repositories, Routing (6 skills)
 │   ├── state-management/        → Riverpod 3.x, Bloc 9.x, Cubit, GetX 5.x (4 skills)
@@ -76,93 +84,26 @@ flutter-skills/
 
 ---
 
-## 📦 The 44 Skills Directory
+## 📦 The 44 Skills Directory Summary
 
-### 1. Core Architecture (6 Skills)
-- `flutter-clean-architecture` — Production-grade layer separation (Presentation → Domain → Data).
-- `flutter-dependency-injection` — Container & provider injection patterns.
-- `flutter-feature-first` — Feature-based module organization.
-- `flutter-repository-pattern` — Abstract domain repositories & data source orchestration.
-- `flutter-project-architect` — Foundational project decision making.
-- `flutter-routing` — Declarative navigation (`go_router`) & Deep Links / App Links.
-
-### 2. State Management (4 Skills)
-- `flutter-riverpod` — Riverpod 3.x with `@riverpod` code generation & `AsyncValue`.
-- `flutter-bloc` — Event-driven state management with `flutter_bloc` & `freezed`.
-- `flutter-cubit` — Method-driven state emission.
-- `flutter-getx` — Controlled GetX reactive usage.
-
-### 3. UI & Styling (7 Skills)
-- `flutter-ui-engineering` — Widget composition & Material 3 design system.
-- `flutter-responsive-design` — LayoutBuilder & adaptive multi-device breakpoints.
-- `flutter-animations` — Impeller-optimized implicit/explicit animations.
-- `flutter-accessibility` — Semantics, screen readers & touch targets.
-- `flutter-localization` — ARB files & dynamic RTL/LTR switching.
-- `flutter-build-screen` — UI mockups decomposition into widget trees.
-- `flutter-web-desktop` — CanvasKit/Wasm, CORS, PWA & Desktop window management.
-
-### 4. Data & Networking (6 Skills)
-- `flutter-api-integration` — Dio networking & exception-to-failure mapping.
-- `flutter-websockets` — Real-time WebSockets, SSE, WebRTC & MQTT.
-- `flutter-graphql` — Ferry & graphql_flutter normalized caching.
-- `flutter-firebase` — Auth, Firestore, Storage, FCM & Crashlytics.
-- `flutter-supabase` — Auth, PostgREST, Storage & Realtime streams.
-- `flutter-local-database` — Drift type-safe SQL persistence.
-
-### 5. Quality, Testing & Security (7 Skills)
-- `flutter-unit-testing` — Mocktail AAA unit tests for UseCases & Notifiers.
-- `flutter-widget-testing` — WidgetTester interaction & state testing.
-- `flutter-integration-testing` — End-to-end device testing with Patrol.
-- `flutter-golden-testing` — Visual regression testing with Alchemist.
-- `flutter-generate-tests` — Automated test suite generation.
-- `flutter-security` — Secure storage, env obfuscation & OWASP hardening.
-- `flutter-error-handling` — Sealed failure class hierarchy.
-
-### 6. Performance & Maintenance (8 Skills)
-- `flutter-performance` — DevTools memory profiler & frame jank elimination.
-- `flutter-app-size` — APK/AAB/IPA size reduction & asset optimization.
-- `flutter-debugging` — DevTools inspection & runtime state fixes.
-- `flutter-bug-fixing` — Minimal-diff root cause bug resolution.
-- `flutter-logging` — Structured logger, PII masking & Crashlytics.
-- `flutter-refactoring` — Safe code modernization & widget extraction.
-- `flutter-background-processing` — WorkManager background tasks & notifications.
-- `flutter-media-hardware` — Camera streams, BLE, MethodChannels & Dart FFI.
-
-### 7. Workflows & DevOps (6 Skills)
-- `flutter-feature-planner` — Requirements breakdown into engineering backlogs.
-- `flutter-create-feature` — End-to-end vertical-slice feature workflow.
-- `flutter-code-review` — 6-step PR quality audit.
-- `flutter-git` — Conventional commits & branching strategy.
-- `flutter-ci-cd` — GitHub Actions & Codemagic automation.
-- `flutter-release` — Fastlane Google Play & App Store automated publishing.
+1. **Core Architecture (6 Skills):** `flutter-clean-architecture`, `flutter-dependency-injection`, `flutter-feature-first`, `flutter-repository-pattern`, `flutter-project-architect`, `flutter-routing`.
+2. **State Management (4 Skills):** `flutter-riverpod`, `flutter-bloc`, `flutter-cubit`, `flutter-getx`.
+3. **UI & Styling (7 Skills):** `flutter-ui-engineering`, `flutter-responsive-design`, `flutter-animations`, `flutter-accessibility`, `flutter-localization`, `flutter-build-screen`, `flutter-web-desktop`.
+4. **Data & Networking (6 Skills):** `flutter-api-integration`, `flutter-websockets`, `flutter-graphql`, `flutter-firebase`, `flutter-supabase`, `flutter-local-database`.
+5. **Quality, Testing & Security (7 Skills):** `flutter-unit-testing`, `flutter-widget-testing`, `flutter-integration-testing`, `flutter-golden-testing`, `flutter-generate-tests`, `flutter-security`, `flutter-error-handling`.
+6. **Performance & Maintenance (8 Skills):** `flutter-performance`, `flutter-app-size`, `flutter-debugging`, `flutter-bug-fixing`, `flutter-logging`, `flutter-refactoring`, `flutter-background-processing`, `flutter-media-hardware`.
+7. **Workflows & DevOps (6 Skills):** `flutter-feature-planner`, `flutter-create-feature`, `flutter-code-review`, `flutter-git`, `flutter-ci-cd`, `flutter-release`.
 
 ---
 
-## ⚡ Global Installation & Deployment
+## 🚀 How to Integrate in Any Project
 
-Deploy all 44 skills and supporting framework resources (`_resources/`) globally across all AI agents on your machine in one command:
-
-```powershell
-.\deploy.ps1
-```
-
-The script automatically synchronizes skills and resources to **3 global AI target paths**:
-1. `~/.gemini/config/skills/` (Gemini CLI)
-2. `~/.agents/skills/` (Universal AI Agents & Claude)
-3. `~/.gemini/antigravity/skills/` (Antigravity Core)
-
----
-
-## 🚀 How to Integrate in a Flutter Project
-
-Copy `AGENTS.md` and `ROUTER_MANIFESTO.md` into the root of your target Flutter application repository:
+Copy `AGENTS.md` and `ROUTER_MANIFESTO.md` into your Flutter application repository:
 
 ```powershell
 Copy-Item .\AGENTS.md <your-flutter-project>\AGENTS.md
 Copy-Item .\ROUTER_MANIFESTO.md <your-flutter-project>\ROUTER_MANIFESTO.md
 ```
-
-Your AI Agent will automatically detect the project policies and capability matrix, pair-programming with Staff Engineer discipline!
 
 ---
 
