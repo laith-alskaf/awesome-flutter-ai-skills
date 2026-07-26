@@ -1,0 +1,5 @@
+# Windsurf Cascade Rules — Flutter AI Agent Skill Framework 2026
+- Enforce Clean Architecture: Presentation -> Domain -> Data
+- Target: Flutter 3.44.x Stable, Dart 3.12.x, Material 3, Impeller Engine
+- Sealed classes & pattern matching for async states (AsyncValue / BlocState)
+- Never mix business logic in UI widgets

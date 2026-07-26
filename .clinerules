@@ -1,0 +1,5 @@
+# Roo Code & Cline Rules — Flutter AI Agent Skill Framework 2026
+- Flutter 3.44.x Stable + Dart 3.12.x Sound Null Safety
+- Clean Architecture (Feature-First)
+- Use const constructors everywhere possible
+- State Management: Riverpod 3.x / Bloc 9.x / Cubit / GetX 5.x
