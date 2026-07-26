@@ -13,6 +13,32 @@ It turns AI Coding Assistants into disciplined Senior Staff Software Engineers a
 
 ---
 
+## 📑 Table of Contents
+
+- [Why Awesome Flutter AI Skills?](#-why-awesome-flutter-ai-skills)
+- [Universal One-Line Quick Start](#-universal-one-line-quick-start-for-all-ai-agents--ides)
+- [Supported AI Agents & IDE Matrix](#-supported-ai-agents--ide-matrix)
+- [Target Technology Stack](#-target-technology-stack)
+- [Framework Architecture & 7 Sectors](#-framework-architecture--7-sectors)
+- [The 44 Skills Directory Summary](#-the-44-skills-directory-summary)
+- [How to Integrate in Any Project](#-how-to-integrate-in-any-project)
+- [Contributing](#-contributing)
+- [License](#-license)
+
+---
+
+## 💡 Why Awesome Flutter AI Skills?
+
+Standard AI coding assistants often generate fragmented code, mix UI logic with business logic, use outdated Flutter/Dart packages, or hallucinate non-existent state management APIs.
+
+**Awesome Flutter AI Skills** solves this by providing:
+1. **Deterministic Skill Routing:** Prevents AI hallucinations using structured YAML frontmatter triggers.
+2. **Zero-Deprecation Guarantee:** Strictly targets **Flutter 3.44.x Stable** and **Dart 3.12.x** with sound null safety, Impeller engine, and Material 3.
+3. **Pluggable State Management:** Dynamic support for Riverpod 3.x, Bloc 9.x, Cubit, and GetX 5.x while enforcing strict domain isolation.
+4. **Universal Agent Support:** One script deploys rules globally across Antigravity, Gemini CLI, Claude, OpenAI Codex Cloud, Cursor, Windsurf, and VS Code Copilot.
+
+---
+
 ## ⚡ Universal One-Line Quick Start (For ALL AI Agents & IDEs)
 
 Install and activate all 44 skills and IDE rules globally across **Antigravity**, **Gemini**, **Claude**, **OpenAI Codex**, **Cursor**, **Windsurf**, and **GitHub Copilot** with a single command:
@@ -98,12 +124,18 @@ awesome-flutter-ai-skills/
 
 ## 🚀 How to Integrate in Any Project
 
-Copy `AGENTS.md` and `ROUTER_MANIFESTO.md` into your Flutter application repository:
+Copy [`AGENTS.md`](AGENTS.md) and [`ROUTER_MANIFESTO.md`](ROUTER_MANIFESTO.md) into your Flutter application repository:
 
 ```powershell
 Copy-Item .\AGENTS.md <your-flutter-project>\AGENTS.md
 Copy-Item .\ROUTER_MANIFESTO.md <your-flutter-project>\ROUTER_MANIFESTO.md
 ```
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request or open an issue to propose new skills, update Dart 3.x patterns, or improve agent routing mechanics.
 
 ---
 
