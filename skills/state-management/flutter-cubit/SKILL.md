@@ -20,9 +20,21 @@ negative_triggers:
 
 ## Purpose
 
-Implement simplified, method-driven state transitions using Cubit (part of `flutter_bloc`), ensuring strict immutability, clean error mapping, and separation from UI presentation logic.
+Implement simplified, method-driven state transitions using Cubit (part of `flutter_bloc`), ensuring strict immutability, clean error mapping, and separation from UI presentation logic. Cubit is the lightweight choice when event-driven traceability of Bloc is not required.
 
-## Rules
+## Scope
+
+**Covers:** Cubit vs Bloc selection decision, immutable state modeling with freezed, async error handling, UseCase integration, DI via BlocProvider/get_it, UI integration with BlocBuilder/BlocConsumer/BlocListener.
+
+**Does not cover:** Event-driven Bloc with event transformers (use `flutter-bloc`), Riverpod providers (use `flutter-riverpod`), GetX reactive state (use `flutter-getx`).
+
+## Technology Context
+
+- `flutter_bloc` 9.x (Cubit is part of `flutter_bloc`)
+- `freezed` for immutable state modeling and sealed class unions
+- `get_it` + `injectable` for dependency injection
+- Dart 3.12+ sealed classes and pattern matching
+- `bloc_test` for assertion-based unit testing
 
 ### 1. When to Choose Cubit vs. Bloc
 - **Use Cubit:** When UI actions map directly to single asynchronous or synchronous operations (e.g., `login(email, pass)`, `fetchUser(id)`, `toggleTheme()`).
@@ -129,8 +141,36 @@ class _UserView extends StatelessWidget {
 ### 5. Best Practices
 - Never call `emit()` after the Cubit is closed (use `if (isClosed) return;` across long async delays).
 - Use `BlocListener` for one-off side effects (navigation, snackbars, dialogs) and `BlocBuilder` for rebuilding widget trees.
+- Never call APIs or databases directly inside the Cubit — always delegate to injected UseCases.
+- Prefer `BlocConsumer` only when both state rendering and side-effect listening are required in the same widget.
+
+## Anti-Patterns
+
+| Anti-Pattern | Better Alternative |
+|---|---|
+| Calling `Dio()` or repository directly in Cubit | Always delegate through injected UseCase |
+| Mutable state classes | Use `freezed` sealed unions (immutable) |
+| Missing `initial` state handling in UI | Always handle all states including `initial()` |
+| `emit()` without `isClosed` check | Add guard: `if (isClosed) return;` |
+| Mixing business logic in Widget | Move all logic to Cubit methods |
+| Using Bloc when Cubit suffices | Cubit is simpler; only use Bloc for debounce/transformers |
+
+## Checklist
+
+- [ ] Cubit vs Bloc decision justified (no event transformers needed → use Cubit)
+- [ ] State modeled with `freezed` sealed unions (all states: initial, loading, loaded, error)
+- [ ] All states handled exhaustively in UI (`BlocBuilder` / `BlocConsumer`)
+- [ ] Side effects use `BlocListener` (navigation, snackbars) not `BlocBuilder`
+- [ ] Business logic delegated to injected UseCases (not direct API calls)
+- [ ] `isClosed` checked before `emit()` in long async operations
+- [ ] Tests use `bloc_test` with explicit `expect` assertions
+- [ ] Cubit provided via `BlocProvider` (not instantiated in widget)
 
 ## Related Skills
-- `flutter-bloc` — Event-driven alternative
-- `flutter-clean-architecture` — Layer boundaries
+
+- `flutter-bloc` — Event-driven alternative for complex flows with transformers
+- `flutter-riverpod` — Code-generation-based alternative for new projects
+- `flutter-clean-architecture` — Layer boundaries (Cubit lives in Presentation)
 - `flutter-dependency-injection` — Providing Cubits via get_it / BlocProvider
+- `flutter-error-handling` — Failure modeling for Cubit error states
+- `flutter-unit-testing` — Testing Cubits with bloc_test

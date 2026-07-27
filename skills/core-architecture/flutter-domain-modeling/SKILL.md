@@ -88,7 +88,46 @@ graph LR
 
 ---
 
+## 🚫 Anti-Patterns
+
+| Anti-Pattern | Why It's Harmful |
+|---|---|
+| Adding `@JsonSerializable` to Domain Entities | Couples business logic to API contracts; breaks layer isolation |
+| Using DTOs directly in Use Cases | Exposes infrastructure concerns into the business layer |
+| One giant Repository for everything | Violates SRP; creates untestable god-objects |
+| Primitive types instead of Value Objects | Allows invalid states at runtime (e.g., negative prices, empty IDs) |
+| Mutable Domain Entities | Makes state tracking unpredictable and testing unreliable |
+| Designing Use Cases that call multiple Repositories | Creates hidden coupling between features; violates DDD aggregates |
+| Skipping the Domain Mapping Pipeline | Results in anemic domain models with business logic leaking into controllers |
+
+---
+
+## ✅ Checklist
+
+- [ ] Business concepts from `.ai/PRODUCT_REQUIREMENTS.md` mapped through all 6 Pipeline stages
+- [ ] All Domain Entities are immutable (all fields `final`), pure Dart, no framework imports
+- [ ] Value Objects created for all primitive-obsession candidates (IDs, currencies, enums)
+- [ ] Sealed failure classes defined with `userMessage` property for UI consumption
+- [ ] One abstract Repository interface per aggregate root (in `domain/repositories/`)
+- [ ] One Use Case class per business action (single `call()` or `execute()` method)
+- [ ] Dependency Injection graph documented (Data Source → Repo → UseCase → Notifier/Bloc)
+- [ ] `.ai/DOMAIN_MAP.md` scaffolded with entities, value objects, use cases, and DI graph
+- [ ] `dart run scripts/verify_architecture.dart` passes with zero domain boundary violations
+
+---
+
 ## 🧭 Next Pipeline Phase Routing
 
 Once `.ai/DOMAIN_MAP.md` is complete and verified, the AI Agent routes to:
-👉 **Skill #32:** `flutter-project-architect` (To select scalable packages and folder structure).
+👉 **`flutter-project-architect`** (To select scalable packages and define folder structure for the implementation phase).
+
+---
+
+## Related Skills
+
+- `flutter-product-discovery-and-architecture` — PRD discovery (WHY phase, precedes this skill)
+- `flutter-project-architect` — Package selection and folder structure (follows this skill)
+- `flutter-clean-architecture` — Layer boundaries and dependency rules
+- `flutter-repository-pattern` — Repository interface and implementation patterns
+- `flutter-error-handling` — Sealed failure class hierarchy design
+- `flutter-create-feature` — End-to-end feature implementation workflow

@@ -17,3 +17,13 @@ Use this checklist to verify that the application is fully accessible to users w
 - [ ] Text elements maintain a minimum color contrast ratio of 4.5:1 against their background (3:1 for large/bold text).
 - [ ] Information is never conveyed by color distinction alone (error states include text explanations and icons).
 - [ ] Animations and auto-scrolling banners check and respect `MediaQuery.of(context).disableAnimations`.
+
+## 4. Keyboard & Focus Navigation
+
+- [ ] All interactive elements are reachable and activatable via keyboard (for Flutter Web and Desktop).
+- [ ] Custom widgets expose focus nodes and respond to `FocusTraversalPolicy`.
+- [ ] Modal dialogs trap focus within the dialog and restore focus to the trigger element on close.
+
+---
+
+**Related Skills:** `flutter-accessibility` (detailed implementation guidelines) · `flutter-ui-engineering` (design system and semantic widget patterns) · `flutter-localization` (RTL layout support)

@@ -1,5 +1,5 @@
 # Universal Flutter AI Agent Skills — Multi-Agent & IDE Deployment Script
-# Deploys 48 skills + _resources across ALL AI Agents & IDEs (Antigravity, Gemini, Claude, OpenAI Codex, Cursor, Windsurf, Roo Code, Copilot)
+# Deploys 49 skills + _resources across ALL AI Agents & IDEs (Antigravity, Gemini, Claude, OpenAI Codex, Cursor, Windsurf, Roo Code, Copilot)
 # Usage: .\deploy.ps1
 # One-Line Remote Usage: irm https://raw.githubusercontent.com/laith-alskaf/awesome-flutter-ai-skills/main/deploy.ps1 | iex
 
@@ -56,7 +56,7 @@ Write-Host ""
 
 $totalDeployed = 0
 $totalPurged = 0
-$resourceFolders = @("templates", "checklists", "anti-patterns", "decisions")
+$resourceFolders = @("templates", "checklists", "anti-patterns", "decisions", "scripts")
 
 # Step 1: Deploy Global Skills & _resources to All AI Agent Paths (Atomic Staging Rollback Engine)
 foreach ($destBase in $targetBases) {

@@ -97,3 +97,14 @@ To prevent context window exhaustion and prompt bloat as projects scale past 100
 ## 💡 Lessons Learned Protocol
 
 Whenever an unexpected bug, memory leak, or architectural anti-pattern is resolved, the AI Agent MUST append a short entry to the `Lessons Learned & Anti-Regression Log` in `.ai/AGENTS_MEMORY.md` to prevent repeating past mistakes in future sessions.
+
+---
+
+## Related Skills
+
+- `flutter-grill-me` — Anti-hallucination interrogation gate (invoked when confidence < 0.80)
+- `flutter-product-discovery-and-architecture` — PRD scaffolding (PRODUCT_REQUIREMENTS.md)
+- `flutter-domain-modeling` — Domain Map scaffolding (DOMAIN_MAP.md)
+- `flutter-production-readiness` — Production checklist verification (PRODUCTION_CHECKLIST.md)
+- `flutter-create-feature` — Triggers this skill for session initialization in Step 0
+- `flutter-code-review` — References CURRENT_STATE.md confidence matrix before review

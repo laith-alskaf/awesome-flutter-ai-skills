@@ -110,3 +110,19 @@ Grill-Me Mode is exited **ONLY** when:
 - `flutter-product-discovery-and-architecture` — PRD scaffolding and WHY phase
 - `flutter-agent-memory` — Confidence matrix and state ledger
 - `flutter-clean-architecture` — Architectural boundary verification
+- `flutter-create-feature` — Feature creation workflow that mandates this gate at Step 0
+- `flutter-domain-modeling` — Domain design after requirements are locked
+
+## ✅ Grill-Me Exit Checklist
+
+*Grill-Me Mode is exited **ONLY** when all items below are checked:*
+
+- [ ] All 5 Engineering Dimensions interrogated with explicit user answers
+- [ ] Architectural layer boundaries (Presentation → Domain → Data) confirmed for this feature
+- [ ] Active state management library identified from `pubspec.yaml` (no ambiguity)
+- [ ] Data persistence strategy confirmed (Drift / Hive / Remote / None)
+- [ ] Security and PII handling confirmed
+- [ ] Test requirements and coverage expectations confirmed
+- [ ] `.ai/PRODUCT_REQUIREMENTS.md` and `.ai/CURRENT_STATE.md` updated with locked decisions
+- [ ] Confidence score in `.ai/CURRENT_STATE.md` recalculated and confirmed ≥ **0.80**
+- [ ] AI Agent exits Grill-Me Mode and proceeds to code generation

@@ -4,7 +4,18 @@ This document is the authoritative **Router Manifesto** for the **Flutter AI Age
 When an AI Agent or Staff Engineer receives a task, requirement, bug report, or pull request, they **must check this capability matrix first** to instantly map the user's intent to the exact orthogonal skill(s) and code template(s).
 
 > [!IMPORTANT]
-> **ZERO HALLUCINATION GATEKEEPER (Context Parity Header):** Before generating or modifying any Dart/Flutter code, an AI Agent MUST output a mandatory "Context Parity Header" in their response confirming reading of `.ai/PROJECT_PROFILE.md` and identifying the target architectural layer boundaries. No code shall be generated until this verification is explicit.
+> **ZERO HALLUCINATION GATEKEEPER (Context Parity Header):** Before generating or modifying any Dart/Flutter code, an AI Agent MUST output the following mandatory "Context Parity Header" confirming context recovery. No code shall be generated until this verification is explicit.
+>
+> ```
+> ✅ CONTEXT PARITY HEADER
+> ├─ PROJECT_PROFILE.md : Read ✓ | Stack: Flutter 3.44 / Dart 3.12
+> ├─ AGENTS.md          : Read ✓ | Architecture: Feature-First Clean Architecture
+> ├─ CURRENT_STATE.md   : Read ✓ | Confidence: [score] | Goal: [active goal]
+> ├─ State Management   : Detected [Riverpod|Bloc|Cubit|GetX] from pubspec.yaml
+> ├─ Target Layer       : [Domain | Data | Presentation | Cross-cutting]
+> ├─ Skill(s) Activated : [skill-name-1], [skill-name-2]
+> └─ Grill-Me Gate      : [PASSED (≥0.80) | TRIGGERED (requirements unclear)]
+> ```
 
 ---
 

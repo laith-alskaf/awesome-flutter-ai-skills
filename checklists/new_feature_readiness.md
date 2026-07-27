@@ -17,3 +17,15 @@ Use this checklist during Sprint Planning or before starting development on a ne
 - [ ] Design wireframes or mockups inspected for spacing tokens, color scheme usage, and responsive breakpoints.
 - [ ] Reusable components identified (avoiding duplicate widget creation).
 - [ ] Accessibility requirements (semantics labels, touch targets) explicitly noted for custom UI widgets.
+
+## 4. Anti-Hallucination Gate (AI Agent Mandatory Step)
+
+- [ ] Agent confidence score in `.ai/CURRENT_STATE.md` is **≥ 0.80** before any code generation begins.
+- [ ] If confidence < 0.80, `flutter-grill-me` has been invoked and all 5 Engineering Dimensions answered.
+- [ ] Active state management library confirmed from `pubspec.yaml` (Riverpod / Bloc / Cubit / GetX).
+- [ ] Backend API contract (URL, method, request/response JSON) fully defined before DTO creation.
+- [ ] All edge cases (network failure, empty data, unauthorized access) documented in user stories.
+
+---
+
+**Related Skills:** `flutter-grill-me` (anti-hallucination gate) · `flutter-feature-planner` (sprint planning) · `flutter-create-feature` (implementation workflow) · `flutter-domain-modeling` (entity design)

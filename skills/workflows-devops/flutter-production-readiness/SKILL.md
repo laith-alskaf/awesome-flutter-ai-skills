@@ -81,4 +81,18 @@ Before authorizing production deployment, the AI Agent MUST generate and verify 
 ## 🧭 Next Pipeline Phase Routing
 
 Once `.ai/PRODUCTION_CHECKLIST.md` passes all 6 pillars and accessibility gates, the AI Agent routes to:
-👉 **Skill #33 (Upgraded):** `flutter-code-review` (For final Principal Engineer architectural review).
+👉 **`flutter-code-review`** (For final Principal Engineer architectural review before store submission).
+
+---
+
+## Related Skills
+
+- `flutter-code-review` — Final code quality and architecture review gate
+- `flutter-security` — Detailed security audit rules (Pillar 1)
+- `flutter-unit-testing` — Testing pyramid verification (Pillar 2)
+- `flutter-widget-testing` — UI regression testing (Pillar 2)
+- `flutter-golden-testing` — Visual regression matrix (Pillar 2)
+- `flutter-accessibility` — Mandatory A11y gate before release
+- `flutter-ci-cd` — CI/CD pipeline for automated release gates (Pillar 5)
+- `flutter-release` — App signing and store submission (Pillar 5)
+- `flutter-logging` — Crash reporting and observability setup (Pillar 6)

@@ -80,7 +80,45 @@ graph TD
 
 ---
 
+## 🚫 Anti-Patterns
+
+| Anti-Pattern | Why It's Harmful |
+|---|---|
+| Jumping to code before answering the 7 Discovery Questions | Generates features nobody wants; wastes engineering effort |
+| Defining MVP that includes every feature | Delays launch; violates YAGNI and Lean principles |
+| Building without defining success metrics | No way to know if the product succeeds or needs pivoting |
+| Skipping user journey mapping | Results in disjointed, incoherent UX flows |
+| Choosing a monetization model after launch | Monetization must be designed into data models from day one |
+| Hallucinating product requirements without user confirmation | Violates Anti-Hallucination Gate — always invoke `flutter-grill-me` if confidence < 0.80 |
+
+---
+
+## ✅ Checklist
+
+- [ ] All 7 Discovery Questions answered with full user confirmation
+- [ ] Target user personas defined with demographics and use environment
+- [ ] Core value proposition differentiated from competitors
+- [ ] MVP scope explicitly separated from future roadmap features
+- [ ] Revenue model and monetization strategy documented
+- [ ] Step-by-step user journeys mapped (using Mermaid or equivalent)
+- [ ] Success metrics defined (DAU, retention, conversion, crash-free sessions)
+- [ ] `.ai/PRODUCT_REQUIREMENTS.md` scaffolded and user-approved
+- [ ] Data Strategy documented (Local-First vs Remote-First vs Hybrid)
+- [ ] Grill-Me Gate passed (confidence ≥ 0.80 before scaffolding PRD)
+
+---
+
 ## 🧭 Next Pipeline Phase Routing
 
 Once `.ai/PRODUCT_REQUIREMENTS.md` is approved by the user, the AI Agent immediately routes to:
-👉 **Skill #47:** `flutter-domain-modeling` (To transform business requirements into rich domain entities and use cases).
+👉 **`flutter-domain-modeling`** (To transform business requirements into rich domain entities and use cases).
+
+---
+
+## Related Skills
+
+- `flutter-grill-me` — Anti-hallucination gate when requirements are unclear
+- `flutter-domain-modeling` — Transform PRD into domain entities and use cases
+- `flutter-project-architect` — Package selection and folder structure
+- `flutter-feature-planner` — Sprint planning and task breakdown
+- `flutter-production-readiness` — Verify 6 readiness pillars before launch

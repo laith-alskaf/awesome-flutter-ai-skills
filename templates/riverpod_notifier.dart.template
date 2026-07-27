@@ -10,7 +10,7 @@ import '../../domain/usecases/get_{{entity_name}}_list_usecase.dart';
 part '{{feature_name}}_notifier.g.dart';
 
 @riverpod
-class {{FeatureName}}Notifier extends_${{FeatureName}}Notifier {
+class {{FeatureName}}Notifier extends _${{FeatureName}}Notifier {
   @override
   Future<List<{{EntityName}}>> build() async {
     return _fetch{{EntityName}}List();

@@ -106,6 +106,22 @@
 - Always use HTTPS. Support certificate pinning for sensitive apps.
 - Validate all user input on client and server.
 
+## Dependency Policy (ADR-011)
+
+- **NEVER manually edit version numbers in `pubspec.yaml`.**
+- **ALWAYS use `flutter pub add <package>` to add or upgrade packages** — it resolves the latest compatible version automatically.
+- Before adding ANY new package, evaluate all 7 criteria (see `decisions/011_dependency_policy.md`):
+  1. Pub Score ≥ 120/160 and Popularity ≥ 90%
+  2. Verified publisher badge (✅) on pub.dev
+  3. Last update within 12 months
+  4. Full null safety support (Dart 3.x compatible)
+  5. Compatible with all target platforms
+  6. Accepted license: MIT, BSD, Apache 2.0 (reject GPL/AGPL)
+  7. No unpatched security vulnerabilities (CVEs)
+- Document the evaluation in a comment above the dependency in `pubspec.yaml`.
+- To upgrade: `flutter pub upgrade <package>` | To audit: `flutter pub outdated`
+
+
 ## Performance
 
 - Profile before optimizing. Never optimize based on assumption.

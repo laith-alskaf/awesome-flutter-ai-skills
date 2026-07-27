@@ -8,14 +8,29 @@ Desktop.ini
 .idea/
 *.swp
 *.swo
+*~
+*.bak
+*.orig
+*.tmp
 
 # Build & Temporary Artifacts
 build/
 .dart_tool/
 .packages
 pubspec.lock
+archive/
+scratch/
 
 # Local Environment & Agent Logs
 .gemini/
+.agent
+.agent/
 .agents/
+.ai
+.codex/sessions/
+.codex/scratch/
+.cursor/sessions/
+.cursor/scratch/
+.windsurf/sessions/
+.windsurf/scratch/
 *.log

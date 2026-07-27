@@ -24,9 +24,17 @@ Maintain and evolve GetX-based Flutter applications with disciplined architectur
 
 ## Scope
 
-**Covers:** GetX controllers, bindings, state management, navigation, DI, migration strategy, performance, testing.
+**Covers:** GetX controllers, reactive `.obs` state, Bindings for DI, GetX navigation, migration strategy toward Riverpod, performance patterns, and testing.
 
-**Does not cover:** New project architecture (use Riverpod), Bloc patterns.
+**Does not cover:** New project architecture — use `flutter-riverpod` for new projects. Does not cover Bloc patterns (use `flutter-bloc`).
+
+## Technology Context
+
+- GetX 5.x (`get` package)
+- Clean Architecture integration (Controller lives in Presentation only)
+- `Rx<T>` and `.obs` for reactive state
+- `GetxController` lifecycle: `onInit()`, `onReady()`, `onClose()`
+- Migration path: GetX (legacy) → Riverpod 3.x (new features)
 
 ## Technology Context
 
@@ -100,8 +108,21 @@ When migrating from legacy GetX:
 | Static Controllers | Proper lifecycle management |
 | Navigation mixed with business logic | Separate concerns |
 
+## Checklist
+
+- [ ] Controller calls UseCase (not repository or API directly)
+- [ ] One controller per feature (max ~200 lines)
+- [ ] All reactive state declared with `Rx<T>` or `.obs`
+- [ ] Bindings used for all DI (no scattered `Get.put()` in widgets)
+- [ ] `onClose()` disposes workers, subscriptions, and controllers
+- [ ] `Obx` only wraps the smallest necessary widget subtree (not entire pages)
+- [ ] Navigation decoupled from business logic
+- [ ] New features in same project started with Riverpod (migration-safe pattern)
+
 ## Related Skills
 
-- `flutter-riverpod` — Recommended for new projects/features
+- `flutter-riverpod` — Recommended for new projects and new features in existing GetX projects
 - `flutter-clean-architecture` — Architecture that outlasts any state manager
-- `flutter-refactoring` — Safe migration patterns
+- `flutter-refactoring` — Safe incremental migration patterns from GetX to Riverpod
+- `flutter-error-handling` — Typed failure modeling for GetX error states
+- `flutter-dependency-injection` — DI patterns with GetX Bindings vs get_it

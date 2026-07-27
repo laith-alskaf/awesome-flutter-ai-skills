@@ -108,6 +108,7 @@ Before manual architectural review, ensure basic automated quality gates pass:
 - Run `dart analyze` — must return zero warnings or informational notices
 - Run `dart format --output=none --set-exit-if-changed .` — code must be formatted
 - Run `flutter test` — all existing unit and widget tests must pass
+- Run `dart run scripts/verify_architecture.dart` — must return zero domain layer violations (no Flutter or state management imports in `domain/`)
 
 ### Step 2: Architecture & Boundary Review
 Check layer separation against `flutter-clean-architecture`:
