@@ -105,10 +105,10 @@ awesome-flutter-ai-skills/
 │   ├── quality-testing-security/→ Unit, Widget, Integration, Golden, Generate Tests, Security, Error Handling (7 skills)
 │   ├── performance-maintenance/ → Performance, App Size, Debugging, Bug Fixing, Logging, Refactoring, Background, Hardware (8 skills)
 │   └── workflows-devops/        → Feature Planner, Create Feature, Code Review, Git, Grill-Me, Memory, Production Readiness, CI/CD, Release (9 skills)
-├── templates/                   → 16 production Dart code templates (.dart.template)
+├── templates/                   → 21 production Dart code templates (.dart.template)
 ├── checklists/                  → 7 operational verification checklists
 ├── anti-patterns/               → 5 reference anti-pattern catalogs
-└── decisions/                   → 11 Architecture Decision Records (ADRs)
+└── decisions/                   → 12 Architecture Decision Records (ADRs)
 ```
 
 ---
@@ -125,13 +125,69 @@ awesome-flutter-ai-skills/
 
 ---
 
-## 🚀 How to Integrate in Any Project
+## 🚀 Deployment & Usage Modes (Local vs. Global)
 
-Copy [`AGENTS.md`](AGENTS.md) and [`ROUTER_MANIFESTO.md`](ROUTER_MANIFESTO.md) into your Flutter application repository:
+The framework supports two distinct deployment architectures. **We strongly recommend the Local (`.agent/`) Mode** for enterprise teams, version-controlled repositories, and isolated project governance.
 
+### 📊 Comparison & Selection Guide
+
+| Feature / Aspect | 🏠 Local Mode (`.agent/` Mode) — ⭐ RECOMMENDED | 🌐 Global Mode (Multi-IDE Global Sync) |
+|---|---|---|
+| **Installation Path** | Inside your target project root: `<project>/.agent/` | User OS profile: `~/.gemini/skills`, `~/.cursor/skills`, etc. |
+| **Project Isolation** | **100% Isolated.** Each project maintains its own stack, skills, and memory. | **Shared across OS.** All projects share the exact same global skill versions. |
+| **Team Collaboration** | **Team-Ready.** Easily shared via Git or excluded cleanly via `.gitignore`. | **Individual-Only.** Requires every developer to run global deploy script. |
+| **Root Clutter** | **Zero Clutter.** Everything lives inside `.agent/`. | **Zero Clutter.** Lives in user profile directory. |
+| **IDE Auto-Wiring** | Automatically creates `.cursorrules`, `.windsurfrules`, `.clinerules` pointing to `.agent/`. | Requires manual IDE configuration or global storage lookup. |
+| **Best Used For** | Production apps, team repositories, CI/CD pipelines, offline workflows. | Quick scripts, prototyping, or cross-language workspace experimentation. |
+
+---
+
+### 🏠 1. Local Mode (`.agent/` Mode) — ⭐ RECOMMENDED
+
+In Local Mode, the entire 49-skill framework, code templates, ADRs, checklists, and session memory are unified inside a single `.agent/` directory within your Flutter project.
+
+#### Fast One-Line Cloud Execution
+Run this single command from inside your target Flutter project directory in PowerShell (no repo clone required):
 ```powershell
-Copy-Item .\AGENTS.md <your-flutter-project>\AGENTS.md
-Copy-Item .\ROUTER_MANIFESTO.md <your-flutter-project>\ROUTER_MANIFESTO.md
+irm https://raw.githubusercontent.com/laith-alskaf/awesome-flutter-ai-skills/main/init-project.ps1 | iex
+```
+
+#### Local Script Execution (Offline / Downloaded Repo)
+If you have cloned this repository locally, run the script from inside your target Flutter project:
+```powershell
+# From inside your target project root:
+& "path\to\awesome-flutter-ai-skills\init-project.ps1"
+
+# Or specify the project path explicitly:
+& "path\to\awesome-flutter-ai-skills\init-project.ps1" -ProjectPath "D:\Projects\my_flutter_app"
+```
+
+#### 🧭 Post-Initialization Workflow (3 Magic Steps)
+Once initialized, your project will contain a clean `.agent/` folder and IDE rule files pointing to it. Follow these 3 steps:
+1. **Define Project Identity:** Open `.agent/PROJECT_PROFILE.md` and define your stack choices (`StateManagement` choice: Riverpod/Bloc/Cubit/GetX, `Database`, `Networking`, and `Key Business Domain`).
+2. **Unlock the Gate (Grill-Me):** Open `.agent/CURRENT_STATE.md` and raise the confidence score from `0.50` to `>= 0.80` once your requirements are clarified. *Note: AI Agents are programmed to refuse code generation if the confidence score is below 0.80!*
+3. **Start Building & Auditing:** Ask your AI Assistant to build features (e.g., *"Create the auth feature using feature-first clean architecture"*). At any time, audit your codebase for architectural purity by running:
+   ```powershell
+   dart run .agent/scripts/verify_architecture.dart
+   ```
+
+---
+
+### 🌐 2. Global Mode (Multi-IDE Global Sync)
+
+In Global Mode, the 49 skills are deployed simultaneously to 6 user-level IDE global directories (Cursor, Windsurf, Gemini, Antigravity, Codex, Roo/Cline).
+
+#### Deploy Globally
+```powershell
+.\deploy.ps1
+# Or one-line cloud command:
+irm https://raw.githubusercontent.com/laith-alskaf/awesome-flutter-ai-skills/main/deploy.ps1 | iex
+```
+
+#### Clean & Uninstall Global Skills
+If you decide to switch exclusively to per-project Local Mode, you can purge all global framework folders cleanly:
+```powershell
+.\uninstall-global.ps1
 ```
 
 ---
