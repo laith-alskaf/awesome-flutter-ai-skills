@@ -62,7 +62,7 @@ irm https://raw.githubusercontent.com/laith-alskaf/awesome-flutter-ai-skills/mai
 
 | Agent / IDE Platform | Target Path / Rule File | Supported Format |
 |---|---|---|
-| **Antigravity AI Agent** | `~/.gemini/antigravity/skills/` | Native `SKILL.md` + `_resources/` |
+| **Antigravity AI Agent** | `~/.gemini/antigravity/knowledge/` | **Knowledge Items (KI)** + Native Skills |
 | **Gemini CLI Agent** | `~/.gemini/config/skills/` | Native `SKILL.md` + `_resources/` |
 | **Claude & Universal Agents** | `~/.agents/skills/` | Native `SKILL.md` + `_resources/` |
 | **OpenAI Codex Cloud Agent** | `~/.codex/skills/` & `.codex/instructions.md` | Codex Cloud Agent Rules |
@@ -91,7 +91,7 @@ irm https://raw.githubusercontent.com/laith-alskaf/awesome-flutter-ai-skills/mai
 
 ```text
 awesome-flutter-ai-skills/
-├── .ai/                         → Project-level active working memory (PRD, domain maps)
+├── .agent/                         → Project-level active working memory (PRD, domain maps)
 ├── core/                        → The OS Kernel
 │   ├── AGENTS.md                → Master Policy, Tech Stack, and Context Protocols
 │   ├── ROUTER_MANIFESTO.md      → Global Capability Matrix & Zero-Hallucination Gatekeeper
@@ -141,7 +141,7 @@ The framework supports two distinct deployment architectures. **We strongly reco
 | **Project Isolation** | **100% Isolated.** Each project maintains its own stack, skills, and memory. | **Shared across OS.** All projects share the exact same global skill versions. |
 | **Team Collaboration** | **Team-Ready.** Easily shared via Git or excluded cleanly via `.gitignore`. | **Individual-Only.** Requires every developer to run global deploy script. |
 | **Root Clutter** | **Zero Clutter.** Everything lives inside `.agent/`. | **Zero Clutter.** Lives in user profile directory. |
-| **IDE Auto-Wiring** | Automatically creates `.cursorrules`, `.windsurfrules`, `.clinerules` pointing to `.agent/`. | Requires manual IDE configuration or global storage lookup. |
+| **IDE Auto-Wiring** | Automatically creates `.cursorrules`, `.windsurfrules`, `.clinerules`, and **Antigravity Knowledge Items (KI)** pointing to `.agent/`. | Requires manual IDE configuration or global storage lookup. |
 | **Best Used For** | Production apps, team repositories, CI/CD pipelines, offline workflows. | Quick scripts, prototyping, or cross-language workspace experimentation. |
 
 ---

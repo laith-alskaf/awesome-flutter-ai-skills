@@ -142,7 +142,7 @@ $currentDir = Get-Location
 # Cursor Rules (.cursorrules)
 $cursorRules = @"
 # Cursor Rules — Flutter AI Agent Skill Framework 2026
-- ZERO HALLUCINATION GATEKEEPER: Before writing code, output a "Context Parity Header" confirming reading of .ai/PROJECT_PROFILE.md and active layer rules. If requirements are ambiguous or Confidence < 0.80, activate Grill-Me Mode (flutter-grill-me) and interrogate the user before generating code.
+- ZERO HALLUCINATION GATEKEEPER: Before writing code, output a "Context Parity Header" confirming reading of .agent/PROJECT_PROFILE.md and active layer rules. If requirements are ambiguous or Confidence < 0.80, activate Grill-Me Mode (flutter-grill-me) and interrogate the user before generating code.
 - STATE MATRIX FIREWALL: Check pubspec.yaml as step zero. If Riverpod is detected, NEVER call Cubit/Bloc/GetX skills. If Bloc is detected, NEVER call Riverpod/GetX skills.
 - Enforce Clean Architecture: Presentation -> Domain -> Data. Zero Flutter UI or state imports in Domain layer.
 - Flutter 3.44.x Stable & Dart 3.12.x Sound Null Safety, Material 3, Impeller Engine.
@@ -155,7 +155,7 @@ Write-Host "    [+] Created .cursorrules in current path" -ForegroundColor Green
 # Windsurf Rules (.windsurfrules)
 $windsurfRules = @"
 # Windsurf Cascade Rules — Flutter AI Agent Skill Framework 2026
-- ZERO HALLUCINATION GATEKEEPER: Before writing code, output a "Context Parity Header" confirming reading of .ai/PROJECT_PROFILE.md and active layer rules. If requirements are ambiguous or Confidence < 0.80, activate Grill-Me Mode (flutter-grill-me) and interrogate the user before generating code.
+- ZERO HALLUCINATION GATEKEEPER: Before writing code, output a "Context Parity Header" confirming reading of .agent/PROJECT_PROFILE.md and active layer rules. If requirements are ambiguous or Confidence < 0.80, activate Grill-Me Mode (flutter-grill-me) and interrogate the user before generating code.
 - STATE MATRIX FIREWALL: Check pubspec.yaml as step zero. If Riverpod is detected, NEVER call Cubit/Bloc/GetX skills. If Bloc is detected, NEVER call Riverpod/GetX skills.
 - Enforce Clean Architecture: Presentation -> Domain -> Data. Zero Flutter UI or state imports in Domain layer.
 - Target: Flutter 3.44.x Stable, Dart 3.12.x, Material 3, Impeller Engine.
@@ -168,7 +168,7 @@ Write-Host "    [+] Created .windsurfrules in current path" -ForegroundColor Gre
 # Roo Code / Cline Rules (.clinerules)
 $clineRules = @"
 # Roo Code & Cline Rules — Flutter AI Agent Skill Framework 2026
-- ZERO HALLUCINATION GATEKEEPER: Before writing code, output a "Context Parity Header" confirming reading of .ai/PROJECT_PROFILE.md and active layer rules. If requirements are ambiguous or Confidence < 0.80, activate Grill-Me Mode (flutter-grill-me) and interrogate the user before generating code.
+- ZERO HALLUCINATION GATEKEEPER: Before writing code, output a "Context Parity Header" confirming reading of .agent/PROJECT_PROFILE.md and active layer rules. If requirements are ambiguous or Confidence < 0.80, activate Grill-Me Mode (flutter-grill-me) and interrogate the user before generating code.
 - STATE MATRIX FIREWALL: Check pubspec.yaml as step zero. If Riverpod is detected, NEVER call Cubit/Bloc/GetX skills. If Bloc is detected, NEVER call Riverpod/GetX skills.
 - Enforce Clean Architecture: Presentation -> Domain -> Data. Zero Flutter UI or state imports in Domain layer.
 - Flutter 3.44.x Stable + Dart 3.12.x Sound Null Safety.
@@ -182,7 +182,7 @@ $codexPath = Join-Path $currentDir ".codex"
 if (-not (Test-Path $codexPath)) { New-Item -ItemType Directory -Path $codexPath -Force | Out-Null }
 $codexRules = @"
 # OpenAI Codex Rules — Flutter AI Agent Skill Framework 2026
-- ZERO HALLUCINATION GATEKEEPER: Before writing code, output a "Context Parity Header" confirming reading of .ai/PROJECT_PROFILE.md and active layer rules. If requirements are ambiguous or Confidence < 0.80, activate Grill-Me Mode (flutter-grill-me) and interrogate the user before generating code.
+- ZERO HALLUCINATION GATEKEEPER: Before writing code, output a "Context Parity Header" confirming reading of .agent/PROJECT_PROFILE.md and active layer rules. If requirements are ambiguous or Confidence < 0.80, activate Grill-Me Mode (flutter-grill-me) and interrogate the user before generating code.
 - STATE MATRIX FIREWALL: Check pubspec.yaml as step zero. If Riverpod is detected, NEVER call Cubit/Bloc/GetX skills. If Bloc is detected, NEVER call Riverpod/GetX skills.
 - Enforce Clean Architecture: Presentation -> Domain -> Data. Zero Flutter UI or state imports in Domain layer.
 - Flutter 3.44.x Stable & Dart 3.12.x Sound Null Safety, Material 3, Impeller Engine.
@@ -197,7 +197,7 @@ $githubPath = Join-Path $currentDir ".github"
 if (-not (Test-Path $githubPath)) { New-Item -ItemType Directory -Path $githubPath -Force | Out-Null }
 $copilotRules = @"
 # GitHub Copilot Rules — Flutter AI Agent Skill Framework 2026
-- ZERO HALLUCINATION GATEKEEPER: Before writing code, output a "Context Parity Header" confirming reading of .ai/PROJECT_PROFILE.md and active layer rules. If requirements are ambiguous or Confidence < 0.80, activate Grill-Me Mode (flutter-grill-me) and interrogate the user before generating code.
+- ZERO HALLUCINATION GATEKEEPER: Before writing code, output a "Context Parity Header" confirming reading of .agent/PROJECT_PROFILE.md and active layer rules. If requirements are ambiguous or Confidence < 0.80, activate Grill-Me Mode (flutter-grill-me) and interrogate the user before generating code.
 - STATE MATRIX FIREWALL: Check pubspec.yaml as step zero. If Riverpod is detected, NEVER call Cubit/Bloc/GetX skills. If Bloc is detected, NEVER call Riverpod/GetX skills.
 - Enforce Clean Architecture: Presentation -> Domain -> Data. Zero Flutter UI or state imports in Domain layer.
 - Flutter 3.44.x Stable & Dart 3.12.x Sound Null Safety, Material 3, Impeller Engine.

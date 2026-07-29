@@ -39,13 +39,13 @@ Before designing any system architecture or writing Dart code, the AI Agent MUST
 7. **What are the success metrics?** (Daily Active Users DAU, retention rate, conversion rate, crash-free user sessions).
 
 > [!WARNING]
-> **GRILL-ME DISCOVERY FALLBACK GATE:** If the user's initial prompt or available context does not provide sufficient clarity to answer all 7 Discovery Questions with high confidence (`score >= 0.80`), the AI Agent MUST NOT fabricate or guess answers. Instead, immediately trigger **`flutter-grill-me`** to interrogate the user and lock down the missing strategic decisions before scaffolding `.ai/PRODUCT_REQUIREMENTS.md`.
+> **GRILL-ME DISCOVERY FALLBACK GATE:** If the user's initial prompt or available context does not provide sufficient clarity to answer all 7 Discovery Questions with high confidence (`score >= 0.80`), the AI Agent MUST NOT fabricate or guess answers. Instead, immediately trigger **`flutter-grill-me`** to interrogate the user and lock down the missing strategic decisions before scaffolding `.agent/PRODUCT_REQUIREMENTS.md`.
 
 ---
 
-## 📄 Scaffolding `.ai/PRODUCT_REQUIREMENTS.md` (PRD)
+## 📄 Scaffolding `.agent/PRODUCT_REQUIREMENTS.md` (PRD)
 
-Upon completing the Discovery Phase, the AI Agent MUST scaffold a comprehensive Product Requirements Document inside the `.ai/` workspace directory (`.ai/PRODUCT_REQUIREMENTS.md`):
+Upon completing the Discovery Phase, the AI Agent MUST scaffold a comprehensive Product Requirements Document inside the `.agent/` workspace directory (`.agent/PRODUCT_REQUIREMENTS.md`):
 
 ```markdown
 # PRODUCT_REQUIREMENTS.md — Product Strategy & Architecture Blueprint
@@ -102,7 +102,7 @@ graph TD
 - [ ] Revenue model and monetization strategy documented
 - [ ] Step-by-step user journeys mapped (using Mermaid or equivalent)
 - [ ] Success metrics defined (DAU, retention, conversion, crash-free sessions)
-- [ ] `.ai/PRODUCT_REQUIREMENTS.md` scaffolded and user-approved
+- [ ] `.agent/PRODUCT_REQUIREMENTS.md` scaffolded and user-approved
 - [ ] Data Strategy documented (Local-First vs Remote-First vs Hybrid)
 - [ ] Grill-Me Gate passed (confidence ≥ 0.80 before scaffolding PRD)
 
@@ -110,7 +110,7 @@ graph TD
 
 ## 🧭 Next Pipeline Phase Routing
 
-Once `.ai/PRODUCT_REQUIREMENTS.md` is approved by the user, the AI Agent immediately routes to:
+Once `.agent/PRODUCT_REQUIREMENTS.md` is approved by the user, the AI Agent immediately routes to:
 👉 **`flutter-domain-modeling`** (To transform business requirements into rich domain entities and use cases).
 
 ---

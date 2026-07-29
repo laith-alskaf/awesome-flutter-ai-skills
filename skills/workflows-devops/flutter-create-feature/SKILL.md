@@ -41,7 +41,7 @@ Execute a complete, production-ready feature from requirements to tested impleme
 Before writing a single line of code, the AI Agent MUST evaluate requirement clarity.
 
 > [!WARNING]
-> **GRILL-ME GATE:** If requirements are ambiguous, state management is unspecified, architectural boundaries are unclear, or confidence score in `.ai/CURRENT_STATE.md` is below **0.80**, the agent MUST NOT proceed to Step 1. Instead, immediately invoke **`flutter-grill-me`** to lock down specifications across the 5 Engineering Dimensions.
+> **GRILL-ME GATE:** If requirements are ambiguous, state management is unspecified, architectural boundaries are unclear, or confidence score in `.agent/CURRENT_STATE.md` is below **0.80**, the agent MUST NOT proceed to Step 1. Instead, immediately invoke **`flutter-grill-me`** to lock down specifications across the 5 Engineering Dimensions.
 
 **Gate Questions (all must be answered before Step 1):**
 1. What exact business problem does this feature solve?

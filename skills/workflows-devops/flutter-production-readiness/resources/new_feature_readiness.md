@@ -20,7 +20,7 @@ Use this checklist during Sprint Planning or before starting development on a ne
 
 ## 4. Anti-Hallucination Gate (AI Agent Mandatory Step)
 
-- [ ] Agent confidence score in `.ai/CURRENT_STATE.md` is **≥ 0.80** before any code generation begins.
+- [ ] Agent confidence score in `.agent/CURRENT_STATE.md` is **≥ 0.80** before any code generation begins.
 - [ ] If confidence < 0.80, `flutter-grill-me` has been invoked and all 5 Engineering Dimensions answered.
 - [ ] Active state management library confirmed from `pubspec.yaml` (Riverpod / Bloc / Cubit / GetX).
 - [ ] Backend API contract (URL, method, request/response JSON) fully defined before DTO creation.

@@ -11,6 +11,6 @@
 - **Objective:** Framework Optimization & Knowledge Architecture Deployment
 - **Accomplished:**
   - Upgraded framework deployment engine (`deploy.ps1`) to support 45 skills across 6 global AI paths.
-  - Implemented 5-Tier Knowledge Architecture (`.ai/PROJECT_PROFILE`, `.ai/KNOWLEDGE_INDEX`, `.ai/AGENTS_MEMORY`, `.ai/CURRENT_STATE`, `.ai/SESSION_LOG`).
+  - Implemented 5-Tier Knowledge Architecture (`.agent/PROJECT_PROFILE`, `.agent/KNOWLEDGE_INDEX`, `.agent/AGENTS_MEMORY`, `.agent/CURRENT_STATE`, `.agent/SESSION_LOG`).
 - **Blockers Resolved:** Eliminated git commit noise by separating static identity from dynamic session state.
 - **Status:** Completed & Gold Certified (100/100).

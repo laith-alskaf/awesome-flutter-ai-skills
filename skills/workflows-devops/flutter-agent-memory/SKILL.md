@@ -24,17 +24,17 @@ This skill governs state persistence, context recovery, and project health track
 
 ## 🏛️ The 8-Step Context Recovery Priority Protocol
 
-When starting ANY new development session or resuming work, AI Agents MUST execute the following 8-step reading order before modifying any code (all project memory files live in `.ai/`):
+When starting ANY new development session or resuming work, AI Agents MUST execute the following 8-step reading order before modifying any code (all project memory files live in `.agent/`):
 
 ```text
-1. .ai/PROJECT_PROFILE.md  → Static Project Identity & Tech Stack (Flutter/Dart version, DB, Routing)
+1. .agent/PROJECT_PROFILE.md  → Static Project Identity & Tech Stack (Flutter/Dart version, DB, Routing)
 2. AGENTS.md               → Core Governance Laws, Quality Rules & Behavioral Constraints
-3. .ai/CURRENT_STATE.md    → Active Work Goal, Context, Assumptions & Confidence Matrix
-4. .ai/KNOWLEDGE_INDEX.md  → Fast Context Map to ADRs, Skills, and Source Folders
-5. .ai/AGENTS_MEMORY.md    → Working Ledger, Milestones, Health Meter & Lessons Learned
-6. Relevant ADRs           → Architectural Decision Records in decisions/ or .ai/decisions/
+3. .agent/CURRENT_STATE.md    → Active Work Goal, Context, Assumptions & Confidence Matrix
+4. .agent/KNOWLEDGE_INDEX.md  → Fast Context Map to ADRs, Skills, and Source Folders
+5. .agent/AGENTS_MEMORY.md    → Working Ledger, Milestones, Health Meter & Lessons Learned
+6. Relevant ADRs           → Architectural Decision Records in decisions/ or .agent/decisions/
 7. Relevant Skills         → Orthogonal Domain Skills in skills/
-8. .ai/SESSION_LOG.md      → Chronological Session History
+8. .agent/SESSION_LOG.md      → Chronological Session History
 ```
 
 ---
@@ -73,7 +73,7 @@ Health:
 
 ## 🛡️ Controlled Checkpoint Rules (Zero Git Noise)
 
-To prevent git history pollution and commit noise, `.ai/AGENTS_MEMORY.md` and `.ai/CURRENT_STATE.md` are updated **ONLY** under the following triggers:
+To prevent git history pollution and commit noise, `.agent/AGENTS_MEMORY.md` and `.agent/CURRENT_STATE.md` are updated **ONLY** under the following triggers:
 1. **Feature Completion:** A full feature or milestone is completed and verified.
 2. **Architecture Change:** A major architectural pattern, dependency, or DB schema changes.
 3. **Explicit User Request:** The user types `checkpoint state` or `save progress`.
@@ -84,11 +84,11 @@ To prevent git history pollution and commit noise, `.ai/AGENTS_MEMORY.md` and `.
 ## 🧹 Memory Compaction & Auto-Pruning Protocol (Zero Context Bloat)
 
 To prevent context window exhaustion and prompt bloat as projects scale past 100,000 lines of code, AI Agents MUST enforce automated memory pruning:
-1. **Session Log Threshold (`SESSION_LOG.md`):** Whenever `.ai/SESSION_LOG.md` exceeds **100 lines**, the agent MUST execute an auto-pruning sprint:
-   - Archive the chronological log details into `.ai/archive/session_log_archived_<date>.md`.
-   - Keep only the last 15 active lines in `.ai/SESSION_LOG.md`.
-2. **Working Ledger Threshold (`AGENTS_MEMORY.md`):** Whenever `.ai/AGENTS_MEMORY.md` exceeds **3,000 words**, the agent MUST compress completed milestones:
-   - Extract completed milestone details into a reference entry inside `.ai/KNOWLEDGE_INDEX.md` or a new ADR.
+1. **Session Log Threshold (`SESSION_LOG.md`):** Whenever `.agent/SESSION_LOG.md` exceeds **100 lines**, the agent MUST execute an auto-pruning sprint:
+   - Archive the chronological log details into `.agent/archive/session_log_archived_<date>.md`.
+   - Keep only the last 15 active lines in `.agent/SESSION_LOG.md`.
+2. **Working Ledger Threshold (`AGENTS_MEMORY.md`):** Whenever `.agent/AGENTS_MEMORY.md` exceeds **3,000 words**, the agent MUST compress completed milestones:
+   - Extract completed milestone details into a reference entry inside `.agent/KNOWLEDGE_INDEX.md` or a new ADR.
    - Replace the verbose milestone description in `AGENTS_MEMORY.md` with a clean 1-line link: `[Milestone X Completed -> See KNOWLEDGE_INDEX.md#milestone-x]`.
    - Reset active working memory tokens to maintain a lean (<1,000 word) operational footprint.
 
@@ -96,7 +96,7 @@ To prevent context window exhaustion and prompt bloat as projects scale past 100
 
 ## 💡 Lessons Learned Protocol
 
-Whenever an unexpected bug, memory leak, or architectural anti-pattern is resolved, the AI Agent MUST append a short entry to the `Lessons Learned & Anti-Regression Log` in `.ai/AGENTS_MEMORY.md` to prevent repeating past mistakes in future sessions.
+Whenever an unexpected bug, memory leak, or architectural anti-pattern is resolved, the AI Agent MUST append a short entry to the `Lessons Learned & Anti-Regression Log` in `.agent/AGENTS_MEMORY.md` to prevent repeating past mistakes in future sessions.
 
 ---
 

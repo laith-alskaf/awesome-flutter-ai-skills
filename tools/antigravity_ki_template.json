@@ -1,0 +1,8 @@
+{
+  "title": "Flutter Framework Context: {{ProjectName}}",
+  "summary": "Whenever working in {{ProjectPath}}, you MUST strictly follow the '8-Step Context Recovery Priority Protocol' defined in `.agent/core/AGENTS.md`. Furthermore, as mandated by `.agent/core/ROUTER_MANIFESTO.md`, before generating or modifying ANY Dart/Flutter code, you MUST output the 'Context Parity Header' (verifying you read `.agent/PROJECT_PROFILE.md`, `AGENTS.md`, and `CURRENT_STATE.md`). If Confidence < 0.80, you must trigger `flutter-grill-me`.",
+  "references": [
+    "{{ProjectPath}}/.agent/core/AGENTS.md",
+    "{{ProjectPath}}/.agent/core/ROUTER_MANIFESTO.md"
+  ]
+}

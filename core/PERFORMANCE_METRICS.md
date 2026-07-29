@@ -28,4 +28,4 @@ The framework is measured against the following success criteria during real-wor
 The `tools/audit_framework.dart` utility automatically measures the physical token size of the repository. It will fail the CI/CD pipeline if any `SKILL.md` file exceeds the 1,000-token limit or if a template becomes bloated.
 
 **Human Auditing:**
-The "Routing Accuracy" and "Hallucination Rate" must be manually audited by reviewing `.ai/SESSION_LOG.md` files generated during development cycles.
+The "Routing Accuracy" and "Hallucination Rate" must be manually audited by reviewing `.agent/SESSION_LOG.md` files generated during development cycles.

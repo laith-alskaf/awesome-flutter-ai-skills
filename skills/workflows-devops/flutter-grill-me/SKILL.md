@@ -10,6 +10,8 @@ triggers:
   - confidence < 0.80
   - project interrogation
   - grill mode
+  - initialize project
+  - start feature
 negative_triggers:
   - flutter run
   - git commit
@@ -39,7 +41,8 @@ graph TD
 ```
 
 ### When to Trigger Grill-Me Mode:
-1. **Low Confidence Score:** If the calculated confidence score in `.ai/CURRENT_STATE.md` is below **0.80**.
+0. **Project Initialization & Feature Start:** If the user prompts 'Initialize Project' or 'Start Feature', the agent MUST immediately trigger `flutter-agent-memory` to load the `.agent` context. If the requirements are incomplete, activate Grill-Me.
+1. **Low Confidence Score:** If the calculated confidence score in `.agent/CURRENT_STATE.md` is below **0.80**.
 2. **Missing Architectural Boundaries:** When a requested feature does not specify its presentation, domain, and data layer interaction.
 3. **Unspecified State Management:** When `pubspec.yaml` is checked and no state management library is detected, or when multiple conflicting libraries are mentioned.
 4. **Offline & Sync Ambiguity:** When data persistence is requested without specifying local database engine (Drift/Hive/Isar) or conflict resolution strategy.
@@ -101,8 +104,8 @@ When invoking this skill, the agent must output a structured interrogation block
 
 Grill-Me Mode is exited **ONLY** when:
 1. The user provides explicit answers or design decisions for all raised questions.
-2. The agent updates `.ai/PRODUCT_REQUIREMENTS.md`, `.ai/DOMAIN_MAP.md`, and `.ai/CURRENT_STATE.md` with the confirmed decisions.
-3. The recalculated confidence score in `.ai/CURRENT_STATE.md` reaches **`score >= 0.80`**.
+2. The agent updates `.agent/PRODUCT_REQUIREMENTS.md`, `.agent/DOMAIN_MAP.md`, and `.agent/CURRENT_STATE.md` with the confirmed decisions.
+3. The recalculated confidence score in `.agent/CURRENT_STATE.md` reaches **`score >= 0.80`**.
 
 ---
 
@@ -123,6 +126,6 @@ Grill-Me Mode is exited **ONLY** when:
 - [ ] Data persistence strategy confirmed (Drift / Hive / Remote / None)
 - [ ] Security and PII handling confirmed
 - [ ] Test requirements and coverage expectations confirmed
-- [ ] `.ai/PRODUCT_REQUIREMENTS.md` and `.ai/CURRENT_STATE.md` updated with locked decisions
-- [ ] Confidence score in `.ai/CURRENT_STATE.md` recalculated and confirmed ≥ **0.80**
+- [ ] `.agent/PRODUCT_REQUIREMENTS.md` and `.agent/CURRENT_STATE.md` updated with locked decisions
+- [ ] Confidence score in `.agent/CURRENT_STATE.md` recalculated and confirmed ≥ **0.80**
 - [ ] AI Agent exits Grill-Me Mode and proceeds to code generation

@@ -404,6 +404,30 @@ if (-not (Test-Path $githubDir)) { New-Item -ItemType Directory -Path $githubDir
 Set-Content -Path (Join-Path $githubDir "copilot-instructions.md") -Value $agentRulesCore -Force
 Write-Host "      [+] .github/copilot-instructions.md (GitHub Copilot)" -ForegroundColor Green
 
+# Antigravity Knowledge Item (KI) Auto-Injection
+$antigravityDir = Join-Path $env:USERPROFILE ".gemini\antigravity\knowledge"
+if (Test-Path $antigravityDir) {
+    # Replace invalid characters in project name for folder name
+    $safeProjectName = $projectName -replace '[^a-zA-Z0-9_\-]', '_'
+    $kiProjectDir = Join-Path $antigravityDir "project_context_$safeProjectName"
+    if (-not (Test-Path $kiProjectDir)) { New-Item -ItemType Directory -Path $kiProjectDir -Force | Out-Null }
+    
+    # Standardized Knowledge Item format for Antigravity OS
+    $kiMetadata = @"
+{
+  "title": "Flutter Framework Context: $projectName",
+  "summary": "Whenever working in this project, you MUST strictly follow the '8-Step Context Recovery Priority Protocol' defined in `.agent/core/AGENTS.md`. Furthermore, as mandated by `.agent/core/ROUTER_MANIFESTO.md`, before generating or modifying ANY Dart/Flutter code, you MUST output the 'Context Parity Header' (verifying you read `.agent/PROJECT_PROFILE.md`, `AGENTS.md`, and `CURRENT_STATE.md`). If Confidence < 0.80, you must trigger `flutter-grill-me`.",
+  "references": [
+    "$($ProjectPath.Replace('\', '/'))/.agent/core/AGENTS.md",
+    "$($ProjectPath.Replace('\', '/'))/.agent/core/ROUTER_MANIFESTO.md",
+    "$($ProjectPath.Replace('\', '/'))/.agent/PROJECT_PROFILE.md"
+  ]
+}
+"@
+    Set-Content -Path (Join-Path $kiProjectDir "metadata.json") -Value $kiMetadata -Force
+    Write-Host "      [+] ~/.gemini/antigravity/knowledge/... (Antigravity KI Injected)" -ForegroundColor Green
+}
+
 # ---------------------------------------------
 # 8. VERIFY INSTALLATION
 # ---------------------------------------------

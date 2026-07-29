@@ -1,7 +1,7 @@
 # Flutter AI Engineering OS — How To Use
 # الدليل الشامل لاستخدام نظام التشغيل الهندسي للذكاء الاصطناعي (V2)
 
-> **For AI Agents:** This document provides deployment paths and integration instructions. Read `.ai/core/AGENTS.md` for policy rules and `.ai/PERSONAS.md` for role adoption.
+> **For AI Agents:** This document provides deployment paths and integration instructions. Read `.agent/core/AGENTS.md` for policy rules and `.agent/PERSONAS.md` for role adoption.
 
 ---
 
