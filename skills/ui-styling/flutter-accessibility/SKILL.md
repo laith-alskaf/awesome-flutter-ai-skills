@@ -16,9 +16,7 @@ negative_triggers:
 
 # Flutter Accessibility
 
-## Purpose
-
-Ensure Flutter applications are usable by everyone, including users with visual, motor, hearing, or cognitive disabilities. Accessibility is mandatory, not optional.
+Ensure Flutter applications are usable by everyone, strictly adhering to **WCAG 2.2 Level AA/AAA** standards. Accessibility is a non-negotiable requirement for a Senior Developer.
 
 ## Rules
 
@@ -39,6 +37,16 @@ Semantics(
 Semantics(
   excludeSemantics: true,
   child: const DecorativeBackground(),
+)
+
+// Semantic grouping for logical reading order
+MergeSemantics(
+  child: Row(
+    children: [
+      Text('Name: '),
+      Text(userName), // Reads as "Name: John Doe" instead of two separate items
+    ],
+  ),
 )
 ```
 
@@ -101,15 +109,14 @@ if (reduceMotion) {
 
 ## Checklist
 
-- [ ] All interactive elements have Semantics labels
-- [ ] Touch targets ≥ 48×48
-- [ ] Dynamic font sizes respected
-- [ ] Color contrast ≥ 4.5:1
-- [ ] Information not conveyed by color alone
-- [ ] RTL layout supported
-- [ ] Focus order is logical
+- [ ] Semantic labels on all interactive elements
+- [ ] MergeSemantics used for logical reading blocks
+- [ ] Touch targets ≥ 48×48 strictly enforced
+- [ ] WCAG 2.2 Color contrast (4.5:1 text, 3:1 large text/icons)
+- [ ] Dynamic font sizes support (up to 300% without layout breaks)
+- [ ] RTL layout supported completely
+- [ ] Focus order follows visual flow
 - [ ] Motion reduction respected
-- [ ] Tested with TalkBack (Android) and VoiceOver (iOS)
 
 ## Related Skills
 

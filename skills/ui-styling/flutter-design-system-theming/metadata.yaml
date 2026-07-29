@@ -1,0 +1,6 @@
+name: flutter-design-system-theming
+version: 1.0.0
+description: Material 3 Design System, semantic tokens, and typography scaling.
+active_persona: "Principal Software Architect"
+requires: []
+conflicts_with: []

@@ -57,54 +57,28 @@ Scaffold
                       └─ Small Widgets
 ```
 
-### Design System — No Magic Numbers
+### Design System & Theming Delegation
 
-Centralize all design tokens. Never hardcode values.
-
-```dart
-// Spacing constants
-abstract final class AppSpacing {
-  static const double xs = 4;
-  static const double sm = 8;
-  static const double md = 16;
-  static const double lg = 24;
-  static const double xl = 32;
-  static const double xxl = 48;
-}
-
-// Usage
-Padding(
-  padding: const EdgeInsets.all(AppSpacing.md), // Not EdgeInsets.all(16)
-)
-```
-
-### Material 3 Theming
+All colors, typography, spacing, and shapes MUST be pulled from the Design System.
+Do not hardcode styles here.
 
 ```dart
-// Theme setup — always use seed color
-MaterialApp(
-  theme: ThemeData(
-    useMaterial3: true,
-    colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
-  ),
-  darkTheme: ThemeData(
-    useMaterial3: true,
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: Colors.indigo,
-      brightness: Brightness.dark,
-    ),
-  ),
-);
-
-// Never hardcode colors — always use Theme
-Text(
-  'Title',
-  style: Theme.of(context).textTheme.headlineMedium, // Not TextStyle(fontSize: 28)
-)
+// WRONG: Hardcoded magic numbers and raw colors
 Container(
-  color: Theme.of(context).colorScheme.primaryContainer, // Not Colors.blue
+  padding: const EdgeInsets.all(16),
+  color: Colors.blue,
+  child: Text('Hello', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+)
+
+// RIGHT: Semantic tokens via Context extensions (see flutter-design-system-theming)
+Container(
+  padding: EdgeInsets.all(context.spacing.md),
+  color: context.colors.primaryContainer,
+  child: Text('Hello', style: context.text.headlineSmall),
 )
 ```
+
+For defining the actual `ThemeData` and extensions, use the `flutter-design-system-theming` skill.
 
 ### Responsive Design
 

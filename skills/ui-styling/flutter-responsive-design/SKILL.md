@@ -81,6 +81,14 @@ EdgeInsets.symmetric(
 - Use `MediaQuery` only for: status bar height, text scale factor, platform brightness
 - Test on: small phone (360px), large phone (414px), tablet (768px), landscape
 
+### Preventing RenderFlex Overflow
+
+One of the most common UI bugs is `RenderFlex overflowed by X pixels`. To prevent this:
+1. **Wrap Text in Flexible/Expanded:** When a `Text` widget is inside a `Row`, wrap it in `Expanded` so it wraps to the next line instead of overflowing.
+2. **Handle Text Scaling:** Users may increase OS font sizes up to 300%. Never hardcode Heights for containers holding Text.
+3. **Use Wrap instead of Row:** When items might overflow horizontally (e.g., chips, tags), use `Wrap` instead of `Row`.
+4. **Scrollable Layouts:** Wrap your main Column in a `SingleChildScrollView` to ensure it can scroll on smaller screens.
+
 ## Related Skills
 
 - `flutter-ui-engineering` — Widget composition

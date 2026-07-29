@@ -1,0 +1,152 @@
+// Presentation UI Page Template
+// Place in: lib/features/<feature_name>/presentation/pages/{{feature_name}}_page.dart
+// Rule: Handle loading (shimmer), error (illustration), empty (illustration), and data states! 
+// Zero business logic in build method. Use HapticFeedback for actions.
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../domain/failures/{{feature_name}}_failure.dart';
+import '../notifiers/{{feature_name}}_notifier.dart';
+import '../widgets/{{entity_name}}_card.dart';
+// TODO: Import your design system / extensions here
+
+class {{FeatureName}}Page extends ConsumerWidget {
+  const {{FeatureName}}Page({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch({{featureName}}NotifierProvider);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('{{FeatureTitle}}'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              ref.read({{featureName}}NotifierProvider.notifier).refresh();
+            },
+            tooltip: 'Refresh',
+          ),
+        ],
+      ),
+      body: state.when(
+        // Senior UX: Use a Shimmer skeleton list instead of a basic spinner
+        loading: () => const _LoadingSkeletonView(),
+        error: (error, _) => _ErrorView(
+          error: error,
+          onRetry: () {
+            HapticFeedback.mediumImpact();
+            ref.read({{featureName}}NotifierProvider.notifier).refresh();
+          },
+        ),
+        data: (list) {
+          if (list.isEmpty) {
+            return const _EmptyView();
+          }
+          return RefreshIndicator(
+            onRefresh: () async {
+              HapticFeedback.lightImpact();
+              return ref.read({{featureName}}NotifierProvider.notifier).refresh();
+            },
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16), // TODO: Use context.spacing.md
+              itemCount: list.length,
+              itemBuilder: (context, index) {
+                final item = list[index];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: {{EntityName}}Card(item: item),
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _LoadingSkeletonView extends StatelessWidget {
+  const _LoadingSkeletonView();
+
+  @override
+  Widget build(BuildContext context) {
+    // A placeholder for a Shimmer skeleton list
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: 5,
+      itemBuilder: (_, __) => Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: Container(
+          height: 80,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ErrorView extends StatelessWidget {
+  const _ErrorView({required this.error, required this.onRetry});
+  final Object error;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final message = switch (error) {
+      {{FeatureName}}Failure failure => failure.userMessage,
+      _ => 'An unexpected error occurred. Please try again.',
+    };
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Senior UX: Use semantic colors, not Colors.red
+            Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.error),
+            const SizedBox(height: 16),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              onPressed: onRetry,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Try Again'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _EmptyView extends StatelessWidget {
+  const _EmptyView();
+
+  @override
+  Widget build(BuildContext context) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // UX: Replace with an SVG illustration in a real app
+            Icon(Icons.inbox_outlined, size: 64, color: Theme.of(context).colorScheme.outline),
+            const SizedBox(height: 16),
+            Text(
+              'No items found.',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ],
+        ),
+      );
+}

@@ -1,0 +1,10 @@
+﻿name: flutter-unit-testing
+version: 1.0.0
+owner: architecture-team
+flutter_version_min: 3.44.0
+dependencies:
+  requires: []
+  conflicts_with: []
+  optional: []
+
+active_persona: "Principal QA & SecOps Engineer"

@@ -1,0 +1,164 @@
+import 'package:flutter/material.dart';
+
+/// App-wide Design System
+/// This class provides the light and dark theme data for the application,
+/// utilizing Material 3 ColorScheme.fromSeed and custom ThemeExtensions.
+class AppTheme {
+  static const Color _seedColor = Color(0xFF6200EE); // Replace with brand color
+
+  static ThemeData get lightTheme {
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: _seedColor,
+      brightness: Brightness.light,
+    );
+    return _buildTheme(colorScheme);
+  }
+
+  static ThemeData get darkTheme {
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: _seedColor,
+      brightness: Brightness.dark,
+    );
+    return _buildTheme(colorScheme);
+  }
+
+  static ThemeData _buildTheme(ColorScheme colorScheme) {
+    return ThemeData(
+      useMaterial3: true,
+      colorScheme: colorScheme,
+      extensions: const [
+        AppSpacing.fallback(),
+        AppRadius.fallback(),
+      ],
+      appBarTheme: AppBarTheme(
+        centerTitle: true,
+        backgroundColor: colorScheme.surface,
+        foregroundColor: colorScheme.onSurface,
+        elevation: 0,
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: colorScheme.primary, width: 2),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: colorScheme.error, width: 2),
+        ),
+        contentPadding: const EdgeInsets.all(16),
+      ),
+      // Example Type Scale - Adjust to brand requirements
+      textTheme: const TextTheme(
+        displayLarge: TextStyle(fontSize: 57, fontWeight: FontWeight.bold, letterSpacing: -0.25),
+        headlineLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+        titleLarge: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+        bodyLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+        labelLarge: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, letterSpacing: 0.1),
+      ),
+    );
+  }
+}
+
+/// Custom Theme Extension for Spacing Tokens
+class AppSpacing extends ThemeExtension<AppSpacing> {
+  final double xs;
+  final double sm;
+  final double md;
+  final double lg;
+  final double xl;
+  final double xxl;
+
+  const AppSpacing({
+    required this.xs,
+    required this.sm,
+    required this.md,
+    required this.lg,
+    required this.xl,
+    required this.xxl,
+  });
+
+  const AppSpacing.fallback()
+      : xs = 4.0,
+        sm = 8.0,
+        md = 16.0,
+        lg = 24.0,
+        xl = 32.0,
+        xxl = 48.0;
+
+  @override
+  ThemeExtension<AppSpacing> copyWith() => this;
+
+  @override
+  ThemeExtension<AppSpacing> lerp(ThemeExtension<AppSpacing>? other, double t) {
+    if (other is! AppSpacing) return this;
+    return AppSpacing(
+      xs: xs + (other.xs - xs) * t,
+      sm: sm + (other.sm - sm) * t,
+      md: md + (other.md - md) * t,
+      lg: lg + (other.lg - lg) * t,
+      xl: xl + (other.xl - xl) * t,
+      xxl: xxl + (other.xxl - xxl) * t,
+    );
+  }
+}
+
+/// Custom Theme Extension for Border Radius Tokens
+class AppRadius extends ThemeExtension<AppRadius> {
+  final double sm;
+  final double md;
+  final double lg;
+  final double pill;
+
+  const AppRadius({
+    required this.sm,
+    required this.md,
+    required this.lg,
+    required this.pill,
+  });
+
+  const AppRadius.fallback()
+      : sm = 4.0,
+        md = 12.0,
+        lg = 24.0,
+        pill = 999.0;
+
+  @override
+  ThemeExtension<AppRadius> copyWith() => this;
+
+  @override
+  ThemeExtension<AppRadius> lerp(ThemeExtension<AppRadius>? other, double t) {
+    if (other is! AppRadius) return this;
+    return AppRadius(
+      sm: sm + (other.sm - sm) * t,
+      md: md + (other.md - md) * t,
+      lg: lg + (other.lg - lg) * t,
+      pill: pill + (other.pill - pill) * t,
+    );
+  }
+}
+
+// Extension to easily access tokens on BuildContext
+extension AppThemeContext on BuildContext {
+  AppSpacing get spacing => Theme.of(this).extension<AppSpacing>() ?? const AppSpacing.fallback();
+  AppRadius get radius => Theme.of(this).extension<AppRadius>() ?? const AppRadius.fallback();
+  ColorScheme get colors => Theme.of(this).colorScheme;
+  TextTheme get text => Theme.of(this).textTheme;
+}

@@ -86,11 +86,34 @@ await tester.pump(Duration(seconds: 1));  // Advance by duration
 await tester.pumpAndSettle();     // Pump until no more frames scheduled
 ```
 
+### Testing for RenderFlex Overflow
+
+By default, Flutter widget tests run on a virtual 800x600 screen. To ensure your UI is responsive and doesn't suffer from `RenderFlex overflow`, test on small screen constraints:
+
+```dart
+testWidgets('Layout does not overflow on small screens', (tester) async {
+  // Set a small screen size (e.g., iPhone SE)
+  tester.view.physicalSize = const Size(320, 568);
+  tester.view.devicePixelRatio = 1.0;
+
+  await tester.pumpWidget(const MaterialApp(home: MyResponsiveScreen()));
+  await tester.pumpAndSettle();
+
+  // If there is an overflow, tester.takeException() will return it.
+  final exception = tester.takeException();
+  expect(exception, isNull, reason: 'RenderFlex overflowed on a small screen!');
+  
+  // Reset view after test
+  addTearDown(() => tester.view.resetPhysicalSize());
+});
+```
+
 ## Checklist
 
 - [ ] All pages tested for each state (loading, error, empty, data)
 - [ ] User interactions tested (tap, type, scroll)
 - [ ] Form validation tested
+- [ ] RenderFlex overflow tested on small logical screen sizes (e.g., 320x568)
 - [ ] Providers mocked via ProviderScope.overrides
 - [ ] Widget keys assigned for testability
 

@@ -21,7 +21,7 @@ It turns AI Coding Assistants into disciplined Senior Staff Software Engineers a
 - [Supported AI Agents & IDE Matrix](#-supported-ai-agents--ide-matrix)
 - [Target Technology Stack](#-target-technology-stack)
 - [Framework Architecture & 7 Sectors](#-framework-architecture--7-sectors)
-- [The 49 Skills Directory Summary](#-the-49-skills-directory-summary)
+- [The 51 skills Directory Summary](#-the-51-skills-directory-summary)
 - [How to Integrate in Any Project](#-how-to-integrate-in-any-project)
 - [Contributing](#-contributing)
 - [License](#-license)
@@ -42,11 +42,11 @@ Standard AI coding assistants often generate fragmented code, mix UI logic with 
 
 ## ⚡ Universal One-Line Quick Start (For ALL AI Agents & IDEs)
 
-Install and activate all 49 skills and IDE rules globally across **Antigravity**, **Gemini**, **Claude**, **OpenAI Codex**, **Cursor**, **Windsurf**, and **GitHub Copilot** with a single command:
+Install and activate all 51 skills and IDE rules globally across **Antigravity**, **Gemini**, **Claude**, **OpenAI Codex**, **Cursor**, **Windsurf**, and **GitHub Copilot** with a single command:
 
 ### PowerShell (Windows)
 ```powershell
-irm https://raw.githubusercontent.com/laith-alskaf/awesome-flutter-ai-skills/main/deploy.ps1 | iex
+irm https://raw.githubusercontent.com/laith-alskaf/awesome-flutter-ai-skills/main/tools/deploy.ps1 | iex
 ```
 
 ### Local Repository Deployment
@@ -87,37 +87,41 @@ irm https://raw.githubusercontent.com/laith-alskaf/awesome-flutter-ai-skills/mai
 
 ---
 
-## 🏗️ Framework Architecture & 7 Sectors
+## 🏗️ Framework Architecture & 7 Sectors (V2 AI Engineering OS)
 
 ```text
 awesome-flutter-ai-skills/
-├── .ai/                         → AI agent working memory, PRD, domain maps & confidence ledgers
-├── scripts/                     → Architectural boundary verification & automated QA utilities
-├── AGENTS.md                    → Root policy instructions for Flutter workspace
-├── ROUTER_MANIFESTO.md          → Capability matrix & zero-ambiguity AI skill routing
-├── HOW_TO_USE.md                → Integration guide & deployment workflows
-├── deploy.ps1                   → Universal multi-agent & multi-IDE deployment script
-├── skills/                      → 49 orthogonal SKILL.md files grouped into 7 sectors
-│   ├── core-architecture/       → Clean Architecture, DI, Domain Modeling, Discovery, Feature-First, Repositories, Routing (8 skills)
-│   ├── state-management/        → Riverpod 3.x, Bloc 9.x, Cubit, GetX 5.x (4 skills)
-│   ├── ui-styling/              → UI Engineering, Responsive, Animations, a11y, l10n, Build Screen, Web/Desktop (7 skills)
-│   ├── data-networking/         → REST API, WebSockets/SSE/WebRTC, GraphQL, Firebase, Supabase, Local DB (6 skills)
-│   ├── quality-testing-security/→ Unit, Widget, Integration, Golden, Generate Tests, Security, Error Handling (7 skills)
-│   ├── performance-maintenance/ → Performance, App Size, Debugging, Bug Fixing, Logging, Refactoring, Background, Hardware (8 skills)
-│   └── workflows-devops/        → Feature Planner, Create Feature, Code Review, Git, Grill-Me, Memory, Production Readiness, CI/CD, Release (9 skills)
-├── templates/                   → 21 production Dart code templates (.dart.template)
-├── checklists/                  → 7 operational verification checklists
-├── anti-patterns/               → 5 reference anti-pattern catalogs
-└── decisions/                   → 12 Architecture Decision Records (ADRs)
+├── .ai/                         → Project-level active working memory (PRD, domain maps)
+├── core/                        → The OS Kernel
+│   ├── AGENTS.md                → Master Policy, Tech Stack, and Context Protocols
+│   ├── ROUTER_MANIFESTO.md      → Global Capability Matrix & Zero-Hallucination Gatekeeper
+│   ├── PERSONAS.md              → Definition of 5 strict AI Roles (CPO, Architect, QA, etc.)
+│   ├── GOVERNANCE.md            → Versioning, Ownership, and Deprecation Lifecycle
+│   └── PERFORMANCE_METRICS.md   → Token Budgets and Framework KPIs
+├── tools/                       → Executable OS Utilities
+│   ├── verify_architecture.dart → Linter for Clean Architecture isolation
+│   ├── audit_framework.dart     → CI/CD validator for token limits and Knowledge Graph
+│   ├── deploy.ps1               → Global multi-agent deployment engine
+│   └── init-project.ps1         → Project-level workspace initializer
+└── skills/                      → 51 Self-Contained Modular Skills in 7 Sectors
+    ├── core-architecture/       → Clean Architecture, DI, Domain Modeling (8 skills)
+    ├── state-management/        → Riverpod 3.x, Bloc 9.x, Cubit, GetX 5.x (4 skills)
+    ├── ui-styling/              → UI Engineering, Responsive, Animations (9 skills)
+    ├── data-networking/         → REST API, WebSockets, Firebase, Supabase (6 skills)
+    ├── quality-testing-security/→ Unit, Widget, Integration, Security (7 skills)
+    ├── performance-maintenance/ → Performance, App Size, Debugging, Refactoring (8 skills)
+    └── workflows-devops/        → Feature Planner, Code Review, Grill-Me, DevOps (9 skills)
 ```
+
+> **Note on Modularity:** Every skill in `skills/` is a self-contained module containing its own `metadata.yaml` (Knowledge Graph), `templates/`, and `resources/`. This guarantees O(1) context loading and prevents LLM token bloat.
 
 ---
 
-## 📦 The 49 Skills Directory Summary
+## 📦 The 51 skills Directory Summary
 
 1. **Core Architecture (8 Skills):** `flutter-clean-architecture`, `flutter-dependency-injection`, `flutter-domain-modeling`, `flutter-feature-first`, `flutter-product-discovery-and-architecture`, `flutter-project-architect`, `flutter-repository-pattern`, `flutter-routing`.
 2. **State Management (4 Skills):** `flutter-riverpod`, `flutter-bloc`, `flutter-cubit`, `flutter-getx`.
-3. **UI & Styling (7 Skills):** `flutter-ui-engineering`, `flutter-responsive-design`, `flutter-animations`, `flutter-accessibility`, `flutter-localization`, `flutter-build-screen`, `flutter-web-desktop`.
+3. **UI & Styling (9 Skills):** `flutter-design-system-theming`, `flutter-micro-interactions-ux`, `flutter-ui-engineering`, `flutter-responsive-design`, `flutter-animations`, `flutter-accessibility`, `flutter-localization`, `flutter-build-screen`, `flutter-web-desktop`.
 4. **Data & Networking (6 Skills):** `flutter-api-integration`, `flutter-websockets`, `flutter-graphql`, `flutter-firebase`, `flutter-supabase`, `flutter-local-database`.
 5. **Quality, Testing & Security (7 Skills):** `flutter-unit-testing`, `flutter-widget-testing`, `flutter-integration-testing`, `flutter-golden-testing`, `flutter-generate-tests`, `flutter-security`, `flutter-error-handling`.
 6. **Performance & Maintenance (8 Skills):** `flutter-performance`, `flutter-app-size`, `flutter-debugging`, `flutter-bug-fixing`, `flutter-logging`, `flutter-refactoring`, `flutter-background-processing`, `flutter-media-hardware`.
@@ -144,12 +148,12 @@ The framework supports two distinct deployment architectures. **We strongly reco
 
 ### 🏠 1. Local Mode (`.agent/` Mode) — ⭐ RECOMMENDED
 
-In Local Mode, the entire 49-skill framework, code templates, ADRs, checklists, and session memory are unified inside a single `.agent/` directory within your Flutter project.
+In Local Mode, the entire 51-skill framework, code templates, ADRs, checklists, and session memory are unified inside a single `.agent/` directory within your Flutter project.
 
 #### Fast One-Line Cloud Execution
 Run this single command from inside your target Flutter project directory in PowerShell (no repo clone required):
 ```powershell
-irm https://raw.githubusercontent.com/laith-alskaf/awesome-flutter-ai-skills/main/init-project.ps1 | iex
+irm https://raw.githubusercontent.com/laith-alskaf/awesome-flutter-ai-skills/main/tools/init-project.ps1 | iex
 ```
 
 #### Local Script Execution (Offline / Downloaded Repo)
@@ -175,13 +179,13 @@ Once initialized, your project will contain a clean `.agent/` folder and IDE rul
 
 ### 🌐 2. Global Mode (Multi-IDE Global Sync)
 
-In Global Mode, the 49 skills are deployed simultaneously to 6 user-level IDE global directories (Cursor, Windsurf, Gemini, Antigravity, Codex, Roo/Cline).
+In Global Mode, the 51 skills are deployed simultaneously to 6 user-level IDE global directories (Cursor, Windsurf, Gemini, Antigravity, Codex, Roo/Cline).
 
 #### Deploy Globally
 ```powershell
 .\deploy.ps1
 # Or one-line cloud command:
-irm https://raw.githubusercontent.com/laith-alskaf/awesome-flutter-ai-skills/main/deploy.ps1 | iex
+irm https://raw.githubusercontent.com/laith-alskaf/awesome-flutter-ai-skills/main/tools/deploy.ps1 | iex
 ```
 
 #### Clean & Uninstall Global Skills

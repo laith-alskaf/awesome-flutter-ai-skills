@@ -79,13 +79,19 @@ Hero(tag: 'product-${product.id}', child: ProductImage(product: product))
 Hero(tag: 'product-${product.id}', child: ProductDetailImage(product: product))
 ```
 
+### Premium Vector Animations (Lottie & Rive)
+
+For complex illustrations (e.g., success checkmarks, empty state illustrations, onboarding graphics), do not build them from scratch with `CustomPainter`.
+- Use **Lottie** for JSON-based AfterEffects animations.
+- Use **Rive** for interactive state-machine driven animations.
+
 ### Performance Rules
 
-- Wrap animated widgets in `RepaintBoundary`
-- Avoid animating `Opacity` widget — use `FadeTransition` or color alpha
-- Use `vsync: this` with `TickerProviderStateMixin`
-- Always dispose `AnimationController`
-- Respect user's motion reduction preference
+- Wrap animated widgets in `RepaintBoundary` to prevent full-screen repaints.
+- Avoid animating `Opacity` widget — use `FadeTransition` or manipulate the color's alpha channel.
+- Use `vsync: this` with `TickerProviderStateMixin`.
+- Always dispose `AnimationController`.
+- Respect user's motion reduction preference (`MediaQuery.of(context).disableAnimations`).
 
 ## Related Skills
 
