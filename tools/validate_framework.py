@@ -14,6 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SKILLS_ROOT = ROOT / "skills"
+ROUTING_SCENARIOS = ROOT / "evaluation" / "routing-scenarios.yaml"
 NAME_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 FRONTMATTER_PATTERN = re.compile(r"\A---\r?\n(.*?)\r?\n---(?:\r?\n|\Z)", re.DOTALL)
 MARKDOWN_LINK_PATTERN = re.compile(r"(?<!!)(?<!\\!)\[[^\]]*\]\(([^)\s]+)(?:\s+[^)]*)?\)")
@@ -89,7 +90,29 @@ def validate_skill(skill_file: Path) -> str:
     return name or skill_dir.name
 
 
-def validate_metadata(skill_file: Path) -> None:
+def metadata_dependency_names(text: str) -> list[str]:
+    """Extract simple YAML dependency lists without adding a runtime dependency."""
+    values: list[str] = []
+    active: str | None = None
+    for line in text.splitlines():
+        header = re.match(r"^  (requires|conflicts_with|optional):\s*(.*)$", line)
+        if header:
+            active, inline = header.groups()
+            inline = inline.strip()
+            if inline.startswith("[") and inline.endswith("]"):
+                values.extend(item.strip().strip("'\\\"") for item in inline[1:-1].split(",") if item.strip())
+            elif inline:
+                values.append(inline.strip("'\\\""))
+            continue
+        child = re.match(r"^    -\s+(.+)$", line)
+        if child and active is not None:
+            values.append(child.group(1).strip().strip("'\\\""))
+        elif line and not line.startswith(" "):
+            active = None
+    return values
+
+
+def validate_metadata(skill_file: Path, known_skills: set[str]) -> None:
     metadata = skill_file.parent / "metadata.yaml"
     relative = skill_file.parent.relative_to(ROOT).as_posix()
     if not metadata.exists():
@@ -108,6 +131,9 @@ def validate_metadata(skill_file: Path) -> None:
     for key in ("requires", "conflicts_with", "optional"):
         if not re.search(rf"(?m)^  {re.escape(key)}:\s*(?:\[.*\])?$", text):
             fail(f"{metadata.relative_to(ROOT)}: dependencies.{key} must be present.")
+    for dependency in metadata_dependency_names(text):
+        if dependency not in known_skills:
+            fail(f"{metadata.relative_to(ROOT)}: dependency references unknown skill {dependency!r}.")
 
 
 def validate_markdown_links() -> None:
@@ -127,6 +153,103 @@ def validate_markdown_links() -> None:
                 fail(f"{document.relative_to(ROOT)}: linked local file is absent: {raw_link}")
 
 
+def validate_routing_scenarios(known_skills: set[str]) -> None:
+    """Validate the intentionally small YAML subset used by routing fixtures."""
+    if not ROUTING_SCENARIOS.exists():
+        fail("Missing evaluation/routing-scenarios.yaml.")
+        return
+    lines = ROUTING_SCENARIOS.read_text(encoding="utf-8-sig").splitlines()
+    if not any(line.strip() == "schema_version: 1" for line in lines):
+        fail("evaluation/routing-scenarios.yaml: schema_version must be 1.")
+
+    scenarios: list[dict[str, object]] = []
+    current: dict[str, object] | None = None
+    folded_field: str | None = None
+    list_field: str | None = None
+    scalar_fields = {"primary_skill"}
+    folded_fields = {"request", "expected_strategy"}
+    list_fields = {"supporting_skills", "forbidden_skills"}
+
+    for raw in lines:
+        if raw.startswith("  - id:"):
+            if current is not None:
+                scenarios.append(current)
+            current = {"id": raw.split(":", 1)[1].strip(), "supporting_skills": [], "forbidden_skills": []}
+            folded_field = None
+            list_field = None
+            continue
+        if current is None:
+            continue
+        match = re.match(r"^    ([a-z_]+):\s*(.*)$", raw)
+        if match:
+            field, value = match.groups()
+            folded_field = None
+            list_field = None
+            if field in scalar_fields:
+                current[field] = value.strip("'\\\"")
+            elif field in folded_fields:
+                current[field] = ""
+                folded_field = field if value in {">", "|", ">-", "|-"} else None
+                if folded_field is None:
+                    current[field] = value.strip("'\\\"")
+            elif field in list_fields:
+                current[field] = [] if value == "[]" else []
+                list_field = field if value != "[]" else None
+            continue
+        list_match = re.match(r"^      -\s+(.+)$", raw)
+        if list_match and list_field is not None:
+            cast_list = current[list_field]
+            if isinstance(cast_list, list):
+                cast_list.append(list_match.group(1).strip("'\\\""))
+            continue
+        if folded_field is not None and raw.startswith("      "):
+            current[folded_field] = f"{current[folded_field]} {raw.strip()}".strip()
+            continue
+        if raw.strip():
+            folded_field = None
+            list_field = None
+
+    if current is not None:
+        scenarios.append(current)
+    if len(scenarios) < 10:
+        fail("evaluation/routing-scenarios.yaml: at least 10 representative scenarios are required.")
+
+    ids: set[str] = set()
+    primary_skills: set[str] = set()
+    for index, scenario in enumerate(scenarios, start=1):
+        identifier = str(scenario.get("id", ""))
+        if not identifier or not NAME_PATTERN.fullmatch(identifier):
+            fail(f"evaluation/routing-scenarios.yaml: scenario {index} has invalid id {identifier!r}.")
+        elif identifier in ids:
+            fail(f"evaluation/routing-scenarios.yaml: duplicate scenario id {identifier!r}.")
+        ids.add(identifier)
+        for field in ("request", "primary_skill", "expected_strategy"):
+            if not str(scenario.get(field, "")).strip():
+                fail(f"evaluation/routing-scenarios.yaml: scenario {identifier!r} requires {field!r}.")
+        primary = str(scenario.get("primary_skill", ""))
+        primary_skills.add(primary)
+        if primary not in known_skills:
+            fail(f"evaluation/routing-scenarios.yaml: scenario {identifier!r} references unknown primary skill {primary!r}.")
+        support = scenario.get("supporting_skills", [])
+        forbidden = scenario.get("forbidden_skills", [])
+        if not isinstance(support, list) or not isinstance(forbidden, list):
+            fail(f"evaluation/routing-scenarios.yaml: scenario {identifier!r} has invalid skill lists.")
+            continue
+        if len(support) != len(set(support)) or len(forbidden) != len(set(forbidden)):
+            fail(f"evaluation/routing-scenarios.yaml: scenario {identifier!r} repeats a listed skill.")
+        for skill in [*support, *forbidden]:
+            if skill not in known_skills:
+                fail(f"evaluation/routing-scenarios.yaml: scenario {identifier!r} references unknown skill {skill!r}.")
+        if primary in support or primary in forbidden:
+            fail(f"evaluation/routing-scenarios.yaml: scenario {identifier!r} repeats its primary skill in another role.")
+        if set(support) & set(forbidden):
+            fail(f"evaluation/routing-scenarios.yaml: scenario {identifier!r} has a skill that is both supporting and forbidden.")
+
+    for required_primary in {"flutter-workspace-architecture", "flutter-dependency-upgrade", "flutter-api-contract-evolution", "flutter-agent-evaluation"}:
+        if required_primary not in primary_skills:
+            fail(f"evaluation/routing-scenarios.yaml: no scenario has {required_primary!r} as its primary skill.")
+
+
 def validate_repository_contracts(skill_count: int) -> None:
     readme = (ROOT / "README.md").read_text(encoding="utf-8-sig")
     if f"AI%20Skills-{skill_count}%20Orthogonal" not in readme:
@@ -135,6 +258,7 @@ def validate_repository_contracts(skill_count: int) -> None:
         fail("README.md: skill-directory summary count does not match the discovered skill count.")
     forbidden = {
         ".ai/": "obsolete .ai project-state path",
+        ".ai\\\\": "obsolete Windows-style .ai project-state path",
         ".gemini/antigravity/skills": "undocumented Antigravity global skill path",
     }
     tracked_text = "\n".join(
@@ -145,11 +269,13 @@ def validate_repository_contracts(skill_count: int) -> None:
     for token, label in forbidden.items():
         if token in tracked_text:
             fail(f"Repository contains {label}: {token}")
-    if not (ROOT / ".agents" / "rules" / "flutter-agent-framework.md").exists():
-        fail("Missing .agents/rules/flutter-agent-framework.md workspace rule.")
+    required_rules = ("flutter-agent-framework.md", "flutter-agent-evaluation.md")
     gitignore = (ROOT / ".gitignore").read_text(encoding="utf-8-sig")
-    if "!.agents/rules/flutter-agent-framework.md" not in gitignore:
-        fail(".gitignore must allow the shipped .agents/rules/flutter-agent-framework.md rule.")
+    for rule in required_rules:
+        if not (ROOT / ".agents" / "rules" / rule).exists():
+            fail(f"Missing .agents/rules/{rule} workspace rule.")
+        if f"!.agents/rules/{rule}" not in gitignore:
+            fail(f".gitignore must allow the shipped .agents/rules/{rule} rule.")
     initializer = (ROOT / "tools" / "init-project.ps1").read_text(encoding="utf-8-sig")
     if ".agents/skills/" not in initializer:
         fail("tools/init-project.ps1 does not install native .agents/skills/." )
@@ -183,6 +309,23 @@ def validate_repository_contracts(skill_count: int) -> None:
         if token not in uninstall:
             fail(f"tools/uninstall-global.ps1: missing uninstall safety contract {token!r}.")
 
+    workflow = ROOT / ".github" / "workflows" / "validate-framework.yml"
+    if not workflow.exists():
+        fail("Missing .github/workflows/validate-framework.yml continuous-validation workflow.")
+    else:
+        workflow_text = workflow.read_text(encoding="utf-8-sig")
+        required_workflow_tokens = (
+            "python3 tools/validate_framework.py",
+            "windows-latest",
+            "init-project.ps1",
+            "deploy.ps1\" -WhatIf",
+            "uninstall-global.ps1\" -Force -WhatIf",
+            ".agents\\skills\\flutter-agent-evaluation\\SKILL.md",
+        )
+        for token in required_workflow_tokens:
+            if token not in workflow_text:
+                fail(f".github/workflows/validate-framework.yml: missing CI smoke-test contract {token!r}.")
+
 
 def main() -> int:
     if not SKILLS_ROOT.exists():
@@ -191,11 +334,13 @@ def main() -> int:
     if not skill_files:
         fail("No skills found at skills/<sector>/<skill>/SKILL.md.")
     names = [validate_skill(skill_file) for skill_file in skill_files]
+    known_skills = set(names)
     for skill_file in skill_files:
-        validate_metadata(skill_file)
+        validate_metadata(skill_file, known_skills)
     for name, count in Counter(names).items():
         if count > 1:
             fail(f"Duplicate skill name: {name!r} appears {count} times.")
+    validate_routing_scenarios(set(names))
     validate_markdown_links()
     validate_repository_contracts(len(skill_files))
 

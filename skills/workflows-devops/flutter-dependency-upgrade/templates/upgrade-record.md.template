@@ -1,0 +1,33 @@
+# Dependency Upgrade Record
+
+## Scope
+
+- **Upgrade objective:**
+- **Baseline constraint and lockfile state:**
+- **Target constraint:**
+- **Affected packages and platforms:**
+
+## Evidence and Decision
+
+| Item | Evidence or decision |
+|---|---|
+| Changelog or migration guide | |
+| Breaking changes | |
+| Package graph impact | |
+| Native platform impact | |
+| Alternatives considered | |
+| Selected approach | |
+
+## Execution Plan
+
+1. 
+2. 
+3. 
+
+## Validation and Rollback
+
+- **Required commands and tests:**
+- **Build or runtime checks:**
+- **Known residual risk:**
+- **Rollback or containment trigger:**
+- **Completion evidence:**

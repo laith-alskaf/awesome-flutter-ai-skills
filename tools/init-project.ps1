@@ -123,9 +123,8 @@ foreach ($folder in @("core", "tools")) {
 # ---------------------------------------------
 Write-Host "[2/6] Creating .agent/ memory architecture..." -ForegroundColor Yellow
 
-# Copy KNOWLEDGE_INDEX from template or generated source
+# Copy the maintained project knowledge-index template.
 $srcKI = Join-Path $frameworkRoot "core\templates\knowledge_index.md.template"
-if (-not (Test-Path $srcKI)) { $srcKI = Join-Path $frameworkRoot ".ai\KNOWLEDGE_INDEX.md" }
 if (Test-Path $srcKI) {
     Copy-Item -Path $srcKI -Destination (Join-Path $agentDir "KNOWLEDGE_INDEX.md") -Force
     Write-Host "      [+] .agent/KNOWLEDGE_INDEX.md" -ForegroundColor Green
@@ -204,46 +203,49 @@ Write-Host "      [+] .agent/PROJECT_PROFILE.md (template ready -- fill in stack
 
 # CURRENT_STATE.md
 $currentState = @"
-# CURRENT_STATE.md -- Active Session State
+# CURRENT_STATE.md -- Active Work State
 
 ---
 
 ## Current Objective
 
 ```yaml
-ActiveGoal: "Project initialization and first feature planning"
+ActiveGoal: "[Describe the current task or leave blank until work begins]"
 LastUpdated: "$today"
-CurrentMilestone: "Milestone 0: Framework Setup"
+TaskRisk: "[Low / Medium / High based on change impact]"
 ```
 
 ---
 
-## Evidence, Assumptions, and Open Questions
+## Decision Record
 
 | Type | Record |
 |---|---|
-| Evidence | Project initialized; application architecture and product requirements have not yet been confirmed. |
-| Assumptions | No state-management, database, authentication, or target-platform choice is assumed. |
-| Open questions | Define the first feature, constraints, and success criteria before making architecture-changing decisions. |
+| Evidence | Project initialized. Inspect the relevant repository files before recording technical claims. |
+| Decisions | No architecture, state-management, database, authentication, or platform choice is assumed. |
+| Assumptions | Record only assumptions required for the current task and label them for validation. |
+| Open questions | Ask only when an answer could change architecture, security, data, API, dependency, or user-visible behavior. |
+| Validation status | No task validation recorded yet. |
+| Next action | Inspect the affected project context and choose the smallest relevant workflow. |
 
-> Use `flutter-grill-me` when unresolved information could change architecture, security, data, API, dependency, or user-visible behavior. For a small reversible task, state the assumption and validate the result instead of blocking on a score.
+> For a reversible low-risk task, state any assumption, make the smallest safe change, and validate it. Use `flutter-grill-me` when unresolved information could change a material decision; do not use a numerical confidence score.
 
 ---
 
 ## Active Files & Context
 
-- [ ] Fill in `.agent/PROJECT_PROFILE.md` with project details
-- [ ] Define state management library choice
-- [ ] Define first feature to build
+- [ ] Record only files and decisions relevant to the active task
+- [ ] Update `.agent/PROJECT_PROFILE.md` when project-level facts are confirmed
+- [ ] Link a related ADR, issue, test, or release artifact when persistent tracking is useful
 
 ---
 
 ## Next Actions
 
-1. Complete `.agent/PROJECT_PROFILE.md` (StateManagement, Database, Auth, etc.)
-2. Run `flutter-grill-me` to lock requirements for first feature
-3. Run `flutter-product-discovery-and-architecture` for PRD scaffolding
-4. Run `flutter-domain-modeling` to define domain entities
+1. Inspect the affected feature, `pubspec.yaml`, tests, CI, and relevant `.agent/` records.
+2. Select the smallest skill set that covers the task and document material decisions or assumptions.
+3. Use product discovery, a PRD, or domain modeling only when the request is a new product, materially ambiguous feature, or non-trivial business change.
+4. Record validation evidence and the next handoff action when the work spans sessions or phases.
 "@
 Set-Content -Path (Join-Path $agentDir "CURRENT_STATE.md") -Value $currentState -Force
 Write-Host "      [+] .agent/CURRENT_STATE.md" -ForegroundColor Green

@@ -1,0 +1,15 @@
+name: flutter-dependency-upgrade
+version: 1.0.0
+owner: platform-team
+flutter_version_min: 3.44.0
+dependencies:
+  requires: []
+  conflicts_with: []
+  optional:
+    - flutter-project-architect
+    - flutter-workspace-architecture
+    - flutter-api-contract-evolution
+    - flutter-ci-cd
+    - flutter-security
+
+active_persona: "Staff Software Engineer"

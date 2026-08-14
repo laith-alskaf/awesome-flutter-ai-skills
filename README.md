@@ -3,7 +3,7 @@
 ![Flutter Version](https://img.shields.io/badge/Flutter-3.44.x%20Stable-02569B?logo=flutter&logoColor=white)
 ![Dart Version](https://img.shields.io/badge/Dart-3.12.x-0175C2?logo=dart&logoColor=white)
 ![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture%20%2B%20SOLID-4CAF50)
-![Skills](https://img.shields.io/badge/AI%20Skills-51%20Orthogonal-ff69b4)
+![Skills](https://img.shields.io/badge/AI%20Skills-55%20Orthogonal-ff69b4)
 ![Knowledge Architecture](https://img.shields.io/badge/Knowledge%20OS-5--Tier-purple)
 ![Audit Status](https://img.shields.io/badge/Audit-100%2F100%20Gold%20Certified-gold)
 ![License](https://img.shields.io/badge/License-MIT-green)
@@ -21,7 +21,7 @@ It turns AI Coding Assistants into disciplined Senior Staff Software Engineers a
 - [Supported AI Agents & IDE Matrix](#-supported-ai-agents--ide-matrix)
 - [Target Technology Stack](#-target-technology-stack)
 - [Framework Architecture & 7 Sectors](#-framework-architecture--7-sectors)
-- [The 51 skills Directory Summary](#-the-51-skills-directory-summary)
+- [The 55 skills Directory Summary](#-the-55-skills-directory-summary)
 - [How to Integrate in Any Project](#-how-to-integrate-in-any-project)
 - [Contributing](#-contributing)
 - [License](#-license)
@@ -95,6 +95,7 @@ awesome-flutter-ai-skills/
 ├── core/                        → The OS Kernel
 │   ├── AGENTS.md                → Master Policy, Tech Stack, and Context Protocols
 │   ├── ROUTER_MANIFESTO.md      → Global Capability Matrix & Zero-Hallucination Gatekeeper
+│   ├── ROUTING_EVALUATION.md    → Routing scenarios and evaluation protocol
 │   ├── PERSONAS.md              → Definition of 5 strict AI Roles (CPO, Architect, QA, etc.)
 │   ├── GOVERNANCE.md            → Versioning, Ownership, and Deprecation Lifecycle
 │   └── PERFORMANCE_METRICS.md   → Token Budgets and Framework KPIs
@@ -103,29 +104,44 @@ awesome-flutter-ai-skills/
 │   ├── audit_framework.dart     → CI/CD validator for token limits and Knowledge Graph
 │   ├── deploy.ps1               → Global multi-agent deployment engine
 │   └── init-project.ps1         → Project-level workspace initializer
-└── skills/                      → 51 Self-Contained Modular Skills in 7 Sectors
-    ├── core-architecture/       → Clean Architecture, DI, Domain Modeling (8 skills)
+└── skills/                      → 55 Self-Contained Modular Skills in 7 Sectors
+    ├── core-architecture/       → Clean Architecture, DI, Domain Modeling, Workspaces (9 skills)
     ├── state-management/        → Riverpod 3.x, Bloc 9.x, Cubit, GetX 5.x (4 skills)
     ├── ui-styling/              → UI Engineering, Responsive, Animations (9 skills)
-    ├── data-networking/         → REST API, WebSockets, Firebase, Supabase (6 skills)
+    ├── data-networking/         → REST API, Contract Evolution, WebSockets, Firebase, Supabase (7 skills)
     ├── quality-testing-security/→ Unit, Widget, Integration, Security (7 skills)
     ├── performance-maintenance/ → Performance, App Size, Debugging, Refactoring (8 skills)
-    └── workflows-devops/        → Feature Planner, Code Review, Grill-Me, DevOps (9 skills)
+    └── workflows-devops/        → Planning, Code Review, Upgrades, Evaluation, DevOps (11 skills)
 ```
 
 > **Note on Modularity:** Every skill in `skills/` is a self-contained module containing a standard `SKILL.md` and supplemental `metadata.yaml`; optional `templates/` and `resources/` are loaded only when needed. This supports progressive disclosure without duplicating project state in every skill.
 
 ---
 
-## 📦 The 51 skills Directory Summary
+## 📦 The 55 skills Directory Summary
 
-1. **Core Architecture (8 Skills):** `flutter-clean-architecture`, `flutter-dependency-injection`, `flutter-domain-modeling`, `flutter-feature-first`, `flutter-product-discovery-and-architecture`, `flutter-project-architect`, `flutter-repository-pattern`, `flutter-routing`.
+1. **Core Architecture (9 Skills):** `flutter-clean-architecture`, `flutter-dependency-injection`, `flutter-domain-modeling`, `flutter-feature-first`, `flutter-product-discovery-and-architecture`, `flutter-project-architect`, `flutter-repository-pattern`, `flutter-routing`, `flutter-workspace-architecture`.
 2. **State Management (4 Skills):** `flutter-riverpod`, `flutter-bloc`, `flutter-cubit`, `flutter-getx`.
 3. **UI & Styling (9 Skills):** `flutter-design-system-theming`, `flutter-micro-interactions-ux`, `flutter-ui-engineering`, `flutter-responsive-design`, `flutter-animations`, `flutter-accessibility`, `flutter-localization`, `flutter-build-screen`, `flutter-web-desktop`.
-4. **Data & Networking (6 Skills):** `flutter-api-integration`, `flutter-websockets`, `flutter-graphql`, `flutter-firebase`, `flutter-supabase`, `flutter-local-database`.
+4. **Data & Networking (7 Skills):** `flutter-api-integration`, `flutter-api-contract-evolution`, `flutter-websockets`, `flutter-graphql`, `flutter-firebase`, `flutter-supabase`, `flutter-local-database`.
 5. **Quality, Testing & Security (7 Skills):** `flutter-unit-testing`, `flutter-widget-testing`, `flutter-integration-testing`, `flutter-golden-testing`, `flutter-generate-tests`, `flutter-security`, `flutter-error-handling`.
 6. **Performance & Maintenance (8 Skills):** `flutter-performance`, `flutter-app-size`, `flutter-debugging`, `flutter-bug-fixing`, `flutter-logging`, `flutter-refactoring`, `flutter-background-processing`, `flutter-media-hardware`.
-7. **Workflows & DevOps (9 Skills):** `flutter-agent-memory`, `flutter-ci-cd`, `flutter-code-review`, `flutter-create-feature`, `flutter-feature-planner`, `flutter-git`, `flutter-grill-me`, `flutter-production-readiness`, `flutter-release`.
+7. **Workflows & DevOps (11 Skills):** `flutter-agent-memory`, `flutter-agent-evaluation`, `flutter-ci-cd`, `flutter-code-review`, `flutter-create-feature`, `flutter-dependency-upgrade`, `flutter-feature-planner`, `flutter-git`, `flutter-grill-me`, `flutter-production-readiness`, `flutter-release`.
+
+---
+
+## 🧪 Strategy, Routing, and Evaluation
+
+The framework uses a proportionate strategy: recover project state only for work that spans sessions or carries material risk; inspect the repository directly for a small local change; ask focused questions only when a missing answer could change architecture, security, data, external contracts, dependencies, or user-visible behavior. The agent should select the smallest skill set that covers the request, preserve the state-management approach used by the affected feature, and record evidence, decisions, assumptions, validation status, and the next action for durable handoffs.
+
+Routing expectations are versioned in [`evaluation/routing-scenarios.yaml`](evaluation/routing-scenarios.yaml), with the maintenance protocol in [`core/ROUTING_EVALUATION.md`](core/ROUTING_EVALUATION.md). These scenarios verify the framework contract for primary, supporting, and forbidden skills; they do not claim that every model will choose a skill identically. The validation workflow runs structural checks on Linux and a non-destructive project-initialization smoke test on Windows PowerShell.
+
+| Situation | Primary workflow |
+|---|---|
+| Multi-package workspace, pub workspace, or Melos decision | `flutter-workspace-architecture` |
+| Flutter, Dart, plugin, or package upgrade | `flutter-dependency-upgrade` |
+| REST or GraphQL compatibility, schema, or DTO evolution | `flutter-api-contract-evolution` |
+| Skill, rule, installer, or routing-contract change | `flutter-agent-evaluation` |
 
 ---
 
@@ -147,7 +163,7 @@ The framework supports two deployment models. **We recommend local mode** for te
 
 ### 🏠 1. Local Mode (`.agent/` state + `.agents/skills/`) — ⭐ RECOMMENDED
 
-In Local Mode, project memory, governance, tools, and generated workspace artifacts live in `.agent/`; the 51 native Agent Skills live in `.agents/skills/`, the default Antigravity workspace-skill location. Antigravity also retains backward compatibility with `.agent/skills/`, but the initializer uses `.agents/skills/` for new projects.
+In Local Mode, project memory, governance, tools, and generated workspace artifacts live in `.agent/`; the 55 native Agent Skills live in `.agents/skills/`, the default Antigravity workspace-skill location. Antigravity also retains backward compatibility with `.agent/skills/`, but the initializer uses `.agents/skills/` for new projects.
 
 #### Safe Setup
 Clone the framework, then run the reviewed initializer from inside your target Flutter project directory:
@@ -166,7 +182,7 @@ If you have cloned this repository locally, run the script from inside your targ
 & "path\to\awesome-flutter-ai-skills\tools\init-project.ps1" -ProjectPath "D:\Projects\my_flutter_app"
 ```
 
-#### 🧭 Post-Initialization Workflow (3 Magic Steps)
+#### 🧭 Post-Initialization Workflow
 Once initialized, your project contains `.agent/` state, `.agents/skills/` native skills, and compatible IDE rule files. Follow these steps:
 1. **Define project identity:** Open `.agent/PROJECT_PROFILE.md` and record only confirmed stack choices and business context.
 2. **Resolve material uncertainty:** Use `flutter-grill-me` when missing information could change architecture, security, dependencies, data, API contracts, or user-visible behavior. Record assumptions for low-risk reversible work in `.agent/CURRENT_STATE.md`.
@@ -179,7 +195,7 @@ Once initialized, your project contains `.agent/` state, `.agents/skills/` nativ
 
 ### 🌐 2. Global Mode (Multi-IDE Global Sync)
 
-In Global Mode, the 51 skills are deployed to the configured user-level skill directories. Antigravity and Gemini use the documented `~/.gemini/config/skills/` global location.
+In Global Mode, the 55 skills are deployed to the configured user-level skill directories. Antigravity and Gemini use the documented `~/.gemini/config/skills/` global location.
 
 #### Deploy Globally
 ```powershell
@@ -202,7 +218,7 @@ Contributions are welcome. Before opening a pull request, run the repository con
 python3 tools/validate_framework.py
 ```
 
-The check validates all 51 skills, frontmatter and supplemental metadata, local Markdown links, documented Antigravity paths, and deployment safety contracts. Add a focused `SKILL.md`, match its directory name in both metadata files, keep rare detail in local resources, and update installer and documentation contracts together whenever a supported path changes.
+The check validates all 55 skills, frontmatter and supplemental metadata, metadata dependency references, local Markdown links, routing scenarios, documented Antigravity paths, CI smoke-test contracts, and deployment safety contracts. Add a focused `SKILL.md`, match its directory name in both metadata files, keep rare detail in local resources, add or update a realistic routing scenario for a material boundary change, and update installer and documentation contracts together whenever a supported path changes.
 
 ---
 

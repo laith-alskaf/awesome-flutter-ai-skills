@@ -1,0 +1,28 @@
+# Agent Framework Evaluation Record
+
+## Change Under Evaluation
+
+- **Change identifier:**
+- **Affected skills, rules, installers, or validators:**
+- **Risk boundary:**
+
+## Scenarios
+
+| Scenario ID | Expected primary skill | Supporting or forbidden skills | Expected strategy |
+|---|---|---|---|
+| | | | |
+
+## Evidence
+
+| Check | Result | Evidence location | Limitation |
+|---|---|---|---|
+| Structural validator | | | |
+| Scenario fixture validation | | | |
+| Installer preview | | | |
+| Sampled live-agent run | | | |
+
+## Decision
+
+- **Accepted changes:**
+- **Observed failures or ambiguities:**
+- **Follow-up owner and condition:**

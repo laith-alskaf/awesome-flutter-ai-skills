@@ -1,0 +1,14 @@
+name: flutter-workspace-architecture
+version: 1.0.0
+owner: architecture-team
+flutter_version_min: 3.44.0
+dependencies:
+  requires: []
+  conflicts_with: []
+  optional:
+    - flutter-feature-first
+    - flutter-clean-architecture
+    - flutter-dependency-upgrade
+    - flutter-ci-cd
+
+active_persona: "Principal Software Architect"

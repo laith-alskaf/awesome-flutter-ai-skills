@@ -35,6 +35,7 @@ Use this decision sequence before selecting a state-management skill:
 | Designing domain entities, aggregates, or value objects | `flutter-domain-modeling` | Domain Mapping Pipeline, Rich Entities vs Simple DTO rules, DI graphs |
 | Setting up a new project or selecting packages | `flutter-project-architect` | Folder structure, package selection, project complexity tiers |
 | Organizing feature folders and boundaries | `flutter-feature-first` | Feature-based modularity, shared vs local code rules |
+| Designing a pub workspace, Melos setup, or package boundaries | `flutter-workspace-architecture` | Multi-package ownership, public APIs, tooling choice, and CI orchestration |
 | Designing architecture or layer boundaries | `flutter-clean-architecture` | Presentation → Domain → Data separation; zero Flutter in Domain |
 | Wiring dependency injection | `flutter-dependency-injection` | Multi-state DI patterns (Riverpod graphs, get_it, GetX Bindings) |
 | Abstracting data sources or caching | `flutter-repository-pattern` | Domain repository interfaces vs Data concrete implementations |
@@ -63,6 +64,7 @@ Use this decision sequence before selecting a state-management skill:
 | User Intent / Problem Domain | Authoritative Skill | What It Enforces |
 |---|---|---|
 | Implementing REST API calls or networking layer | `flutter-api-integration` | Dio interceptors, DTO creation, mapper extension, token handling |
+| Evolving REST or GraphQL contracts, schemas, or compatibility windows | `flutter-api-contract-evolution` | Versioning, rollout, DTO compatibility, contract tests, and retirement evidence |
 | Implementing live WebSockets, SSE, WebRTC, or MQTT | `flutter-websockets` | Auto-reconnect backoff, heartbeat ping/pong, domain stream isolation |
 | Integrating GraphQL APIs | `flutter-graphql` | Normalized cache, queries/mutations, ferry/graphql_flutter |
 | Integrating Firebase services | `flutter-firebase` | Auth, Firestore, FCM, Crashlytics clean architecture wiring |
@@ -96,13 +98,15 @@ Use this decision sequence before selecting a state-management skill:
 | User Intent / Problem Domain | Authoritative Skill | What It Enforces |
 |---|---|---|
 | Planning a new feature, sprint backlog, or milestones | `flutter-feature-planner` | Engineering task breakdown, dependency graphs, estimation |
+| Evaluating skill, rule, routing, installer, or validator changes in this framework | `flutter-agent-evaluation` | Scenario fixtures, contract checks, and evidence-bound interpretation |
 | Interrogating users or resolving missing information that could change a material decision | `flutter-grill-me` | Focused requirement interrogation across the relevant engineering dimensions |
 | Creating a new feature end-to-end across all layers | `flutter-create-feature` | Vertical-slice workflow from domain analysis to UI and testing |
 | Reviewing code or auditing a pull request | `flutter-code-review` | 6-step PR audit (analysis, architecture, state, UI, security, tests) |
 | Managing git branching, commits, or versioning | `flutter-git` | Semantic versioning, conventional commits, PR workflows |
+| Upgrading Flutter, Dart, or package constraints and resolving dependency conflicts | `flutter-dependency-upgrade` | Compatibility analysis, staged migration, rollback, and validation evidence |
 | Setting up CI/CD pipelines (GitHub Actions, Fastlane) | `flutter-ci-cd` | Automated analysis, formatting, testing, and build artifacts |
 | Preparing store release (Play Store / App Store) | `flutter-release` | App signing, metadata, bundle generation, post-release monitoring |
-| Managing project memory, state, & health ledger | `flutter-agent-memory` | 8-Step Context Protocol, Confidence Matrix, Lessons Learned |
+| Managing project memory, state, handoffs, and reusable lessons | `flutter-agent-memory` | Evidence, decisions, assumptions, open questions, and next action |
 | Auditing SaaS/Mobile production readiness & release gates | `flutter-production-readiness` | 6 Readiness Pillars (Security, Testing, Analytics, Monetization, Release, Observability) & A11y gate |
 
 ---
@@ -119,3 +123,7 @@ Use this decision sequence before selecting a state-management skill:
   👉 **Route:** `flutter-product-discovery-and-architecture` (WHY) ➔ `flutter-domain-modeling` (WHAT) ➔ `flutter-project-architect` (DESIGN) ➔ `flutter-feature-planner` (PLAN) ➔ Implementation Skills (CODE) ➔ `flutter-production-readiness` (READY) ➔ `flutter-code-review` (REVIEW).
 * **Scenario E: "We want to add an offline data sync feature, but specifications and state rules are unclear." (Decision readiness)**
   👉 **Route:** `flutter-grill-me` (RESOLVE MATERIAL QUESTIONS) ➔ `flutter-agent-memory` (RECORD DECISIONS AND ASSUMPTIONS) ➔ `flutter-background-processing` + `flutter-local-database` + `flutter-clean-architecture` (IMPLEMENT AND VALIDATE).
+* **Scenario F: "Split two Flutter apps and shared authentication into a workspace."**
+  👉 **Route:** `flutter-workspace-architecture` (MAP BOUNDARIES AND TOOLING) ➔ `flutter-ci-cd` (VERIFY PACKAGE MATRIX) ➔ `flutter-dependency-upgrade` (ONLY IF CONSTRAINTS CHANGE).
+* **Scenario G: "Change a versioned API identifier without breaking released clients."**
+  👉 **Route:** `flutter-api-contract-evolution` (DEFINE COMPATIBILITY AND ROLLOUT) ➔ `flutter-api-integration` (IMPLEMENT CLIENT ADAPTERS) ➔ `flutter-repository-pattern` (PRESERVE BOUNDARIES).

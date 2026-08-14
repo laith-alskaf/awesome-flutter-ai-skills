@@ -1,0 +1,33 @@
+# API Contract Change Record
+
+## Contract Scope
+
+- **Operation or endpoint:**
+- **Contract owner:**
+- **Client consumers:**
+- **Current version or schema:**
+- **Target version or schema:**
+
+## Change Classification
+
+| Aspect | Before | After | Compatibility decision |
+|---|---|---|---|
+| Request | | | |
+| Response | | | |
+| Error and authorization | | | |
+| Cache or persistence | | | |
+| Analytics or telemetry | | | |
+
+## Rollout Plan
+
+- **Server-first, client-first, or versioned path:**
+- **Compatibility window and deprecation date:**
+- **Telemetry or owner evidence for retirement:**
+- **Rollback or containment:**
+
+## Validation Evidence
+
+- **Contract tests:**
+- **Mapper and migration tests:**
+- **User-flow tests:**
+- **Release evidence:**

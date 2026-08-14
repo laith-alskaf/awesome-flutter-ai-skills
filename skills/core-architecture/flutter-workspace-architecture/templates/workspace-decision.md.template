@@ -1,0 +1,31 @@
+# Workspace Decision Record
+
+## Context
+
+- **Workspace goal:**
+- **Affected packages:**
+- **SDK and platform constraints:**
+- **Current package graph:**
+
+## Options Considered
+
+| Option | Benefits | Costs and risks |
+|---|---|---|
+| Keep current structure | | |
+| Native Pub Workspace | | |
+| Melos | | |
+
+## Decision
+
+- **Selected option:**
+- **Reasoning and evidence:**
+- **Public package boundaries:**
+- **Developer commands:**
+- **CI changes:**
+
+## Migration and Validation
+
+- **Incremental steps:**
+- **Rollback or containment:**
+- **Required checks:**
+- **Completion evidence:**

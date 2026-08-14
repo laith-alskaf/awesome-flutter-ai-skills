@@ -1,0 +1,13 @@
+name: flutter-agent-evaluation
+version: 1.0.0
+owner: platform-team
+flutter_version_min: 3.44.0
+dependencies:
+  requires: []
+  conflicts_with: []
+  optional:
+    - flutter-agent-memory
+    - flutter-code-review
+    - flutter-ci-cd
+
+active_persona: "Technical Lead / Project Manager"

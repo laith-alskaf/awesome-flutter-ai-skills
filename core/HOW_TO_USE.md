@@ -13,7 +13,7 @@ This framework is a **Modular AI Engineering OS (V2)** for Flutter. It enforces 
 ```powershell
 .\tools\deploy.ps1
 ```
-This syncs the `/core` OS Kernel and all 51 modular skills to your global AI agent paths.
+This syncs the `/core` OS Kernel and all 55 modular skills to your global AI agent paths.
 
 **Initialize locally in a Flutter project:**
 ```powershell
@@ -44,17 +44,17 @@ This sets up `.agent/` for project state and `.agents/skills/` for native worksp
 
 ## 🏛️ 2. الهيكل المعماري والقطاعات السبعة (The 7 Engineering Sectors)
 
-يضم النظام **51 مهارة هندسية مستقلة (Self-Contained Skills)**:
+يضم النظام **55 مهارة هندسية مستقلة (Self-Contained Skills)**:
 
-1. 🏗️ **`core-architecture/` (8 مهارات):** معمارية النظافة، التنظيم بالميزات، وحقن التبعيات.
+1. 🏗️ **`core-architecture/` (9 مهارات):** معمارية النظافة، التنظيم بالميزات، حقن التبعيات، ومساحات العمل متعددة الحزم.
 2. 🧠 **`state-management/` (4 مهارات):** Riverpod, Bloc, Cubit, GetX.
 3. 🎨 **`ui-styling/` (9 مهارات):** هندسة الـ UI، التصميم المتجاوب، الحركات، وتجربة المستخدم (Micro-interactions).
-4. 🌐 **`data-networking/` (6 مهارات):** REST APIs, WebSockets, Firebase, Supabase.
+4. 🌐 **`data-networking/` (7 مهارات):** REST APIs، تطور العقود، WebSockets، Firebase، وSupabase.
 5. 🛡️ **`quality-testing-security/` (7 مهارات):** الاختبارات، الأمان، ومعالجة الأخطاء.
 6. ⚡ **`performance-maintenance/` (8 مهارات):** الأداء، التشخيص، وإعادة الهيكلة.
-7. 🚀 **`workflows-devops/` (9 مهارات):** التخطيط، CI/CD، مراجعة الكود، وبروتوكول Grill-Me.
+7. 🚀 **`workflows-devops/` (11 مهارة):** التخطيط، CI/CD، مراجعة الكود، الترقيات، تقييم الوكيل، وبروتوكول Grill-Me.
 
-> **ملاحظة:** تم إلغاء المجلدات العامة (`templates`, `checklists`). الآن، كل مهارة تحتوي على مجلدي `templates/` و `resources/` الخاصين بها فقط!
+> **ملاحظة:** تم إلغاء المجلدات العامة (`templates`, `checklists`). الآن، كل مهارة تحتوي على مجلدي `templates/` و `resources/` الخاصين بها فقط. عند تعديل حد توجيه أو قاعدة أو مُثبّت، استخدم `flutter-agent-evaluation` وحدّث سيناريوً واقعياً في `evaluation/routing-scenarios.yaml` ثم شغّل `python3 tools/validate_framework.py`.
 
 ---
 
@@ -87,7 +87,7 @@ This sets up `.agent/` for project state and `.agents/skills/` for native worksp
 │   ├── AGENTS_MEMORY.md                 ← سجل الصحة والدروس المتكررة
 │   └── SESSION_LOG.md                   ← سجل الجلسات والتسليم
 ├── .agents/
-│   └── skills/                          ← جميع الـ 51 مهارة بصيغة Agent Skills الأصلية
+│   └── skills/                          ← جميع الـ 55 مهارة بصيغة Agent Skills الأصلية
 ├── .cursorrules                         ← قواعد Cursor المتوافقة مع حالة المشروع
 ├── .windsurfrules                       ← قواعد Windsurf
 └── .clinerules                          ← قواعد Roo/Cline

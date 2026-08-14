@@ -10,8 +10,8 @@ permissions:
   contents: read
 
 jobs:
-  validate:
-    name: Validate Agent Skills and Integration Contracts
+  contract-validation:
+    name: Validate Agent Skills, Routing, and Integration Contracts
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -22,5 +22,45 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Validate skill and installation contracts
+      - name: Validate skill, routing, and installation contracts
         run: python3 tools/validate_framework.py
+
+  powershell-installation-smoke:
+    name: Smoke Test PowerShell Project Initialization
+    runs-on: windows-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Create minimal Flutter-shaped project fixture
+        shell: pwsh
+        run: |
+          $fixture = Join-Path $env:RUNNER_TEMP "flutter-skills-fixture"
+          New-Item -ItemType Directory -Path (Join-Path $fixture "lib") -Force | Out-Null
+          @'
+          name: flutter_skills_fixture
+          publish_to: none
+          environment:
+            sdk: ">=3.0.0 <4.0.0"
+          dependencies:
+            flutter:
+              sdk: flutter
+          '@ | Set-Content -Path (Join-Path $fixture "pubspec.yaml")
+          "void main() {}" | Set-Content -Path (Join-Path $fixture "lib/main.dart")
+          "FIXTURE=$fixture" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+      - name: Initialize project-local framework
+        shell: pwsh
+        run: |
+          & "$env:GITHUB_WORKSPACE\tools\init-project.ps1" -ProjectPath "$env:FIXTURE"
+          if (-not (Test-Path "$env:FIXTURE\.agent\CURRENT_STATE.md")) { throw "Missing project state" }
+          if (-not (Test-Path "$env:FIXTURE\.agents\skills\flutter-agent-evaluation\SKILL.md")) { throw "Missing native workspace skill" }
+          if (-not (Test-Path "$env:FIXTURE\.github\copilot-instructions.md")) { throw "Missing generated IDE instructions" }
+          $skillCount = @(Get-ChildItem "$env:FIXTURE\.agents\skills" -Directory).Count
+          if ($skillCount -lt 55) { throw "Expected at least 55 installed skills, found $skillCount" }
+
+      - name: Preview global deployment and uninstallation safely
+        shell: pwsh
+        run: |
+          & "$env:GITHUB_WORKSPACE\tools\deploy.ps1" -WhatIf
+          & "$env:GITHUB_WORKSPACE\tools\uninstall-global.ps1" -Force -WhatIf

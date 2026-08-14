@@ -1,53 +1,42 @@
-# CURRENT_STATE.md — Active Execution State & Reasoning Context
+# CURRENT_STATE.md — Active Work State
 
 ---
 
-## 🎯 Current Work Objective & Context
+## Current Objective
 
 ```yaml
-ActiveGoal: "Implement Authentication Domain & State Management"
-CurrentBranch: "main"
-CurrentMilestone: "Sprint 1: Core Auth Flow"
+ActiveGoal: "[Describe the current task]"
+CurrentBranch: "[Branch or not applicable]"
 LastUpdated: "{{DATE}}"
+TaskRisk: "[Low / Medium / High based on impact]"
 ```
 
 ---
 
-## 🔬 Reasoning & Confidence Matrix
+## Decision Record
 
-```yaml
-Confidence:
-  level: High           # [High, Medium, Low]
-  score: 0.95           # [0.00 to 1.00]
-  reason: "Clean Architecture layer boundaries verified; repository unit tests pass zero warning policy."
-```
+| Type | Record |
+|---|---|
+| Evidence | [Files, tests, ADRs, logs, or issue evidence inspected.] |
+| Decisions | [Chosen approach and why it fits the current project.] |
+| Assumptions | [Only assumptions needed for the task, with validation plan.] |
+| Open questions | [Questions that could change a material decision.] |
+| Validation status | [Completed, pending, and unavailable checks.] |
+| Next action | [Smallest next action or handoff.] |
 
----
-
-## 📁 Active Working Context & Files
-
-- **Primary Feature:** `lib/features/auth/`
-- **Files Being Modified:**
-  - `lib/features/auth/domain/repositories/auth_repository.dart`
-  - `lib/features/auth/data/repositories/auth_repository_impl.dart`
-  - `lib/features/auth/presentation/notifiers/auth_notifier.dart`
-- **Active Skills Triggered:** `flutter-clean-architecture`, `flutter-riverpod`, `flutter-security`
+> Do not use a numerical confidence score as a decision gate. Ask focused questions only when an unresolved answer could change architecture, security, data, API contracts, dependencies, or user-visible behavior.
 
 ---
 
-## 💡 Active Assumptions & Open Questions
+## Active Context
 
-### Assumptions
-- [x] Firebase Auth is configured and initialized in `main.dart`.
-- [x] Riverpod 3.x with `@riverpod` code generator is the designated state library.
-
-### Open Questions & User Input Required
-- None currently blocking. All architectural boundaries aligned.
+- **Primary feature or package:**
+- **Files being modified:**
+- **Relevant skills:**
+- **Linked issue, ADR, or release artifact:**
 
 ---
 
-## ⏩ Next Immediate Actions
+## Handoff Notes
 
-1. Implement `AuthNotifier` state transitions for `Loading`, `Authenticated`, and `Unauthenticated`.
-2. Connect `LoginPage` UI form to `AuthNotifier`.
-3. Run `flutter test test/features/auth/` to verify AAA unit test suite.
+Record only the information a subsequent agent needs to continue safely: current objective, evidence, decisions, unresolved material questions, completed validation, and the next action. Archive historical detail rather than silently deleting it when the session log becomes difficult to navigate.

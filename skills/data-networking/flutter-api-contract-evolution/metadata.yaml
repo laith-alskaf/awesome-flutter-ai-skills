@@ -1,0 +1,15 @@
+name: flutter-api-contract-evolution
+version: 1.0.0
+owner: data-platform-team
+flutter_version_min: 3.44.0
+dependencies:
+  requires: []
+  conflicts_with: []
+  optional:
+    - flutter-api-integration
+    - flutter-graphql
+    - flutter-local-database
+    - flutter-repository-pattern
+    - flutter-dependency-upgrade
+
+active_persona: "Principal Software Architect"
