@@ -1,6 +1,6 @@
 ---
 name: flutter-agent-memory
-description: Use this skill when initializing an AI session, resuming previous work, saving a project checkpoint, logging lessons learned, or updating project health metrics. Enforces the 8-Step Context Recovery Priority Protocol, Confidence Matrix, and zero git noise rules.
+description: Use this skill when resuming multi-step work, saving a project checkpoint, recording reusable lessons, or preparing a handoff. Recovers relevant project context and records evidence, decisions, assumptions, open questions, validation status, and next action without inventing a confidence score.
 triggers:
   - resume work
   - checkpoint state
@@ -29,7 +29,7 @@ For a resumed, multi-file, or high-risk task in an initialized project, recover 
 ```text
 1. .agent/PROJECT_PROFILE.md  → Static Project Identity & Tech Stack (Flutter/Dart version, DB, Routing)
 2. AGENTS.md               → Core Governance Laws, Quality Rules & Behavioral Constraints
-3. .agent/CURRENT_STATE.md    → Active Work Goal, Context, Assumptions & Confidence Matrix
+3. .agent/CURRENT_STATE.md    → Active work goal, evidence, decisions, assumptions, and open questions
 4. .agent/KNOWLEDGE_INDEX.md  → Fast Context Map to ADRs, Skills, and Source Folders
 5. .agent/AGENTS_MEMORY.md    → Working Ledger, Milestones, Health Meter & Lessons Learned
 6. Relevant ADRs           → Architectural Decision Records in decisions/ or .agent/decisions/
@@ -39,15 +39,17 @@ For a resumed, multi-file, or high-risk task in an initialized project, recover 
 
 ---
 
-## 🔬 Reasoning & Confidence Matrix Rules
+## 🔬 Decision Record Rules
 
-When updating `CURRENT_STATE.md`, record the evidence, assumptions, and unresolved questions that affect the next action. A confidence score is optional; it must never be presented as an objective calculation.
+When updating `CURRENT_STATE.md`, record the evidence, decisions, assumptions, unresolved questions, validation status, and next action that affect the work. Do not use a numerical confidence score as a gate or substitute for evidence.
 
 ```yaml
-Confidence:
-  level: High           # [High, Medium, Low]
-  score: 0.95           # [0.00 to 1.00 score]
-  reason: "Clean Architecture layer boundaries verified; repository unit tests pass zero warning policy."
+DecisionReadiness:
+  evidence: "Affected feature and existing state approach inspected."
+  decisions: "Reuse the feature's Cubit implementation."
+  assumptions: "The reported failure is reproducible in the existing widget test."
+  open_questions: "None that change the selected fix."
+  next_validation: "Run the focused widget test, then the relevant test suite."
 ```
 
 > **Decision rule:** If uncertainty could change the architecture, security, data, external API contract, dependency choice, or user-visible behavior, use `flutter-grill-me` or ask focused questions before proceeding. For a reversible and low-risk change, state the assumption, make the smallest safe change, and validate it; do not block solely because a numerical score is absent or low.
@@ -99,7 +101,7 @@ When an unexpected bug, memory leak, or architectural anti-pattern is resolved, 
 - `flutter-domain-modeling` — Domain Map scaffolding (DOMAIN_MAP.md)
 - `flutter-production-readiness` — Production checklist verification (PRODUCTION_CHECKLIST.md)
 - `flutter-create-feature` — Triggers this skill for session initialization in Step 0
-- `flutter-code-review` — References CURRENT_STATE.md confidence matrix before review
+- `flutter-code-review` — Reviews project context and validation evidence when they are relevant
 
 ## Validation
 

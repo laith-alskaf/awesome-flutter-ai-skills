@@ -1,0 +1,194 @@
+schema_version: 1
+scenarios:
+  - id: reversible-bug-fix
+    request: >
+      The submit button remains disabled after a successful profile update. Find the
+      root cause, make the smallest safe fix, and add a regression test.
+    primary_skill: flutter-bug-fixing
+    supporting_skills:
+      - flutter-widget-testing
+    forbidden_skills:
+      - flutter-product-discovery-and-architecture
+      - flutter-agent-memory
+    expected_strategy: >
+      Reproduce the issue, inspect the affected feature, state any small assumption,
+      implement a minimal fix, and run the relevant regression test without forcing project discovery.
+
+  - id: multi-layer-feature
+    request: >
+      Add saved searches with persistence, a repository use case, Riverpod state,
+      loading and empty states, and widget tests.
+    primary_skill: flutter-create-feature
+    supporting_skills:
+      - flutter-local-database
+      - flutter-riverpod
+      - flutter-widget-testing
+    forbidden_skills:
+      - flutter-getx
+    expected_strategy: >
+      Recover relevant project context, confirm the existing state-management approach,
+      plan a vertical slice, and validate the changed user flow.
+
+  - id: bloc-versus-cubit
+    request: >
+      Extend the orders feature, which already contains OrderCubit classes, with a
+      method-driven refresh and error state.
+    primary_skill: flutter-cubit
+    supporting_skills:
+      - flutter-error-handling
+    forbidden_skills:
+      - flutter-bloc
+      - flutter-riverpod
+    expected_strategy: >
+      Inspect the affected feature rather than inferring from flutter_bloc alone,
+      preserve Cubit patterns, and avoid introducing a second state approach.
+
+  - id: security-sensitive-pr-review
+    request: >
+      Review a pull request that introduces biometric unlock and changes token refresh
+      handling before it is merged.
+    primary_skill: flutter-code-review
+    supporting_skills:
+      - flutter-security
+      - flutter-api-integration
+    forbidden_skills: []
+    expected_strategy: >
+      Review correctness, architecture, error handling, tests, and security-sensitive
+      behavior with evidence rather than rewriting the feature.
+
+  - id: sdk-and-plugin-upgrade
+    request: >
+      Upgrade Flutter and a camera plugin with native Android and iOS changes, and
+      provide a migration and rollback plan.
+    primary_skill: flutter-dependency-upgrade
+    supporting_skills:
+      - flutter-media-hardware
+      - flutter-ci-cd
+    forbidden_skills:
+      - flutter-project-architect
+    expected_strategy: >
+      Inventory constraints and platform impact, review migration evidence, stage the
+      upgrade, validate builds and runtime paths, and record rollback containment.
+
+  - id: package-conflict
+    request: >
+      Resolve incompatible transitive constraints between the analytics package and
+      the current Flutter SDK without forcing a dependency override blindly.
+    primary_skill: flutter-dependency-upgrade
+    supporting_skills:
+      - flutter-security
+    forbidden_skills:
+      - flutter-create-feature
+    expected_strategy: >
+      Identify constraint owners and compatible alternatives, then record why any
+      override, replacement, or deferred upgrade is safe.
+
+  - id: monorepo-boundaries
+    request: >
+      Split a repository with two Flutter apps and shared authentication code into a
+      package workspace with clear boundaries and CI commands.
+    primary_skill: flutter-workspace-architecture
+    supporting_skills:
+      - flutter-ci-cd
+      - flutter-feature-first
+    forbidden_skills:
+      - flutter-create-feature
+    expected_strategy: >
+      Map package ownership and imports, choose native Pub Workspaces or Melos from
+      evidence, migrate incrementally, and verify every affected package in CI.
+
+  - id: rest-contract-breaking-change
+    request: >
+      The API will replace customer_id with a versioned account identifier and old app
+      versions must continue to work during the rollout.
+    primary_skill: flutter-api-contract-evolution
+    supporting_skills:
+      - flutter-api-integration
+      - flutter-repository-pattern
+    forbidden_skills:
+      - flutter-create-feature
+    expected_strategy: >
+      Define compatibility and rollout ownership before DTO changes, preserve mapping
+      boundaries, test old and new shapes, and retire the old contract with evidence.
+
+  - id: graphql-schema-deprecation
+    request: >
+      Deprecate a GraphQL field used by cached mobile clients and move consumers to a
+      replacement field without breaking persisted operations.
+    primary_skill: flutter-api-contract-evolution
+    supporting_skills:
+      - flutter-graphql
+    forbidden_skills:
+      - flutter-api-integration
+    expected_strategy: >
+      Coordinate schema evolution, generated types, persisted operations, normalized
+      cache behavior, compatibility timing, and contract tests.
+
+  - id: local-storage-schema-change
+    request: >
+      Change the offline task schema to support multiple assignees while preserving
+      existing cached records and sync behavior.
+    primary_skill: flutter-api-contract-evolution
+    supporting_skills:
+      - flutter-local-database
+      - flutter-repository-pattern
+    forbidden_skills: []
+    expected_strategy: >
+      Plan local migration and recovery behavior together with remote compatibility,
+      mapping tests, and an explicit rollout or containment path.
+
+  - id: release-readiness
+    request: >
+      Prepare a signed Android and iOS release after a major feature and report the
+      remaining production risks.
+    primary_skill: flutter-release
+    supporting_skills:
+      - flutter-production-readiness
+      - flutter-ci-cd
+    forbidden_skills:
+      - flutter-bug-fixing
+    expected_strategy: >
+      Run readiness and release checks proportionately, gather build and test evidence,
+      and report unresolved risks instead of declaring a universal guarantee.
+
+  - id: security-hardening
+    request: >
+      Audit a Flutter app that stores session tokens, uses a WebView for payments, and
+      logs network failures.
+    primary_skill: flutter-security
+    supporting_skills:
+      - flutter-logging
+      - flutter-api-integration
+    forbidden_skills: []
+    expected_strategy: >
+      Inspect token storage, WebView, transport, logging, permissions, and failure
+      paths; make security recommendations based on project evidence.
+
+  - id: framework-routing-change
+    request: >
+      Add a new skill to this repository and prove that its description, metadata,
+      routing, install paths, and validation contracts remain consistent.
+    primary_skill: flutter-agent-evaluation
+    supporting_skills:
+      - flutter-agent-memory
+      - flutter-code-review
+    forbidden_skills:
+      - flutter-create-feature
+    expected_strategy: >
+      Update the skill contract and a realistic routing scenario together, run the
+      structural validator, distinguish static checks from live-agent evidence, and
+      report environment limitations.
+
+  - id: missing-project-state
+    request: >
+      Fix a null exception in an existing Flutter repository that has no .agent folder
+      and only fails in one widget test.
+    primary_skill: flutter-bug-fixing
+    supporting_skills:
+      - flutter-widget-testing
+    forbidden_skills:
+      - flutter-agent-memory
+      - flutter-product-discovery-and-architecture
+    expected_strategy: >
+      Recover context from the repository and failing test, avoid creating persistent
+      project state for this local fix, implement the smallest correction, and validate it.

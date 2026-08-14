@@ -31,6 +31,7 @@ scratch/
 .agents/*
 !.agents/rules/
 !.agents/rules/flutter-agent-framework.md
+!.agents/rules/flutter-agent-evaluation.md
 .ai
 .codex/sessions/
 .codex/scratch/
