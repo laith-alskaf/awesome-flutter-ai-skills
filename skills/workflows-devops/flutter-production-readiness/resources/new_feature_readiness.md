@@ -18,13 +18,13 @@ Use this checklist during Sprint Planning or before starting development on a ne
 - [ ] Reusable components identified (avoiding duplicate widget creation).
 - [ ] Accessibility requirements (semantics labels, touch targets) explicitly noted for custom UI widgets.
 
-## 4. Anti-Hallucination Gate (AI Agent Mandatory Step)
+## 4. Decision Readiness (AI Agent Step)
 
-- [ ] Agent confidence score in `.agent/CURRENT_STATE.md` is **≥ 0.80** before any code generation begins.
-- [ ] If confidence < 0.80, `flutter-grill-me` has been invoked and all 5 Engineering Dimensions answered.
-- [ ] Active state management library confirmed from `pubspec.yaml` (Riverpod / Bloc / Cubit / GetX).
-- [ ] Backend API contract (URL, method, request/response JSON) fully defined before DTO creation.
-- [ ] All edge cases (network failure, empty data, unauthorized access) documented in user stories.
+- [ ] Material assumptions, open questions, and confirmed decisions are recorded in project state or the relevant design artifact.
+- [ ] `flutter-grill-me` was used when unresolved information could change architecture, data, security, dependencies, API contracts, or user-visible behavior.
+- [ ] The active state-management approach is confirmed from the affected feature and `pubspec.yaml`, or a deliberate selection is documented for a new feature.
+- [ ] Backend API contracts are defined before DTO creation when the feature depends on an external API.
+- [ ] Relevant edge cases, such as network failure, empty data, and unauthorized access, are documented in user stories or acceptance criteria.
 
 ---
 

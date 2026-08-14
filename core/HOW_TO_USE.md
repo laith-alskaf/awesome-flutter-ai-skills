@@ -1,7 +1,7 @@
 # Flutter AI Engineering OS — How To Use
 # الدليل الشامل لاستخدام نظام التشغيل الهندسي للذكاء الاصطناعي (V2)
 
-> **For AI Agents:** This document provides deployment paths and integration instructions. Read `.agent/core/AGENTS.md` for policy rules and `.agent/PERSONAS.md` for role adoption.
+> **For AI Agents:** This document provides deployment paths and integration instructions. In an initialized project, read `.agent/core/AGENTS.md` for project governance and use `.agents/skills/` for native skill discovery. Do not require either path while maintaining this framework repository itself.
 
 ---
 
@@ -19,14 +19,13 @@ This syncs the `/core` OS Kernel and all 51 modular skills to your global AI age
 ```powershell
 .\tools\init-project.ps1
 ```
-This sets up the `.agent/` isolated workspace inside your current project.
+This sets up `.agent/` for project state and `.agents/skills/` for native workspace skill discovery inside your current project.
 
 ---
 
 ## نظرة عامة (Arabic Overview)
 
-هذا الدليل هو مرجعك العملي لدمج **نظام التشغيل الهندسي V2 (AI Engineering OS)**.
-تمت إعادة هيكلة هذا النظام بالكامل ليكون **Modular**، بحيث تحتوي كل مهارة على القوالب والموارد الخاصة بها، مما يمنع استهلاك الذاكرة (Token Bloat) ويضمن استجابة دقيقة من وكيل الذكاء الاصطناعي بناءً على 5 شخصيات قيادية (Personas).
+هذا الدليل هو مرجعك العملي لدمج **نظام التشغيل الهندسي V2 (AI Engineering OS)**. المهارات تُكتشف أصلاً من `.agents/skills/`، بينما تحفظ `.agent/` حالة المشروع وقراراته وسجلات التسليم. يحتوي كل Skill على تعليمات أساسية وموارد اختيارية تُقرأ عند الحاجة، ما يدعم الإفصاح التدريجي دون افتراض ذاكرة دائمة للوكيل.
 
 ---
 
@@ -80,22 +79,23 @@ This sets up the `.agent/` isolated workspace inside your current project.
 ```text
 <your-flutter-project>/
 ├── .agent/
-│   ├── core/                            ← نواة النظام (AGENTS.md, PERSONAS.md, إلخ)
-│   ├── skills/                          ← جميع الـ 51 مهارة بنظام الوحدات (Modular)
+│   ├── core/                            ← نواة الحوكمة (AGENTS.md, PERSONAS.md، إلخ)
 │   ├── tools/                           ← أدوات الفحص والتأكيد
 │   ├── PROJECT_PROFILE.md               ← هويّة المشروع (عدّلها أولاً!)
-│   ├── KNOWLEDGE_INDEX.md               ← خريطة الـ skills الكاملة
-│   ├── CURRENT_STATE.md                 ← متتبع الثقة والحالة
-│   ├── AGENTS_MEMORY.md                 ← سجل صحة المشروع
-│   └── SESSION_LOG.md                   ← سجل الجلسات
-├── .cursorrules                         ← قواعد Cursor (موجّهة إلى .agent/core/AGENTS.md)
+│   ├── KNOWLEDGE_INDEX.md               ← خريطة المعرفة
+│   ├── CURRENT_STATE.md                 ← الأدلة والافتراضات والأسئلة المفتوحة
+│   ├── AGENTS_MEMORY.md                 ← سجل الصحة والدروس المتكررة
+│   └── SESSION_LOG.md                   ← سجل الجلسات والتسليم
+├── .agents/
+│   └── skills/                          ← جميع الـ 51 مهارة بصيغة Agent Skills الأصلية
+├── .cursorrules                         ← قواعد Cursor المتوافقة مع حالة المشروع
 ├── .windsurfrules                       ← قواعد Windsurf
 └── .clinerules                          ← قواعد Roo/Cline
 ```
 
 **الخطوات بعد التهيئة:**
-1. افتح `.agent/PROJECT_PROFILE.md` واملأ تفاصيل مشروعك.
-2. تأكد من قراءة الوكيل لملف `.agent/core/PERSONAS.md`.
-3. اطلب من الـ AI Agent تفعيل `flutter-grill-me` لقفل المتطلبات.
-4. ابدأ البناء!
+1. افتح `.agent/PROJECT_PROFILE.md` وسجّل تفاصيل المشروع المؤكدة.
+2. دع الوكيل يختار من `.agents/skills/` أقل مجموعة مهارات تغطي المهمة.
+3. اطلب `flutter-grill-me` فقط عندما تؤثر المعلومات الناقصة في المعمارية أو الأمان أو البيانات أو الواجهات أو الاعتماديات أو سلوك المستخدم.
+4. ابدأ البناء والتحقق التدريجي.
 

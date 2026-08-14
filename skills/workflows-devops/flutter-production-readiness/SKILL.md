@@ -96,3 +96,7 @@ Once `.agent/PRODUCTION_CHECKLIST.md` passes all 6 pillars and accessibility gat
 - `flutter-ci-cd` — CI/CD pipeline for automated release gates (Pillar 5)
 - `flutter-release` — App signing and store submission (Pillar 5)
 - `flutter-logging` — Crash reporting and observability setup (Pillar 6)
+
+## Validation
+
+Before completing, verify the output against the target project's applicable analysis, test, and platform checks. Confirm that the result satisfies this skill's scope, preserves existing project conventions, and records any material assumption or limitation.

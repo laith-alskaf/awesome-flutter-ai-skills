@@ -4,7 +4,7 @@
 // Flutter AI Agent Skill Framework 2026
 //
 // Authoritative Linter & CI Gatekeeper for Clean Architecture Layer Boundaries
-// Usage: dart run scripts/verify_architecture.dart [path_to_project_root]
+// Usage: dart run .agent/tools/verify_architecture.dart [path_to_project_root]
 // ============================================================================
 
 import 'dart:io';

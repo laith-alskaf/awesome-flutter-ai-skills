@@ -101,7 +101,7 @@ features/
 The domain layer is the heart of the application. It must:
 
 > [!CAUTION]
-> **ABSOLUTE DOMAIN ISOLATION RULE (0% State & UI Imports):** The Domain layer MUST remain 100% pure Dart 3.12. You are strictly forbidden from importing `@riverpod`, `flutter_riverpod`, `flutter_bloc`, `bloc`, `get`, `get_it`, `injectable`, `dio`, `drift`, `hive`, or any Flutter UI library (`package:flutter/material.dart`, `dart:ui`). All state management providers/controllers must live in Presentation or DI containers, injecting domain repositories into UseCases via interfaces. Use `dart run scripts/verify_architecture.dart` to verify.
+> **ABSOLUTE DOMAIN ISOLATION RULE (0% State & UI Imports):** The Domain layer MUST remain 100% pure Dart 3.12. You are strictly forbidden from importing `@riverpod`, `flutter_riverpod`, `flutter_bloc`, `bloc`, `get`, `get_it`, `injectable`, `dio`, `drift`, `hive`, or any Flutter UI library (`package:flutter/material.dart`, `dart:ui`). All state management providers/controllers must live in Presentation or DI containers, injecting domain repositories into UseCases via interfaces. Use `dart run .agent/tools/verify_architecture.dart` to verify.
 
 - Contain zero Flutter or State Management library imports
 - Compile independently of any framework

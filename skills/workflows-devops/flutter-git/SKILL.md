@@ -88,3 +88,7 @@ android/.gradle/
 - `flutter-ci-cd` — Automated build and test
 - `flutter-release` — Versioning and release process
 - `flutter-code-review` — Review standards
+
+## Validation
+
+Before completing, verify the output against the target project's applicable analysis, test, and platform checks. Confirm that the result satisfies this skill's scope, preserves existing project conventions, and records any material assumption or limitation.

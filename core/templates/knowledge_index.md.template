@@ -1,34 +1,37 @@
 # KNOWLEDGE_INDEX.md — Context Navigation Map
 
-This index allows AI Agents to rapidly jump to specific architectural decisions (ADRs), orthogonal skills, and feature modules without searching every file in the workspace.
+Use this file as a compact index to durable project knowledge. Keep it current only when the project uses persistent agent state; do not invent links to ADRs, features, or templates that do not exist.
 
----
+## Project entry points
 
-## 🏛️ Architectural Decision Records (ADRs)
-
-| ADR File | Decision Domain | Key Outcome |
+| Item | Path or reference | Status |
 |---|---|---|
-| [`decisions/ADR-0001-clean-architecture.md`](decisions/ADR-0001-clean-architecture.md) | Layer Isolation | Presentation ➔ Domain ➔ Data flow; zero Flutter in Domain |
-| [`decisions/ADR-0002-state-management-matrix.md`](decisions/ADR-0002-state-management-matrix.md) | Pluggable State | Support Riverpod 3.x, Bloc 9.x, Cubit, and GetX 5.x |
-| [`decisions/ADR-0003-impeller-rendering.md`](decisions/ADR-0003-impeller-rendering.md) | Rendering Engine | Default to Impeller engine for 60/120 FPS frame budget |
-| [`decisions/ADR-0004-declarative-routing.md`](decisions/ADR-0004-declarative-routing.md) | Routing | Declarative typed routing using `go_router` |
-| [`decisions/ADR-0005-dio-networking.md`](decisions/ADR-0005-dio-networking.md) | REST Networking | Dio interceptor chain for auth tokens and exception mapping |
+| Project profile | `.agent/PROJECT_PROFILE.md` | Required after initialization |
+| Current state | `.agent/CURRENT_STATE.md` | Update at meaningful checkpoints |
+| Health and lessons | `.agent/AGENTS_MEMORY.md` | Add reusable lessons only |
+| Session handoffs | `.agent/SESSION_LOG.md` | Link archives when compacted |
+| Native skills | `.agents/skills/` | Installed by the framework initializer |
+| Governance | `.agent/core/AGENTS.md` | Read when relevant to the task |
 
----
+## Architectural decisions
 
-## 🛠️ Feature Modules & Skill Mapping
+Add an entry only after a decision record exists. Store project ADRs in the location selected by the project, such as `docs/adr/` or `.agent/decisions/`.
 
-| Feature / Domain Module | Source Directory | Primary Skill | Active Template |
+| Decision | Record | Date | Status |
 |---|---|---|---|
-| **Authentication & Auth Guard** | `lib/features/auth/` | `flutter-security` | `riverpod_notifier.dart.template` |
-| **Networking & API Client** | `lib/core/network/` | `flutter-api-integration` | `dio_client.dart.template` |
-| **Live WebSocket Streaming** | `lib/features/chat/` | `flutter-websockets` | `websocket_service.dart.template` |
-| **Local Persistence** | `lib/core/database/` | `flutter-local-database` | `drift_database.dart.template` |
+| _No indexed decisions yet_ | — | — | — |
 
----
+## Active work
 
-## 🧭 Fast Recovery Shortcuts
+| Objective | Relevant source paths | Skills used | Evidence / next action |
+|---|---|---|---|
+| _No active work recorded_ | — | — | — |
 
-- **To add a new screen:** Jump to `skills/ui-styling/flutter-build-screen/SKILL.md`.
-- **To fix a bug:** Jump to `skills/performance-maintenance/flutter-bug-fixing/SKILL.md`.
-- **To review code:** Jump to `skills/workflows-devops/flutter-code-review/SKILL.md`.
+## Skill shortcuts
+
+- Build or revise a screen: `.agents/skills/flutter-build-screen/SKILL.md`.
+- Diagnose a defect: `.agents/skills/flutter-bug-fixing/SKILL.md`.
+- Review a change: `.agents/skills/flutter-code-review/SKILL.md`.
+- Recover or persist non-trivial task context: `.agents/skills/flutter-agent-memory/SKILL.md`.
+
+When a skill is absent from `.agents/skills/`, install or initialize the framework rather than guessing its content.

@@ -141,3 +141,7 @@ class SearchIntent extends Intent { const SearchIntent(); }
 - `flutter-responsive-design` — Multi-column desktop/tablet breakpoints
 - `flutter-ui-engineering` — Adaptive layouts and design tokens
 - `flutter-release` — Building web PWA and desktop installers
+
+## Validation
+
+Before completing, verify the output against the target project's applicable analysis, test, and platform checks. Confirm that the result satisfies this skill's scope, preserves existing project conventions, and records any material assumption or limitation.

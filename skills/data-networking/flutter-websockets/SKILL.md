@@ -150,3 +150,7 @@ class LiveOrderBloc extends Bloc<LiveOrderEvent, LiveOrderState> {
 - `flutter-api-integration` — Standard REST HTTP networking
 - `flutter-clean-architecture` — Stream boundary isolation
 - `flutter-error-handling` — Mapping socket errors to domain failures
+
+## Validation
+
+Before completing, verify the output against the target project's applicable analysis, test, and platform checks. Confirm that the result satisfies this skill's scope, preserves existing project conventions, and records any material assumption or limitation.

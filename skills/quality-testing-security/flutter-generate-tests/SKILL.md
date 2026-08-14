@@ -136,3 +136,7 @@ Verify zero flaky tests and check coverage reports for domain/data layers.
 - `flutter-widget-testing` — WidgetTester and UI mocking
 - `flutter-integration-testing` — E2E flow testing
 - `flutter-riverpod` / `flutter-bloc` / `flutter-cubit` / `flutter-getx` — State testing patterns
+
+## Validation
+
+Before completing, verify the output against the target project's applicable analysis, test, and platform checks. Confirm that the result satisfies this skill's scope, preserves existing project conventions, and records any material assumption or limitation.

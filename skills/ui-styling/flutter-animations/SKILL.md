@@ -97,3 +97,7 @@ For complex illustrations (e.g., success checkmarks, empty state illustrations, 
 
 - `flutter-ui-engineering` — Widget composition
 - `flutter-performance` — Animation performance profiling
+
+## Validation
+
+Before completing, verify the output against the target project's applicable analysis, test, and platform checks. Confirm that the result satisfies this skill's scope, preserves existing project conventions, and records any material assumption or limitation.

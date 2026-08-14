@@ -2,12 +2,11 @@
 
 ## Technology Stack
 
-- Flutter 3.44.x Stable
-- Dart 3.12.x
-- Material 3 (useMaterial3: true)
-- Impeller rendering engine (default, no opt-out)
-- SwiftPM for iOS/macOS dependencies
-- Null Safety (sound)
+- Treat the target project's `pubspec.yaml`, lockfiles, platform folders, and CI configuration as the source of truth for Flutter, Dart, and package versions.
+- Use Flutter 3.44.x / Dart 3.12.x only as this framework's example baseline; do not upgrade a target project without an explicit compatibility decision.
+- Prefer Material 3 for new UI when it matches the product design system.
+- Profile and verify renderer, platform, and iOS/macOS dependency-manager choices before changing them.
+- Preserve sound null safety and the target project's existing platform support.
 
 ## Build Commands
 
@@ -108,18 +107,10 @@
 
 ## Dependency Policy (ADR-011)
 
-- **NEVER manually edit version numbers in `pubspec.yaml`.**
-- **ALWAYS use `flutter pub add <package>` to add or upgrade packages** — it resolves the latest compatible version automatically.
-- Before adding ANY new package, evaluate all 7 criteria (see `decisions/011_dependency_policy.md`):
-  1. Pub Score ≥ 120/160 and Popularity ≥ 90%
-  2. Verified publisher badge (✅) on pub.dev
-  3. Last update within 12 months
-  4. Full null safety support (Dart 3.x compatible)
-  5. Compatible with all target platforms
-  6. Accepted license: MIT, BSD, Apache 2.0 (reject GPL/AGPL)
-  7. No unpatched security vulnerabilities (CVEs)
-- Document the evaluation in a comment above the dependency in `pubspec.yaml`.
-- To upgrade: `flutter pub upgrade <package>` | To audit: `flutter pub outdated`
+- Prefer `flutter pub add`, `flutter pub remove`, `flutter pub upgrade`, and `flutter pub outdated` for ordinary dependency changes; never hand-edit generated lockfiles.
+- Preserve intentional SDK constraints, dependency overrides, and workspace configuration. Edit `pubspec.yaml` directly only when the change cannot be expressed safely through the package command, and explain the reason in the change record or pull request.
+- Before adding a production dependency, verify that it solves a real requirement, supports the target Flutter/Dart versions and platforms, has an acceptable license for the project, and has a credible maintenance and security posture. Record evidence proportionate to the risk; do not use a universal score or freshness threshold as a substitute for review.
+- Read `core/resources/011_dependency_policy.md` for the full evaluation checklist.
 
 
 ## Performance
@@ -133,25 +124,10 @@
 
 ## AI Agent Behavior, Personas & Context Protocol
 
-- **Default State (The Fallback Persona):** Upon boot, you are the **Technical Lead / Project Manager**. You route general queries and decide which specialized persona is needed. Read `core/PERSONAS.md` for role definitions (use Progressive Disclosure: read ONLY your active persona).
-- **Persona Handoff Protocol:** When a multi-phase task requires switching roles (e.g., from CPO analyzing requirements to Architect designing the domain), the active persona MUST output a concise **Handover Note** summarizing the state before the context switch occurs.
-- Follow the **8-Step Context Recovery Priority Protocol**:
-  1. `.agent/PROJECT_PROFILE.md` (Static Project Identity & Stack)
-  2. `AGENTS.md` (Governance Laws, Behavioral Constraints & Quality Standards)
-  3. `.agent/CURRENT_STATE.md` (Active Goal, Context, Assumptions & Confidence Matrix)
-  4. `.agent/KNOWLEDGE_INDEX.md` (Fast Map to ADRs, Skills & Source Folders)
-  5. `.agent/AGENTS_MEMORY.md` (Working Ledger, Milestones, Health Meter & Lessons Learned)
-  6. Relevant ADRs (`decisions/` or `.agent/decisions/`)
-  7. Relevant Skills (`skills/`)
-  8. `.agent/SESSION_LOG.md` (Chronological History Ledger)
-- Enforce the **Why-What-Ready Product Pipeline** on all project initialization or feature development:
-  - **WHY:** Evaluate business strategy, 7 Discovery Questions, and PRD (`.agent/PRODUCT_REQUIREMENTS.md` via `flutter-product-discovery-and-architecture`).
-  - **WHAT:** Design domain entities, value objects, and DI graphs (`.agent/DOMAIN_MAP.md` via `flutter-domain-modeling`).
-  - **READY:** Verify 6 production pillars and A11y gating before release (`.agent/PRODUCTION_CHECKLIST.md` via `flutter-production-readiness`).
-- **Enforce the Anti-Hallucination Interrogation Gate (`grill-me`):** If project requirements, architectural boundaries, or state management rules are ambiguous, incomplete, or if the agent's calculated reasoning confidence in `.agent/CURRENT_STATE.md` is below `0.80`, the AI Agent MUST NOT generate code. Instead, immediately trigger `flutter-grill-me` to interrogate the user across 5 engineering dimensions.
-- Think before coding. Follow: Understand → Analyze → Plan → Implement → Review.
-- Never generate code immediately. Always understand the problem first.
-- Never skip error handling, loading states, or empty states.
-- Never sacrifice architecture for speed.
-- If evidence is missing, ask before proceeding.
-- Every recommendation must be justified with reasoning.
+- **Default state:** Start as the Technical Lead / Project Manager, select only the persona necessary for the task, and read the corresponding section of `core/PERSONAS.md` on demand.
+- **Handoffs:** For a multi-phase or interrupted task, write a concise handoff note containing the objective, evidence, decisions, validation status, and next action. Do not create a handoff artifact for a trivial one-step change.
+- **Recover context conditionally:** If the target project contains `.agent/`, read `PROJECT_PROFILE.md`, `CURRENT_STATE.md`, the relevant state record, and only the ADRs and skills needed for the task. If it does not, inspect the project README, `pubspec.yaml`, source tree, and CI configuration; create project-state files only when the user requests initialization or persistent tracking.
+- **Use the Why–What–Ready pipeline proportionately:** apply discovery and a PRD to new products or materially ambiguous features, domain design to non-trivial business logic, and release-readiness checks before a release. Do not force the full pipeline on a typo fix or narrowly scoped maintenance task.
+- **Resolve uncertainty safely:** If missing information changes architecture, security, data, external APIs, dependencies, or user-visible behavior, ask focused questions or document an explicit assumption before proceeding. For a reversible low-risk change, state the assumption and continue rather than inventing a numerical confidence score.
+- Follow: Understand → Analyze → Plan when warranted → Implement → Validate → Report. Match the amount of process to the task risk.
+- Cover error, loading, and empty states when the changed user flow can exhibit them. Preserve architecture and justify material recommendations with evidence.

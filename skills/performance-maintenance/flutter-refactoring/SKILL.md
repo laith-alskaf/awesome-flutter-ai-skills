@@ -105,3 +105,7 @@ onPressed: () {
 - `flutter-clean-architecture` — Target layer boundaries
 - `flutter-unit-testing` — Safety net unit testing
 - `flutter-performance` — Performance impact verification
+
+## Validation
+
+Before completing, verify the output against the target project's applicable analysis, test, and platform checks. Confirm that the result satisfies this skill's scope, preserves existing project conventions, and records any material assumption or limitation.
