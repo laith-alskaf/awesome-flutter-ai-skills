@@ -7,29 +7,26 @@
 #   Flutter project directory so that ALL AI agents (Antigravity,
 #   Gemini, Claude, Cursor, Windsurf, Copilot, Codex, Roo) work
 #   with the complete framework locally -- per project.
-#   ALL resources and governance files are cleanly placed inside
-#   the .agent/ folder without cluttering the project root!
+#   Project state and governance live in .agent/; native workspace skills
+#   live in .agents/skills/ for Antigravity discovery.
 #
 # USAGE (from inside your Flutter project root):
-#   .\path\to\flutter-skills\init-project.ps1
+#   & "path\to\flutter-skills\tools\init-project.ps1"
 #
 # USAGE (specify project path explicitly):
-#   .\init-project.ps1 -ProjectPath "D:\Projects\my_flutter_app"
+#   & "path\to\flutter-skills\tools\init-project.ps1" -ProjectPath "D:\Projects\my_flutter_app"
 #
-# USAGE (one-line from GitHub, run inside project dir):
-#   irm https://raw.githubusercontent.com/laith-alskaf/awesome-flutter-ai-skills/main/tools/init-project.ps1 | iex
-#
-# WHAT IT CREATES (Unified inside .agent/ directory):
+# WHAT IT CREATES:
 #   .agent/core/AGENTS.md            -> Framework governance rules
 #   .agent/core/ROUTER_MANIFESTO.md  -> Agent routing & skill matrix
 #   .agent/core/PERSONAS.md          -> The 5 AI Personas definitions
 #   .agent/PROJECT_PROFILE.md        -> Project identity (edit this!)
 #   .agent/KNOWLEDGE_INDEX.md        -> Navigation map to all skills
-#   .agent/CURRENT_STATE.md          -> Session confidence tracker
-#   .agent/AGENTS_MEMORY.md          -> Project health ledger
-#   .agent/SESSION_LOG.md            -> Chronological session log
-#   .agent/skills/                   -> All 51 modular skills (local copy)
-#   .agent/tools/                    -> Executable OS Utilities
+#   .agent/CURRENT_STATE.md          -> Evidence, assumptions, and open questions
+#   .agent/AGENTS_MEMORY.md          -> Project health and reusable lessons
+#   .agent/SESSION_LOG.md            -> Chronological session handoffs
+#   .agent/tools/                    -> Executable framework utilities
+#   .agents/skills/                  -> All native Agent Skills
 #   .cursorrules                     -> Cursor IDE rules (pointing to .agent/)
 #   .windsurfrules                   -> Windsurf IDE rules (pointing to .agent/)
 #   .clinerules                      -> Roo Code / Cline rules (pointing to .agent/)
@@ -43,16 +40,20 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+Set-StrictMode -Version Latest
 
 # ---------------------------------------------
 # 1. RESOLVE PATHS
 # ---------------------------------------------
 
-# Determine the flutter-skills framework source directory
+# Resolve the repository root when invoked from tools/, while retaining
+# current-directory behavior for one-line streamed execution.
 $scriptDir = $PSScriptRoot
-if ([string]::IsNullOrEmpty($scriptDir)) { $scriptDir = Get-Location }
-
-$frameworkRoot = $scriptDir
+if ([string]::IsNullOrEmpty($scriptDir)) {
+    $frameworkRoot = (Get-Location).Path
+} else {
+    $frameworkRoot = Split-Path -Parent $scriptDir
+}
 if (-not [string]::IsNullOrEmpty($SkillsSource)) { $frameworkRoot = $SkillsSource }
 
 # If run via IEX stream (no local files), clone from GitHub temporarily
@@ -217,19 +218,15 @@ CurrentMilestone: "Milestone 0: Framework Setup"
 
 ---
 
-## Confidence Matrix
+## Evidence, Assumptions, and Open Questions
 
-```yaml
-Confidence:
-  level: Low       # [High, Medium, Low] -- Update as requirements are locked
-  score: 0.50      # Start low; raise as requirements are clarified via flutter-grill-me
-  reason: "Project just initialized. PROJECT_PROFILE.md needs to be filled in."
-```
+| Type | Record |
+|---|---|
+| Evidence | Project initialized; application architecture and product requirements have not yet been confirmed. |
+| Assumptions | No state-management, database, authentication, or target-platform choice is assumed. |
+| Open questions | Define the first feature, constraints, and success criteria before making architecture-changing decisions. |
 
-> [!WARNING]
-> Confidence score is 0.50 -- below 0.80 threshold.
-> The AI Agent MUST invoke **flutter-grill-me** before generating any code.
-> Fill in PROJECT_PROFILE.md first, then update this score.
+> Use `flutter-grill-me` when unresolved information could change architecture, security, data, API, dependency, or user-visible behavior. For a small reversible task, state the assumption and validate the result instead of blocking on a score.
 
 ---
 
@@ -301,9 +298,10 @@ $sessionLog = @"
 
 ## Session: $today
 
-- **Action:** Project initialized with Flutter AI Agent Skill Framework 2026 (.agent/ mode)
-- **Source Framework:** awesome-flutter-ai-skills
-- **Status:** .agent/PROJECT_PROFILE.md needs to be filled in before first feature work.
+- **Action:** Project initialized with Flutter AI Agent Skill Framework 2026.
+- **Source Framework:** awesome-flutter-ai-skills.
+- **State location:** `.agent/` stores project context; `.agents/skills/` stores native workspace skills.
+- **Status:** Confirm the project profile and first feature before architecture-changing work.
 "@
 Set-Content -Path (Join-Path $agentDir "SESSION_LOG.md") -Value $sessionLog -Force
 Write-Host "      [+] .agent/SESSION_LOG.md" -ForegroundColor Green
@@ -315,69 +313,57 @@ Write-Host "      [+] .agent/SESSION_LOG.md" -ForegroundColor Green
 # The core/ and tools/ directories were copied in Step 3.
 
 # ---------------------------------------------
-# 6. COPY ALL 51 skills INTO .agent/skills/
+# 6. COPY ALL SKILLS INTO .agents/skills/ (official Antigravity path)
 # ---------------------------------------------
-Write-Host "[4/6] Copying all 51 skills directly into .agent/skills/..." -ForegroundColor Yellow
+Write-Host "[4/6] Copying all skills into .agents/skills/..." -ForegroundColor Yellow
 
 $srcSkills = Join-Path $frameworkRoot "skills"
-$dstSkills = Join-Path $agentDir "skills"
+$agentsDir = Join-Path $ProjectPath ".agents"
+$dstSkills = Join-Path $agentsDir "skills"
 
 if (Test-Path $srcSkills) {
+    if (-not (Test-Path $agentsDir)) { New-Item -ItemType Directory -Path $agentsDir -Force | Out-Null }
     if (Test-Path $dstSkills) { Remove-Item -Path $dstSkills -Recurse -Force }
     Copy-Item -Path $srcSkills -Destination $dstSkills -Recurse -Force
     $skillCount = (Get-ChildItem -Path $dstSkills -Filter "SKILL.md" -Recurse).Count
-    Write-Host "      [+] .agent/skills/ ($skillCount skills)" -ForegroundColor Green
+    Write-Host "      [+] .agents/skills/ ($skillCount skills; Antigravity default path)" -ForegroundColor Green
 }
 
 # ---------------------------------------------
 # 7. CREATE IDE & AGENT RULES FILES
 # ---------------------------------------------
-Write-Host "[5/6] Creating IDE & agent rules files (pointing to .agent/)..." -ForegroundColor Yellow
+Write-Host "[5/6] Creating IDE and agent rules..." -ForegroundColor Yellow
 
 $agentRulesCore = @"
-# Flutter AI Agent Skill Framework 2026 -- Project Rules (.agent/ Mode)
+# Flutter AI Agent Skill Framework 2026 -- Project Rules
 # Project: $projectName | Initialized: $today
 #
-# MANDATORY AGENT PROTOCOL:
-# 1. Read .agent/PROJECT_PROFILE.md FIRST (project identity & stack)
-# 2. Read .agent/core/AGENTS.md (governance laws & quality standards)
-# 3. Read .agent/core/PERSONAS.md (determine active persona)
-# 4. Read .agent/CURRENT_STATE.md (confidence matrix -- if < 0.80, trigger flutter-grill-me)
-# 5. Check .agent/KNOWLEDGE_INDEX.md (skill navigation map)
-# 6. Check pubspec.yaml (active state management library detection)
+# CONTEXT:
+# For a non-trivial Flutter change, inspect pubspec.yaml, the affected feature,
+# and relevant .agent/ state files. Missing optional state files do not block a
+# small reversible change; state the assumption and validate the result.
 #
-# ZERO HALLUCINATION GATE:
-# Output a Context Parity Header before ANY code generation:
-#   [OK] .agent/PROJECT_PROFILE.md: Read | Stack: Flutter 3.44 / [StateLib]
-#   [OK] .agent/core/AGENTS.md: Read | Architecture: Feature-First Clean Architecture
-#   [OK] .agent/CURRENT_STATE.md: Read | Confidence: [score]
-#   [OK] Active Persona: [Tech Lead | CPO | Principal Architect | Staff Engineer | QA/SecOps]
-#   [OK] State Management: Detected [Riverpod|Bloc|Cubit|GetX] from pubspec.yaml
-#   [OK] Skill(s) Activated: [skill-name]
-#   [OK] Grill-Me Gate: [PASSED (>=0.80) | TRIGGERED]
-# If Confidence < 0.80 -> STOP. Invoke flutter-grill-me first.
+# SKILLS:
+# Native workspace skills live in .agents/skills/. Select the smallest relevant
+# skill set. Inspect both pubspec.yaml and the affected feature before choosing
+# Riverpod, Bloc, Cubit, or GetX; flutter_bloc alone does not distinguish Bloc
+# from Cubit. Do not introduce a second state approach in one feature without an
+# explicit migration plan.
 #
-# STATE MATRIX FIREWALL:
-# Riverpod detected -> LOCK OUT Bloc, Cubit, GetX skills
-# Bloc detected -> LOCK OUT Riverpod, GetX skills
-# GetX detected -> LOCK OUT Riverpod, Bloc, Cubit skills
+# ARCHITECTURE:
+# Preserve the target project's architecture. When Clean Architecture is used,
+# keep Flutter UI and state-management imports out of Domain and keep UI imports
+# out of Data. Cover loading, error, and empty states when the changed flow can
+# exhibit them.
 #
-# ARCHITECTURE RULES:
-# - Clean Architecture: Presentation -> Domain -> Data (strict)
-# - Domain layer: ZERO Flutter/Riverpod/Bloc/Dio/Drift imports
-# - Data layer: ZERO Flutter UI widget imports
-# - Repository interfaces: always return Result<T, Failure>, never throw
-# - State: immutable (freezed or Dart 3 sealed classes)
-# - All screens: handle loading, error, empty, and data states
+# DEPENDENCIES:
+# Prefer flutter pub commands for ordinary changes. Preserve intentional project
+# constraints and read .agent/core/resources/011_dependency_policy.md before a
+# material dependency decision.
 #
-# DEPENDENCY POLICY (ADR-011):
-# ALWAYS use: flutter pub add <package>  (never edit pubspec.yaml manually)
-# Check 7 criteria before ANY new package: Score>=120, Verified publisher,
-# Active<12mo, Null-safe, Platform-compatible, MIT/BSD/Apache license, No CVEs
-#
-# OS KERNEL:       .agent/core/ (AGENTS.md, PERSONAS.md, ROUTER_MANIFESTO.md)
-# SKILLS LOCATION: .agent/skills/ (Modular skills containing templates and resources)
-# VERIFY ARCH:     dart run .agent/tools/verify_architecture.dart
+# GOVERNANCE: .agent/core/AGENTS.md
+# ROUTING:    .agent/core/ROUTER_MANIFESTO.md
+# VERIFY:     dart run .agent/tools/verify_architecture.dart
 "@
 
 # .cursorrules
@@ -404,34 +390,14 @@ if (-not (Test-Path $githubDir)) { New-Item -ItemType Directory -Path $githubDir
 Set-Content -Path (Join-Path $githubDir "copilot-instructions.md") -Value $agentRulesCore -Force
 Write-Host "      [+] .github/copilot-instructions.md (GitHub Copilot)" -ForegroundColor Green
 
-# Antigravity Knowledge Item (KI) Auto-Injection
-$antigravityDir = Join-Path $env:USERPROFILE ".gemini\antigravity\knowledge"
-if (Test-Path $antigravityDir) {
-    # Replace invalid characters in project name for folder name
-    $safeProjectName = $projectName -replace '[^a-zA-Z0-9_\-]', '_'
-    $kiProjectDir = Join-Path $antigravityDir "project_context_$safeProjectName"
-    if (-not (Test-Path $kiProjectDir)) { New-Item -ItemType Directory -Path $kiProjectDir -Force | Out-Null }
-    
-    # Standardized Knowledge Item format for Antigravity OS
-    $kiMetadata = @"
-{
-  "title": "Flutter Framework Context: $projectName",
-  "summary": "Whenever working in this project, you MUST strictly follow the '8-Step Context Recovery Priority Protocol' defined in `.agent/core/AGENTS.md`. Furthermore, as mandated by `.agent/core/ROUTER_MANIFESTO.md`, before generating or modifying ANY Dart/Flutter code, you MUST output the 'Context Parity Header' (verifying you read `.agent/PROJECT_PROFILE.md`, `AGENTS.md`, and `CURRENT_STATE.md`). If Confidence < 0.80, you must trigger `flutter-grill-me`.",
-  "references": [
-    "$($ProjectPath.Replace('\', '/'))/.agent/core/AGENTS.md",
-    "$($ProjectPath.Replace('\', '/'))/.agent/core/ROUTER_MANIFESTO.md",
-    "$($ProjectPath.Replace('\', '/'))/.agent/PROJECT_PROFILE.md"
-  ]
-}
-"@
-    Set-Content -Path (Join-Path $kiProjectDir "metadata.json") -Value $kiMetadata -Force
-    Write-Host "      [+] ~/.gemini/antigravity/knowledge/... (Antigravity KI Injected)" -ForegroundColor Green
-}
+# Antigravity discovers this project's skills from .agents/skills/.
+# Do not inject project context into a global Knowledge Item location: doing so
+# can leak stale project context across workspaces and is not required for skill discovery.
 
 # ---------------------------------------------
 # 8. VERIFY INSTALLATION
 # ---------------------------------------------
-Write-Host "[6/6] Verifying installation in .agent/..." -ForegroundColor Yellow
+Write-Host "[6/6] Verifying project state and native skills..." -ForegroundColor Yellow
 
 $checks = @(
     @{ Path = (Join-Path $agentDir "core/AGENTS.md");              Label = ".agent/core/AGENTS.md" },
@@ -439,7 +405,7 @@ $checks = @(
     @{ Path = (Join-Path $agentDir "PROJECT_PROFILE.md");          Label = ".agent/PROJECT_PROFILE.md" },
     @{ Path = (Join-Path $agentDir "KNOWLEDGE_INDEX.md");          Label = ".agent/KNOWLEDGE_INDEX.md" },
     @{ Path = (Join-Path $agentDir "CURRENT_STATE.md");            Label = ".agent/CURRENT_STATE.md" },
-    @{ Path = (Join-Path $agentDir "skills");                      Label = ".agent/skills/" },
+    @{ Path = (Join-Path $agentsDir "skills");                     Label = ".agents/skills/" },
     @{ Path = (Join-Path $agentDir "tools");                       Label = ".agent/tools/" },
     @{ Path = (Join-Path $ProjectPath ".cursorrules");             Label = ".cursorrules" },
     @{ Path = (Join-Path $githubDir "copilot-instructions.md");       Label = ".github/copilot-instructions.md" }
@@ -467,7 +433,7 @@ Write-Host ""
 if ($allPassed) {
     Write-Host "============================================================" -ForegroundColor Green
     Write-Host "  [SUCCESS] Flutter AI Agent Framework initialized successfully!" -ForegroundColor Green
-    Write-Host "  Project: $projectName | All resources unified in .agent/" -ForegroundColor Green
+    Write-Host "  Project: $projectName | State: .agent/ | Skills: .agents/skills/" -ForegroundColor Green
     Write-Host "============================================================" -ForegroundColor Green
 } else {
     Write-Host "============================================================" -ForegroundColor Yellow
@@ -481,11 +447,11 @@ Write-Host "  1. Open .agent/PROJECT_PROFILE.md and fill in:" -ForegroundColor W
 Write-Host "     - StateManagement (Riverpod | Bloc | Cubit | GetX)" -ForegroundColor Gray
 Write-Host "     - Database, Networking, Authentication choices" -ForegroundColor Gray
 Write-Host "     - Project description for AI Agent context" -ForegroundColor Gray
-Write-Host "  2. Raise confidence score in .agent/CURRENT_STATE.md to >= 0.80" -ForegroundColor White
-Write-Host "  3. Ask your AI Agent to 'run flutter-grill-me' to lock requirements" -ForegroundColor White
+Write-Host "  2. Record evidence, assumptions, and open questions in .agent/CURRENT_STATE.md" -ForegroundColor White
+Write-Host "  3. Use 'flutter-grill-me' when uncertainty can change a material decision" -ForegroundColor White
 Write-Host "  4. Start building with: 'create the [feature] feature'" -ForegroundColor White
 Write-Host ""
-Write-Host "  [SKILLS]:   .agent/skills/ (51 modular skills available offline)" -ForegroundColor Cyan
+Write-Host "  [SKILLS]:   .agents/skills/ (native Antigravity workspace skills)" -ForegroundColor Cyan
 Write-Host "  [VERIFY]:   dart run .agent/tools/verify_architecture.dart" -ForegroundColor Cyan
-Write-Host "  [PACKAGES]: Always use 'flutter pub add <package>' (ADR-011)" -ForegroundColor Cyan
+Write-Host "  [PACKAGES]: Prefer Flutter pub commands; review ADR-011 for material changes" -ForegroundColor Cyan
 Write-Host ""

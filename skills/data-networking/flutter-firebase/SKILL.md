@@ -87,3 +87,7 @@ void main() {
 - `flutter-clean-architecture` — Data layer placement
 - `flutter-security` — Auth token management
 - `flutter-error-handling` — Firebase exception mapping
+
+## Validation
+
+Before completing, verify the output against the target project's applicable analysis, test, and platform checks. Confirm that the result satisfies this skill's scope, preserves existing project conventions, and records any material assumption or limitation.

@@ -29,28 +29,25 @@ Execute a complete, production-ready feature from requirements to tested impleme
 
 ## Technology Context
 
-- Flutter 3.44.x / Dart 3.12.x
-- Feature-First + Clean Architecture (Presentation → Domain → Data)
-- Pluggable state management: Riverpod 3.x / Bloc 9.x / Cubit / GetX 5.x
-- go_router for declarative navigation
+- Use the target project's declared Flutter/Dart versions and existing architecture as the source of truth.
+- Apply Feature-First Clean Architecture only when it is established by the project or selected for this new feature.
+- Select state management from the affected feature's existing implementation and `pubspec.yaml` evidence.
+- Reuse the project's routing mechanism; use `go_router` only when it is already selected or explicitly adopted.
 
 ## Workflow Steps
 
-### ⛔ Step 0: Anti-Hallucination Gate (MANDATORY FIRST STEP)
+### Step 0: Establish Decision Readiness
 
-Before writing a single line of code, the AI Agent MUST evaluate requirement clarity.
+Before implementing a non-trivial feature, inspect the target project's architecture, affected feature, state-management usage, data sources, routes, and relevant `.agent/` state when it exists.
 
-> [!WARNING]
-> **GRILL-ME GATE:** If requirements are ambiguous, state management is unspecified, architectural boundaries are unclear, or confidence score in `.agent/CURRENT_STATE.md` is below **0.80**, the agent MUST NOT proceed to Step 1. Instead, immediately invoke **`flutter-grill-me`** to lock down specifications across the 5 Engineering Dimensions.
+> **Grill-Me rule:** If an unanswered question could change architecture, state management, data, security, dependencies, external contracts, deployment, or user-visible behavior, invoke **`flutter-grill-me`** or record an explicit assumption before the affected implementation step. Do not force unrelated questions or a numerical confidence threshold onto reversible low-risk work.
 
-**Gate Questions (all must be answered before Step 1):**
-1. What exact business problem does this feature solve?
-2. What state management library is active in `pubspec.yaml`?
-3. What API endpoints or local data sources does this feature require?
-4. What are the loading, error, empty, and success UI states?
-5. What are the edge cases and failure scenarios?
-
-Only proceed when all 5 questions are answered with **High confidence (score ≥ 0.80)**.
+**Typical questions, when applicable:**
+1. What user problem and acceptance criteria define the feature?
+2. Which state-management approach does the affected feature already use?
+3. What API, local data, privacy, or synchronization decisions are required?
+4. Which loading, error, empty, and success states can this user flow exhibit?
+5. Which edge cases and failure scenarios require tests or explicit handling?
 
 ---
 
@@ -124,8 +121,7 @@ Check the active state management library in `pubspec.yaml`:
 | `flutter_bloc` + method calls | `flutter-cubit` | `cubit.dart.template` |
 | `get` (GetX) | `flutter-getx` | `getx_controller.dart.template` |
 
-> [!CAUTION]
-> **STATE MATRIX FIREWALL:** Never mix state management libraries. If `flutter_riverpod` is detected, Bloc/Cubit/GetX skills are strictly locked.
+> **State-selection rule:** Reuse the approach already used by the affected feature. `flutter_bloc` alone does not distinguish Bloc from Cubit; inspect the actual classes and request. Do not introduce a second approach into one feature without an explicit migration boundary and removal plan.
 
 ---
 
@@ -134,8 +130,8 @@ Check the active state management library in `pubspec.yaml`:
 1. **Create Page** — Main screen widget; renders state, delegates actions to state holders
 2. **Create Widgets** — Small, single-responsibility, reusable components
 3. **Handle All States** — Loading skeleton, error with retry, empty state, data list/detail
-4. **Apply Theming** — Use Material 3 tokens; no hardcoded colors or sizes
-5. **Ensure Responsiveness** — Test on phone, tablet, and landscape orientation
+4. **Apply Theming** — Reuse the project's design system and avoid unexplained hardcoded visual values.
+5. **Ensure Responsiveness** — Test the target form factors and orientations that the project supports.
 
 See: `flutter-ui-engineering`, `flutter-responsive-design`, `flutter-accessibility`
 
@@ -143,9 +139,9 @@ See: `flutter-ui-engineering`, `flutter-responsive-design`, `flutter-accessibili
 
 ### Step 7: Navigation
 
-1. **Add Route** — Register in centralized `go_router` configuration
-2. **Add Type-Safe Route** — With `go_router_builder` if the project uses typed routes
-3. **Add Deep Link** — If the feature requires external URL navigation
+1. **Add Route** — Register the feature through the routing mechanism already used by the project.
+2. **Add Type Safety** — Use typed routes only when the selected router and project support them.
+3. **Add Deep Link** — Add and test one only when the feature requires external URL navigation.
 
 See: `flutter-routing`
 
@@ -153,9 +149,9 @@ See: `flutter-routing`
 
 ### Step 8: Testing
 
-1. **Unit Tests** — UseCases (mocked repository), Repository (mocked datasource), Notifiers/Blocs
-2. **Widget Tests** — Page rendering for each state (loading, error, empty, data)
-3. **Integration Test** — If this is a critical user flow
+1. **Unit Tests** — Cover changed business logic and state behavior using the project's test conventions.
+2. **Widget Tests** — Cover user-visible states that the changed page can exhibit.
+3. **Integration Test** — Add one when the user flow is critical or the project requires it.
 
 See: `flutter-unit-testing`, `flutter-widget-testing`, `flutter-generate-tests`
 
@@ -166,11 +162,13 @@ See: `flutter-unit-testing`, `flutter-widget-testing`, `flutter-generate-tests`
 Run automated verification before marking the feature as complete:
 
 ```bash
-dart analyze                             # Zero warnings policy
-dart format --output=none --set-exit-if-changed .  # Format check
-flutter test                             # All tests pass
-dart run scripts/verify_architecture.dart  # Zero domain boundary violations
+dart analyze
+dart format --output=none --set-exit-if-changed .
+flutter test
+dart run .agent/tools/verify_architecture.dart
 ```
+
+Run only the checks supported by the target project and include relevant platform or integration checks. The architecture verifier applies when the project uses the framework's Clean Architecture layout.
 
 Then request peer review against: `flutter-code-review`
 
@@ -179,7 +177,7 @@ Then request peer review against: `flutter-code-review`
 ## Execution Order Summary
 
 ```
-0. Grill-Me Gate (confirm requirements & confidence ≥ 0.80)
+0. Establish decision readiness and resolve material uncertainty
 1. Domain Entities (pure Dart, immutable)
 2. Domain Failures (sealed class with userMessage)
 3. Domain Repository Interface (abstract, returns Result<T, Failure>)
@@ -197,20 +195,20 @@ Then request peer review against: `flutter-code-review`
 
 ## Checklist
 
-- [ ] Step 0: Grill-Me Gate passed (confidence ≥ 0.80, all 5 questions answered)
+- [ ] Material uncertainty was resolved through `flutter-grill-me` or documented assumptions
 - [ ] Feature-first folder structure created
 - [ ] Domain layer has zero Flutter or state management imports
 - [ ] All entities are immutable, pure Dart
 - [ ] Repository interface returns `Result<T, Failure>`, never throws
 - [ ] DTOs never leave the data layer
-- [ ] State management matches active library in `pubspec.yaml`
+- [ ] State management matches the affected feature's established approach or documented selection
 - [ ] UI handles loading, error, empty, and data states
-- [ ] No hardcoded colors or sizes (uses design system tokens)
-- [ ] Route registered in go_router configuration
+- [ ] Visual values follow the project's design system or have an explicit rationale
+- [ ] Route registered through the project's routing mechanism when navigation is required
 - [ ] Unit tests written for UseCases and Repository
 - [ ] Widget tests written for all UI states
-- [ ] `dart analyze` passes with zero warnings
-- [ ] `dart run scripts/verify_architecture.dart` passes with zero violations
+- [ ] Applicable analysis, formatting, test, and platform checks pass
+- [ ] `dart run .agent/tools/verify_architecture.dart` passes when Clean Architecture verification applies
 
 ## Related Skills
 

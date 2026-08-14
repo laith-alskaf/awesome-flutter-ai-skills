@@ -110,3 +110,7 @@ setUpAll(() async {
 - `flutter-widget-testing` — Functional widget testing
 - `flutter-ui-engineering` — Responsive and adaptive layout rules
 - `flutter-ci-cd` — Running visual regression checks in CI
+
+## Validation
+
+Before completing, verify the output against the target project's applicable analysis, test, and platform checks. Confirm that the result satisfies this skill's scope, preserves existing project conventions, and records any material assumption or limitation.

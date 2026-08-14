@@ -112,7 +112,7 @@ graph LR
 - [ ] One Use Case class per business action (single `call()` or `execute()` method)
 - [ ] Dependency Injection graph documented (Data Source → Repo → UseCase → Notifier/Bloc)
 - [ ] `.agent/DOMAIN_MAP.md` scaffolded with entities, value objects, use cases, and DI graph
-- [ ] `dart run scripts/verify_architecture.dart` passes with zero domain boundary violations
+- [ ] `dart run .agent/tools/verify_architecture.dart` passes with zero domain boundary violations
 
 ---
 
@@ -131,3 +131,7 @@ Once `.agent/DOMAIN_MAP.md` is complete and verified, the AI Agent routes to:
 - `flutter-repository-pattern` — Repository interface and implementation patterns
 - `flutter-error-handling` — Sealed failure class hierarchy design
 - `flutter-create-feature` — End-to-end feature implementation workflow
+
+## Validation
+
+Before completing, verify the output against the target project's applicable analysis, test, and platform checks. Confirm that the result satisfies this skill's scope, preserves existing project conventions, and records any material assumption or limitation.

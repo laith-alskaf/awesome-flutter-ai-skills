@@ -100,3 +100,7 @@ Never let exceptions escape the repository. Catch all data source exceptions (`D
 - `flutter-api-integration` — Remote data source implementation
 - `flutter-local-database` — Local data source implementation
 - `flutter-error-handling` — Sealed failure classes and Result pattern
+
+## Validation
+
+Before completing, verify the output against the target project's applicable analysis, test, and platform checks. Confirm that the result satisfies this skill's scope, preserves existing project conventions, and records any material assumption or limitation.

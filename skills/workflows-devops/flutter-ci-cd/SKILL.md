@@ -132,3 +132,7 @@ workflows:
 - `flutter-git` — PR branch naming and workflow rules
 - `flutter-release` — App Store / Play Store automated publishing
 - `flutter-unit-testing` — Test suite execution
+
+## Validation
+
+Before completing, verify the output against the target project's applicable analysis, test, and platform checks. Confirm that the result satisfies this skill's scope, preserves existing project conventions, and records any material assumption or limitation.

@@ -25,7 +25,7 @@ Use this checklist during code reviews, refactoring, or milestone audits to ensu
 
 ## 5. Automated Verification
 
-- [ ] Run `dart run scripts/verify_architecture.dart` — must report **zero** domain or data boundary violations.
+- [ ] Run `dart run .agent/tools/verify_architecture.dart` — must report **zero** domain or data boundary violations.
 - [ ] Run `dart analyze` — must return zero warnings, errors, or lints.
 - [ ] Run `flutter test` — all unit and widget tests pass with no failures.
 
@@ -33,4 +33,4 @@ Use this checklist during code reviews, refactoring, or milestone audits to ensu
 
 **Related Skills:** `flutter-clean-architecture` (layer rules) · `flutter-code-review` (PR review process)
 **Related ADR:** `decisions/001_clean_architecture.md` (original architectural decision)
-**Verification Tool:** `dart run scripts/verify_architecture.dart [path_to_project_root]`
+**Verification Tool:** `dart run .agent/tools/verify_architecture.dart [path_to_project_root]`

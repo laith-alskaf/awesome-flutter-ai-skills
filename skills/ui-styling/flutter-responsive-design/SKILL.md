@@ -93,3 +93,7 @@ One of the most common UI bugs is `RenderFlex overflowed by X pixels`. To preven
 
 - `flutter-ui-engineering` — Widget composition
 - `flutter-accessibility` — Adaptive accessibility
+
+## Validation
+
+Before completing, verify the output against the target project's applicable analysis, test, and platform checks. Confirm that the result satisfies this skill's scope, preserves existing project conventions, and records any material assumption or limitation.

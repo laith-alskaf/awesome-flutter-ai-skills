@@ -1,6 +1,11 @@
 name: flutter-design-system-theming
 version: 1.0.0
-description: Material 3 Design System, semantic tokens, and typography scaling.
+owner: ui-engineering-team
+flutter_version_min: 3.44.0
+
+dependencies:
+  requires: []
+  conflicts_with: []
+  optional: []
+
 active_persona: "Principal Software Architect"
-requires: []
-conflicts_with: []

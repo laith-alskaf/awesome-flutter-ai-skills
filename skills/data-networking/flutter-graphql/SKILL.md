@@ -80,3 +80,7 @@ Map `OperationException` (link exceptions and GraphQL errors) to typed domain fa
 - `flutter-clean-architecture` — Data layer rules
 - `flutter-api-integration` — REST alternative
 - `flutter-error-handling` — Mapping exceptions to failures
+
+## Validation
+
+Before completing, verify the output against the target project's applicable analysis, test, and platform checks. Confirm that the result satisfies this skill's scope, preserves existing project conventions, and records any material assumption or limitation.

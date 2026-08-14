@@ -1,13 +1,12 @@
 ---
 name: flutter-grill-me
-description: Use this skill when project requirements, architectural boundaries, state management choices, or deployment rules are ambiguous, incomplete, or when the agent confidence score is below 0.80. Enforces the Grill-Me Anti-Hallucination Interrogation Protocol to rigorously question the user across 5 engineering dimensions before generating code.
+description: Use this skill when missing or conflicting requirements could change architecture, state management, data, security, deployment, or user-visible behavior. Guides focused questions across the relevant engineering dimensions before making a material decision.
 triggers:
   - grill me
   - interrogate project
   - audit requirements
   - ambiguous requirements
   - unclear spec
-  - confidence < 0.80
   - project interrogation
   - grill mode
   - initialize project
@@ -23,7 +22,7 @@ negative_triggers:
 
 This skill acts as the **Anti-Hallucination Interrogation Gatekeeper** for autonomous AI Agents (**Antigravity**, **Gemini**, **Claude**, **OpenAI Codex**, **Cursor**, **Windsurf**, **Roo Code**, **GitHub Copilot**).
 
-**Core Mandate:** When project requirements, feature specifications, state management choices, or architectural boundaries are vague, incomplete, contradictory, or when the agent's reasoning confidence score is `< 0.80`, the AI Agent MUST NOT make assumptions or generate code. Instead, the agent must activate **Grill-Me Mode** and rigorously interrogate the user.
+**Core mandate:** Activate this workflow when missing or conflicting information could materially change architecture, state management, data, security, deployment, or user-visible behavior. Ask only the questions relevant to that decision. For a reversible low-risk change, state the assumption, make the smallest safe change, and validate it instead of forcing a full interrogation.
 
 ---
 
@@ -31,22 +30,21 @@ This skill acts as the **Anti-Hallucination Interrogation Gatekeeper** for auton
 
 ```mermaid
 graph TD
-    A[Task / Request Received] --> B{Are requirements clear?<br>Is Confidence >= 0.80?}
-    B -->|No: Ambiguity Detected| C[🛑 ACTIVATE GRILL-ME MODE]
-    C --> D[Interrogate across 5 Engineering Dimensions]
-    D --> E[Lock Answers in PRODUCT_REQUIREMENTS.md & CURRENT_STATE.md]
-    E --> F[Confidence rises to >= 0.80]
-    F --> G[Proceed to Architecture & Code Generation]
-    B -->|Yes: Full Spec & High Confidence| G
+    A[Task / Request Received] --> B{Would missing information change a material decision?}
+    B -->|Yes| C[Activate Grill-Me]
+    C --> D[Ask only relevant engineering questions]
+    D --> E[Record confirmed decisions and open assumptions]
+    E --> F[Proceed with the smallest validated next step]
+    B -->|No, reversible low-risk work| F
 ```
 
 ### When to Trigger Grill-Me Mode:
-0. **Project Initialization & Feature Start:** If the user prompts 'Initialize Project' or 'Start Feature', the agent MUST immediately trigger `flutter-agent-memory` to load the `.agent` context. If the requirements are incomplete, activate Grill-Me.
-1. **Low Confidence Score:** If the calculated confidence score in `.agent/CURRENT_STATE.md` is below **0.80**.
-2. **Missing Architectural Boundaries:** When a requested feature does not specify its presentation, domain, and data layer interaction.
-3. **Unspecified State Management:** When `pubspec.yaml` is checked and no state management library is detected, or when multiple conflicting libraries are mentioned.
-4. **Offline & Sync Ambiguity:** When data persistence is requested without specifying local database engine (Drift/Hive/Isar) or conflict resolution strategy.
-5. **Explicit User Invocation:** When the user commands `grill me`, `interrogate project`, or `audit requirements`.
+0. **Project initialization or feature start:** Read relevant `.agent/` state if it exists. Activate Grill-Me only when the new work has material unresolved requirements.
+1. **Material uncertainty:** The missing information could change architecture, security, data handling, dependency selection, external contracts, deployment, or visible behavior.
+2. **Missing architectural boundaries:** A requested non-trivial feature does not specify the required presentation, domain, and data interactions.
+3. **Unspecified state management:** The relevant feature has no established approach and the choice would shape new code, or a requested change conflicts with its existing approach.
+4. **Offline and synchronization ambiguity:** Persistence or synchronization is requested without a conflict-resolution, ownership, or data-retention decision.
+5. **Explicit user invocation:** The user commands `grill me`, `interrogate project`, or `audit requirements`.
 
 ---
 
@@ -62,7 +60,7 @@ When Grill-Me Mode is active, the agent must ask precise, non-negotiable questio
 ### 2. ⚡ Dimension 2: The Pluggable State Matrix
 - *Question:* "What is the active state management library for this feature according to `pubspec.yaml` (Riverpod 3.x, Bloc 9.x, Cubit, or GetX)?"
 - *Question:* "How will loading, empty, and error states be modeled (e.g., using sealed classes, `freezed`, or `AsyncValue`) without exposing raw exceptions to the UI?"
-- *Rule:* Enforce the **State Matrix Firewall** — zero mixing of orthogonal state libraries.
+- *Rule:* Reuse the state-management approach already used by the affected feature. Do not mix approaches in one feature without an explicit migration boundary and removal plan.
 
 ### 3. 🌐 Dimension 3: Data Persistence & Offline Sync
 - *Question:* "Does this feature require local-first data persistence, and if so, what is the chosen local database engine (Drift, Hive, sqflite)?"
@@ -85,7 +83,7 @@ When invoking this skill, the agent must output a structured interrogation block
 ```markdown
 > [!WARNING]
 > **🔥 GRILL-ME INTERROGATION MODE ACTIVATED**
-> **Reason:** Requirement ambiguity detected / Confidence score below threshold (0.80).
+> **Reason:** Missing or conflicting information could change a material engineering decision.
 > **Action Required:** Please answer the following engineering questions to lock down the specifications before any code generation begins.
 
 ### 1. Architectural Boundaries
@@ -102,30 +100,27 @@ When invoking this skill, the agent must output a structured interrogation block
 
 ## 🔓 Requirement Lock & Exit Criteria
 
-Grill-Me Mode is exited **ONLY** when:
-1. The user provides explicit answers or design decisions for all raised questions.
-2. The agent updates `.agent/PRODUCT_REQUIREMENTS.md`, `.agent/DOMAIN_MAP.md`, and `.agent/CURRENT_STATE.md` with the confirmed decisions.
-3. The recalculated confidence score in `.agent/CURRENT_STATE.md` reaches **`score >= 0.80`**.
+Exit Grill-Me Mode when the relevant questions have explicit answers or documented assumptions, the resulting decision is recorded in the applicable project-state or design artifact, and the next implementation step has an appropriate validation plan. Do not require unrelated dimensions, files, or a numerical confidence score.
 
 ---
 
 ## Related Skills
 - `flutter-product-discovery-and-architecture` — PRD scaffolding and WHY phase
-- `flutter-agent-memory` — Confidence matrix and state ledger
+- `flutter-agent-memory` — Context, handoff, and state ledger
 - `flutter-clean-architecture` — Architectural boundary verification
 - `flutter-create-feature` — Feature creation workflow that mandates this gate at Step 0
 - `flutter-domain-modeling` — Domain design after requirements are locked
 
 ## ✅ Grill-Me Exit Checklist
 
-*Grill-Me Mode is exited **ONLY** when all items below are checked:*
+*Exit Grill-Me Mode only after the relevant items below are checked:*
 
-- [ ] All 5 Engineering Dimensions interrogated with explicit user answers
-- [ ] Architectural layer boundaries (Presentation → Domain → Data) confirmed for this feature
-- [ ] Active state management library identified from `pubspec.yaml` (no ambiguity)
-- [ ] Data persistence strategy confirmed (Drift / Hive / Remote / None)
-- [ ] Security and PII handling confirmed
-- [ ] Test requirements and coverage expectations confirmed
-- [ ] `.agent/PRODUCT_REQUIREMENTS.md` and `.agent/CURRENT_STATE.md` updated with locked decisions
-- [ ] Confidence score in `.agent/CURRENT_STATE.md` recalculated and confirmed ≥ **0.80**
-- [ ] AI Agent exits Grill-Me Mode and proceeds to code generation
+- [ ] The material uncertainty is explicitly identified.
+- [ ] Relevant engineering dimensions have explicit user answers or documented assumptions.
+- [ ] Architecture, state, data, security, and test decisions are recorded when applicable.
+- [ ] Affected project-state or design artifacts are updated when persistent tracking is enabled.
+- [ ] The next action is scoped, reversible where practical, and has a validation plan.
+
+## Validation
+
+Before completing, verify the output against the target project's applicable analysis, test, and platform checks. Confirm that the result satisfies this skill's scope, preserves existing project conventions, and records any material assumption or limitation.

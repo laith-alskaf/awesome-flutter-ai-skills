@@ -3,7 +3,7 @@
 ![Flutter Version](https://img.shields.io/badge/Flutter-3.44.x%20Stable-02569B?logo=flutter&logoColor=white)
 ![Dart Version](https://img.shields.io/badge/Dart-3.12.x-0175C2?logo=dart&logoColor=white)
 ![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture%20%2B%20SOLID-4CAF50)
-![Skills](https://img.shields.io/badge/AI%20Skills-49%20Orthogonal-ff69b4)
+![Skills](https://img.shields.io/badge/AI%20Skills-51%20Orthogonal-ff69b4)
 ![Knowledge Architecture](https://img.shields.io/badge/Knowledge%20OS-5--Tier-purple)
 ![Audit Status](https://img.shields.io/badge/Audit-100%2F100%20Gold%20Certified-gold)
 ![License](https://img.shields.io/badge/License-MIT-green)
@@ -33,38 +33,37 @@ It turns AI Coding Assistants into disciplined Senior Staff Software Engineers a
 Standard AI coding assistants often generate fragmented code, mix UI logic with business logic, use outdated Flutter/Dart packages, or hallucinate non-existent state management APIs.
 
 **Awesome Flutter AI Skills** solves this by providing:
-1. **Deterministic Skill Routing & Anti-Hallucination Gate:** Prevents AI hallucinations using structured YAML triggers and rigorous project interrogation (`flutter-grill-me`) when requirements or confidence (< 0.80) are ambiguous.
-2. **Zero-Deprecation Guarantee:** Strictly targets **Flutter 3.44.x Stable** and **Dart 3.12.x** with sound null safety, Impeller engine, and Material 3.
-3. **Pluggable State Management & Architecture Firewall:** Dynamic support for Riverpod 3.x, Bloc 9.x, Cubit, and GetX 5.x while enforcing absolute Clean Architecture domain isolation via automated linting (`verify_architecture.dart`).
-4. **Universal Atomic Deployment Engine:** One script (`deploy.ps1`) deploys and staging-verifies rules globally across Antigravity, Gemini CLI, Claude, OpenAI Codex Cloud, Cursor, Windsurf, and VS Code Copilot.
+1. **Deterministic Skill Routing & Decision-Readiness Gate:** Reduces unsupported assumptions through structured YAML triggers and focused project interrogation (`flutter-grill-me`) when missing information could change a material decision.
+2. **Version-Aware Guidance:** Uses Flutter 3.44.x and Dart 3.12.x as examples while requiring the target project's declared SDK constraints to drive real changes.
+3. **Pluggable State Management and Architecture Boundaries:** Supports Riverpod, Bloc, Cubit, and GetX through feature-level evidence, while providing an optional verifier for Clean Architecture boundary checks.
+4. **Safe Multi-Agent Deployment:** `deploy.ps1` synchronizes native skills to documented global locations with backup-and-restore behavior and supports `-WhatIf`; `init-project.ps1` installs project state and native workspace skills locally.
 
 ---
 
 ## ⚡ Universal One-Line Quick Start (For ALL AI Agents & IDEs)
 
-Install and activate all 51 skills and IDE rules globally across **Antigravity**, **Gemini**, **Claude**, **OpenAI Codex**, **Cursor**, **Windsurf**, and **GitHub Copilot** with a single command:
+Install the framework from a checked-out copy so that PowerShell executes a reviewed local file rather than remote text.
 
 ### PowerShell (Windows)
 ```powershell
-irm https://raw.githubusercontent.com/laith-alskaf/awesome-flutter-ai-skills/main/tools/deploy.ps1 | iex
+git clone https://github.com/laith-alskaf/awesome-flutter-ai-skills.git
+cd awesome-flutter-ai-skills
+.\tools\deploy.ps1
 ```
 
-### Local Repository Deployment
-```powershell
-.\deploy.ps1
-```
+For project-local installation—the recommended mode—run `tools\init-project.ps1` from the Flutter project root. This writes project state to `.agent/` and native workspace skills to `.agents/skills/`.
 
 ---
 
 ## 🌐 Supported AI Agents & IDE Matrix
 
-`deploy.ps1` automatically synchronizes skills and global supporting resources (`_resources/`) to **6 Global AI Agent Paths** and injects project-level rules:
+`deploy.ps1` synchronizes skills to documented global paths. For Antigravity projects, use the project-local `.agents/skills/` path; `.agent/` is retained for project state and legacy compatibility.
 
 | Agent / IDE Platform | Target Path / Rule File | Supported Format |
 |---|---|---|
-| **Antigravity AI Agent** | `~/.gemini/antigravity/knowledge/` | **Knowledge Items (KI)** + Native Skills |
-| **Gemini CLI Agent** | `~/.gemini/config/skills/` | Native `SKILL.md` + `_resources/` |
-| **Claude & Universal Agents** | `~/.agents/skills/` | Native `SKILL.md` + `_resources/` |
+| **Antigravity AI Agent** | Workspace: `.agents/skills/`; global: `~/.gemini/config/skills/` | Native `SKILL.md` skills |
+| **Gemini CLI Agent** | `~/.gemini/config/skills/` | Native `SKILL.md` skills |
+| **Claude & Universal Agents** | `~/.agents/skills/` | Native `SKILL.md` skills |
 | **OpenAI Codex Cloud Agent** | `~/.codex/skills/` & `.codex/instructions.md` | Codex Cloud Agent Rules |
 | **Cursor IDE** | `~/.cursor/skills/` & `.cursorrules` | Project Rules & MDC |
 | **Windsurf IDE** | `~/.windsurf/skills/` & `.windsurfrules` | Cascade System Rules |
@@ -92,6 +91,7 @@ irm https://raw.githubusercontent.com/laith-alskaf/awesome-flutter-ai-skills/mai
 ```text
 awesome-flutter-ai-skills/
 ├── .agent/                         → Project-level active working memory (PRD, domain maps)
+├── .agents/skills/                  → Native Antigravity workspace skills
 ├── core/                        → The OS Kernel
 │   ├── AGENTS.md                → Master Policy, Tech Stack, and Context Protocols
 │   ├── ROUTER_MANIFESTO.md      → Global Capability Matrix & Zero-Hallucination Gatekeeper
@@ -113,7 +113,7 @@ awesome-flutter-ai-skills/
     └── workflows-devops/        → Feature Planner, Code Review, Grill-Me, DevOps (9 skills)
 ```
 
-> **Note on Modularity:** Every skill in `skills/` is a self-contained module containing its own `metadata.yaml` (Knowledge Graph), `templates/`, and `resources/`. This guarantees O(1) context loading and prevents LLM token bloat.
+> **Note on Modularity:** Every skill in `skills/` is a self-contained module containing a standard `SKILL.md` and supplemental `metadata.yaml`; optional `templates/` and `resources/` are loaded only when needed. This supports progressive disclosure without duplicating project state in every skill.
 
 ---
 
@@ -131,74 +131,78 @@ awesome-flutter-ai-skills/
 
 ## 🚀 Deployment & Usage Modes (Local vs. Global)
 
-The framework supports two distinct deployment architectures. **We strongly recommend the Local (`.agent/`) Mode** for enterprise teams, version-controlled repositories, and isolated project governance.
+The framework supports two deployment models. **We recommend local mode** for team repositories and isolated governance: project state is stored in `.agent/` while native workspace skills are stored in `.agents/skills/`.
 
 ### 📊 Comparison & Selection Guide
 
-| Feature / Aspect | 🏠 Local Mode (`.agent/` Mode) — ⭐ RECOMMENDED | 🌐 Global Mode (Multi-IDE Global Sync) |
+| Feature / Aspect | Local mode — recommended | Global mode |
 |---|---|---|
-| **Installation Path** | Inside your target project root: `<project>/.agent/` | User OS profile: `~/.gemini/skills`, `~/.cursor/skills`, etc. |
-| **Project Isolation** | **100% Isolated.** Each project maintains its own stack, skills, and memory. | **Shared across OS.** All projects share the exact same global skill versions. |
-| **Team Collaboration** | **Team-Ready.** Easily shared via Git or excluded cleanly via `.gitignore`. | **Individual-Only.** Requires every developer to run global deploy script. |
-| **Root Clutter** | **Zero Clutter.** Everything lives inside `.agent/`. | **Zero Clutter.** Lives in user profile directory. |
-| **IDE Auto-Wiring** | Automatically creates `.cursorrules`, `.windsurfrules`, `.clinerules`, and **Antigravity Knowledge Items (KI)** pointing to `.agent/`. | Requires manual IDE configuration or global storage lookup. |
-| **Best Used For** | Production apps, team repositories, CI/CD pipelines, offline workflows. | Quick scripts, prototyping, or cross-language workspace experimentation. |
+| **Installation path** | `<project>/.agent/` for state and `<project>/.agents/skills/` for native skills. | Documented user-profile skill directories, including `~/.gemini/config/skills/`. |
+| **Project isolation** | The project can version its own state and skill revision. | Skill revisions are shared across workspaces on the same machine. |
+| **Team collaboration** | Commit the desired files or exclude project state deliberately in `.gitignore`. | Each developer must install and update the framework separately. |
+| **Agent wiring** | Creates compatible project rule files and native workspace skills. | Installs skills only; project-specific rules remain an explicit choice. |
+| **Best use** | Production applications, teams, CI, and offline work. | Personal utilities, experiments, and cross-workspace defaults. |
 
 ---
 
-### 🏠 1. Local Mode (`.agent/` Mode) — ⭐ RECOMMENDED
+### 🏠 1. Local Mode (`.agent/` state + `.agents/skills/`) — ⭐ RECOMMENDED
 
-In Local Mode, the entire 51-skill framework, code templates, ADRs, checklists, and session memory are unified inside a single `.agent/` directory within your Flutter project.
+In Local Mode, project memory, governance, tools, and generated workspace artifacts live in `.agent/`; the 51 native Agent Skills live in `.agents/skills/`, the default Antigravity workspace-skill location. Antigravity also retains backward compatibility with `.agent/skills/`, but the initializer uses `.agents/skills/` for new projects.
 
-#### Fast One-Line Cloud Execution
-Run this single command from inside your target Flutter project directory in PowerShell (no repo clone required):
+#### Safe Setup
+Clone the framework, then run the reviewed initializer from inside your target Flutter project directory:
 ```powershell
-irm https://raw.githubusercontent.com/laith-alskaf/awesome-flutter-ai-skills/main/tools/init-project.ps1 | iex
+git clone https://github.com/laith-alskaf/awesome-flutter-ai-skills.git
+& "path\to\awesome-flutter-ai-skills\tools\init-project.ps1"
 ```
 
 #### Local Script Execution (Offline / Downloaded Repo)
 If you have cloned this repository locally, run the script from inside your target Flutter project:
 ```powershell
 # From inside your target project root:
-& "path\to\awesome-flutter-ai-skills\init-project.ps1"
+& "path\to\awesome-flutter-ai-skills\tools\init-project.ps1"
 
 # Or specify the project path explicitly:
-& "path\to\awesome-flutter-ai-skills\init-project.ps1" -ProjectPath "D:\Projects\my_flutter_app"
+& "path\to\awesome-flutter-ai-skills\tools\init-project.ps1" -ProjectPath "D:\Projects\my_flutter_app"
 ```
 
 #### 🧭 Post-Initialization Workflow (3 Magic Steps)
-Once initialized, your project will contain a clean `.agent/` folder and IDE rule files pointing to it. Follow these 3 steps:
-1. **Define Project Identity:** Open `.agent/PROJECT_PROFILE.md` and define your stack choices (`StateManagement` choice: Riverpod/Bloc/Cubit/GetX, `Database`, `Networking`, and `Key Business Domain`).
-2. **Unlock the Gate (Grill-Me):** Open `.agent/CURRENT_STATE.md` and raise the confidence score from `0.50` to `>= 0.80` once your requirements are clarified. *Note: AI Agents are programmed to refuse code generation if the confidence score is below 0.80!*
-3. **Start Building & Auditing:** Ask your AI Assistant to build features (e.g., *"Create the auth feature using feature-first clean architecture"*). At any time, audit your codebase for architectural purity by running:
+Once initialized, your project contains `.agent/` state, `.agents/skills/` native skills, and compatible IDE rule files. Follow these steps:
+1. **Define project identity:** Open `.agent/PROJECT_PROFILE.md` and record only confirmed stack choices and business context.
+2. **Resolve material uncertainty:** Use `flutter-grill-me` when missing information could change architecture, security, dependencies, data, API contracts, or user-visible behavior. Record assumptions for low-risk reversible work in `.agent/CURRENT_STATE.md`.
+3. **Build and validate:** Ask the agent to select the smallest relevant skill set. Audit architectural boundaries when appropriate with:
    ```powershell
-   dart run .agent/scripts/verify_architecture.dart
+   dart run .agent/tools/verify_architecture.dart
    ```
 
 ---
 
 ### 🌐 2. Global Mode (Multi-IDE Global Sync)
 
-In Global Mode, the 51 skills are deployed simultaneously to 6 user-level IDE global directories (Cursor, Windsurf, Gemini, Antigravity, Codex, Roo/Cline).
+In Global Mode, the 51 skills are deployed to the configured user-level skill directories. Antigravity and Gemini use the documented `~/.gemini/config/skills/` global location.
 
 #### Deploy Globally
 ```powershell
-.\deploy.ps1
-# Or one-line cloud command:
-irm https://raw.githubusercontent.com/laith-alskaf/awesome-flutter-ai-skills/main/tools/deploy.ps1 | iex
+.\tools\deploy.ps1
 ```
 
 #### Clean & Uninstall Global Skills
-If you decide to switch exclusively to per-project Local Mode, you can purge all global framework folders cleanly:
+If you decide to switch to project-local mode, remove only the managed global skill directories:
 ```powershell
-.\uninstall-global.ps1
+.\tools\uninstall-global.ps1 -Force
 ```
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request or open an issue to propose new skills, update Dart 3.x patterns, or improve agent routing mechanics.
+Contributions are welcome. Before opening a pull request, run the repository contract check from the repository root:
+
+```bash
+python3 tools/validate_framework.py
+```
+
+The check validates all 51 skills, frontmatter and supplemental metadata, local Markdown links, documented Antigravity paths, and deployment safety contracts. Add a focused `SKILL.md`, match its directory name in both metadata files, keep rare detail in local resources, and update installer and documentation contracts together whenever a supported path changes.
 
 ---
 

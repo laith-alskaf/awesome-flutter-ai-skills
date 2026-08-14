@@ -92,3 +92,7 @@ void setupCrashReporting() {
 - `flutter-debugging` — DevTools memory profiler and widget inspector
 - `flutter-error-handling` — Sealed failure classes mapping
 - `flutter-security` — PII protection and security defaults
+
+## Validation
+
+Before completing, verify the output against the target project's applicable analysis, test, and platform checks. Confirm that the result satisfies this skill's scope, preserves existing project conventions, and records any material assumption or limitation.

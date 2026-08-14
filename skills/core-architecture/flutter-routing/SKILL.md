@@ -113,3 +113,7 @@ final routerProvider = Provider<GoRouter>((ref) {
 ## Related Skills
 - `flutter-clean-architecture` — Navigation boundaries
 - `flutter-web-desktop` — URL strategy configuration
+
+## Validation
+
+Before completing, verify the output against the target project's applicable analysis, test, and platform checks. Confirm that the result satisfies this skill's scope, preserves existing project conventions, and records any material assumption or limitation.

@@ -124,3 +124,7 @@ if (constraints.maxWidth >= Breakpoints.tablet) {
 - `flutter-responsive-design` — Multi-device layout patterns
 - `flutter-accessibility` — A11y rules
 - `flutter-riverpod` / `flutter-bloc` / `flutter-cubit` / `flutter-getx` — State consumer patterns
+
+## Validation
+
+Before completing, verify the output against the target project's applicable analysis, test, and platform checks. Confirm that the result satisfies this skill's scope, preserves existing project conventions, and records any material assumption or limitation.

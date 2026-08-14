@@ -1,5 +1,5 @@
 # Roo Code & Cline Rules — Flutter AI Agent Skill Framework 2026
-- ZERO HALLUCINATION GATEKEEPER: Before writing code, output a "Context Parity Header" confirming reading of .ai/PROJECT_PROFILE.md and active layer rules. If requirements are ambiguous or Confidence < 0.80, activate Grill-Me Mode (flutter-grill-me) and interrogate the user before generating code.
+- CONTEXT GATE: Before modifying Flutter application code, read `.agent/PROJECT_PROFILE.md` and `.agent/CURRENT_STATE.md` when those initialized-project files exist. If either required detail is missing or requirements remain ambiguous, ask focused questions or activate `flutter-grill-me`; do not block framework maintenance because an application-state file is absent.
 - STATE MATRIX FIREWALL: Check pubspec.yaml as step zero. If Riverpod is detected, NEVER call Cubit/Bloc/GetX skills. If Bloc is detected, NEVER call Riverpod/GetX skills.
 - Enforce Clean Architecture: Presentation -> Domain -> Data. Zero Flutter UI or state imports in Domain layer.
 - Flutter 3.44.x Stable + Dart 3.12.x Sound Null Safety.

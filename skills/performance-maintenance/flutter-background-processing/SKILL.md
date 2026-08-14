@@ -157,3 +157,7 @@ class LocalNotificationService {
 - `flutter-local-database` — Persisting synced data in background
 - `flutter-api-integration` — Background API syncing
 - `flutter-firebase` — FCM push notification background handlers
+
+## Validation
+
+Before completing, verify the output against the target project's applicable analysis, test, and platform checks. Confirm that the result satisfies this skill's scope, preserves existing project conventions, and records any material assumption or limitation.

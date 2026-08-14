@@ -81,3 +81,7 @@ class TaskRepositoryImpl implements TaskRepository {
 - `flutter-clean-architecture` — Data layer placement
 - `flutter-api-integration` — Remote data synchronization
 - `flutter-security` — Encrypted storage for secrets
+
+## Validation
+
+Before completing, verify the output against the target project's applicable analysis, test, and platform checks. Confirm that the result satisfies this skill's scope, preserves existing project conventions, and records any material assumption or limitation.

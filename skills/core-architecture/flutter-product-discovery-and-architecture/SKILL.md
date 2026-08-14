@@ -22,7 +22,7 @@ negative_triggers:
 
 This skill acts as the **Chief Product Officer (CPO) and Chief Technology Officer (CTO)** for autonomous AI Agents (**Antigravity**, **Gemini**, **Claude**, **OpenAI Codex**, **Cursor**, **Windsurf**, **Roo Code**, **GitHub Copilot**).
 
-**Core Mandate:** Never generate Flutter UI or backend code immediately. Always conduct rigorous Product Discovery, define user journeys, and establish strategic technical architecture first.
+**Core mandate:** Use product discovery for a new product, a materially ambiguous feature, or an explicit strategy request. Do not impose full discovery on a small maintenance task; recover only the context and decisions necessary for the work.
 
 ---
 
@@ -38,8 +38,7 @@ Before designing any system architecture or writing Dart code, the AI Agent MUST
 6. **What are the main user journeys?** (Step-by-step interactive progression from onboarding to core habit loop).
 7. **What are the success metrics?** (Daily Active Users DAU, retention rate, conversion rate, crash-free user sessions).
 
-> [!WARNING]
-> **GRILL-ME DISCOVERY FALLBACK GATE:** If the user's initial prompt or available context does not provide sufficient clarity to answer all 7 Discovery Questions with high confidence (`score >= 0.80`), the AI Agent MUST NOT fabricate or guess answers. Instead, immediately trigger **`flutter-grill-me`** to interrogate the user and lock down the missing strategic decisions before scaffolding `.agent/PRODUCT_REQUIREMENTS.md`.
+> **Discovery decision rule:** If a missing answer would change the product scope, architecture, data, security, launch plan, or user-visible behavior, use **`flutter-grill-me`** to obtain an answer or record an explicit assumption before creating the relevant section of `.agent/PRODUCT_REQUIREMENTS.md`. Do not fabricate product requirements or require unrelated discovery answers for a narrowly scoped task.
 
 ---
 
@@ -89,13 +88,13 @@ graph TD
 | Building without defining success metrics | No way to know if the product succeeds or needs pivoting |
 | Skipping user journey mapping | Results in disjointed, incoherent UX flows |
 | Choosing a monetization model after launch | Monetization must be designed into data models from day one |
-| Hallucinating product requirements without user confirmation | Violates Anti-Hallucination Gate — always invoke `flutter-grill-me` if confidence < 0.80 |
+| Hallucinating product requirements without user confirmation | Creates unsupported product decisions; use `flutter-grill-me` when a missing answer is material. |
 
 ---
 
 ## ✅ Checklist
 
-- [ ] All 7 Discovery Questions answered with full user confirmation
+- [ ] All discovery questions relevant to the product or feature have explicit answers or documented assumptions
 - [ ] Target user personas defined with demographics and use environment
 - [ ] Core value proposition differentiated from competitors
 - [ ] MVP scope explicitly separated from future roadmap features
@@ -104,7 +103,7 @@ graph TD
 - [ ] Success metrics defined (DAU, retention, conversion, crash-free sessions)
 - [ ] `.agent/PRODUCT_REQUIREMENTS.md` scaffolded and user-approved
 - [ ] Data Strategy documented (Local-First vs Remote-First vs Hybrid)
-- [ ] Grill-Me Gate passed (confidence ≥ 0.80 before scaffolding PRD)
+- [ ] Material unknowns were resolved through `flutter-grill-me` or recorded as explicit assumptions before PRD scaffolding
 
 ---
 
@@ -122,3 +121,7 @@ Once `.agent/PRODUCT_REQUIREMENTS.md` is approved by the user, the AI Agent imme
 - `flutter-project-architect` — Package selection and folder structure
 - `flutter-feature-planner` — Sprint planning and task breakdown
 - `flutter-production-readiness` — Verify 6 readiness pillars before launch
+
+## Validation
+
+Before completing, verify the output against the target project's applicable analysis, test, and platform checks. Confirm that the result satisfies this skill's scope, preserves existing project conventions, and records any material assumption or limitation.

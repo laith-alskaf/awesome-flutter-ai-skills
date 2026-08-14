@@ -1,31 +1,32 @@
-# AI Performance Metrics & Token Budgets
+# Framework Quality Metrics and Context Budget
 
-This document outlines the strict Key Performance Indicators (KPIs) and Token Budgets that govern the AI Engineering Operating System. 
+This framework uses progressive disclosure: agents first see skill metadata, then load a selected `SKILL.md`, and read local resources only when needed. Measure quality with reproducible checks and representative evaluation tasks rather than asserting unattainable universal percentages.
 
-## 1. Token Budget Constraints
-To prevent LLM context dilution and token exhaustion, every skill module must strictly adhere to the following budgets.
-*Note: Token estimates assume 1 token ≈ 4 characters of English text/code.*
+## Context guidance
 
-- **Global Boot Context (The OS Kernel)**: Max `1,500` tokens combined.
-  - `AGENTS.md` + `ROUTER_MANIFESTO.md` must remain concise.
-- **Skill Core (`SKILL.md`)**: Max `1,000` tokens per skill.
-- **Skill Knowledge Graph (`metadata.yaml`)**: Max `100` tokens.
-- **Skill Templates (`templates/*.template`)**: Max `1,500` tokens per template.
-- **Total Task Execution Context**: When an agent executes a single task, the total framework knowledge loaded into memory must NEVER exceed **4,500 tokens**.
+| Layer | Guideline | Rationale |
+|---|---|---|
+| Discovery metadata | Keep names unique and descriptions specific. | The description determines whether an agent can select the right skill. |
+| `SKILL.md` | Keep under 500 lines and focused on one workflow. | The full body is read on activation. |
+| Resources and templates | Load only from the selected skill when the task requires them. | Rare details should not occupy every task's context. |
+| Compound tasks | Select the smallest skill set that covers the work. | A task may legitimately require more than one skill; do not impose an arbitrary count. |
 
-## 2. Target Performance KPIs
-The framework is measured against the following success criteria during real-world AI coding sessions:
+## Quality indicators
 
-| Metric | Target KPI | Definition |
-| :--- | :--- | :--- |
-| **Routing Accuracy** | > 99% | The AI Agent selects the exact correct `SKILL.md` based on the user's intent without hallucinating a different path. |
-| **Ambiguity Trigger Rate**| < 5% | The percentage of sessions where the Agent halts and triggers the `flutter-grill-me` protocol due to low confidence (< 0.80). |
-| **Hallucination Rate** | 0% | The Agent invents zero non-existent APIs, Flutter packages, or invalid state management combinations. |
-| **Skills Loaded** | Max 3 | The Agent loads no more than 3 distinct skills into working memory for any single atomic task. |
-| **Orphaned Context** | 0% | The Agent successfully unloads skills from memory when switching to an unrelated task. |
+| Indicator | Evidence | Review cadence |
+|---|---|---|
+| Contract validity | `python3 tools/validate_framework.py` passes. | Every pull request and push to `main`. |
+| Routing quality | Representative task prompts select the expected primary skills without unrelated activation. | Before a release and after material routing changes. |
+| Instruction safety | Workflows distinguish material uncertainty from reversible low-risk work and do not rely on invented confidence scores. | After governance or workflow changes. |
+| Installation integrity | Local initialization writes `.agent/` state and `.agents/skills/`; global deployment targets documented paths. | After installer changes. |
+| Context discipline | Long or specialized detail is moved to local resources, and no `SKILL.md` exceeds the line limit. | Every pull request. |
 
-## 3. Auditing the Metrics
-The `tools/audit_framework.dart` utility automatically measures the physical token size of the repository. It will fail the CI/CD pipeline if any `SKILL.md` file exceeds the 1,000-token limit or if a template becomes bloated.
+## Audit procedure
 
-**Human Auditing:**
-The "Routing Accuracy" and "Hallucination Rate" must be manually audited by reviewing `.agent/SESSION_LOG.md` files generated during development cycles.
+Run the repository validator from the root:
+
+```bash
+python3 tools/validate_framework.py
+```
+
+Use task-level tests to evaluate routing and generated code quality. Record assumptions, decisions, and validation evidence in project-state files only when a project uses persistent agent context; do not infer an agent's internal memory state from a log file.

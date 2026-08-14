@@ -24,7 +24,7 @@ This skill governs state persistence, context recovery, and project health track
 
 ## 🏛️ The 8-Step Context Recovery Priority Protocol
 
-When starting ANY new development session or resuming work, AI Agents MUST execute the following 8-step reading order before modifying any code (all project memory files live in `.agent/`):
+For a resumed, multi-file, or high-risk task in an initialized project, recover only the relevant context in the following order. All project-state files live in `.agent/`; native Antigravity skills live in `.agents/skills/`. If a state file does not exist, inspect the repository and create it only when persistent tracking is requested.
 
 ```text
 1. .agent/PROJECT_PROFILE.md  → Static Project Identity & Tech Stack (Flutter/Dart version, DB, Routing)
@@ -41,7 +41,7 @@ When starting ANY new development session or resuming work, AI Agents MUST execu
 
 ## 🔬 Reasoning & Confidence Matrix Rules
 
-Whenever updating `CURRENT_STATE.md`, the AI Agent MUST calculate and log its reasoning confidence:
+When updating `CURRENT_STATE.md`, record the evidence, assumptions, and unresolved questions that affect the next action. A confidence score is optional; it must never be presented as an objective calculation.
 
 ```yaml
 Confidence:
@@ -50,8 +50,7 @@ Confidence:
   reason: "Clean Architecture layer boundaries verified; repository unit tests pass zero warning policy."
 ```
 
-> [!WARNING]
-> **ANTI-HALLUCINATION CONFIDENCE THRESHOLD (< 0.80):** If the calculated reasoning confidence score is below **`0.80`** (`score < 0.80`), or if any architectural layer boundaries/state management rules are ambiguous, the AI Agent is strictly **forbidden from modifying any code**. The agent MUST immediately invoke **`flutter-grill-me`** (Grill-Me Mode) to interrogate the user across the 5 engineering dimensions until confidence reaches `score >= 0.80`.
+> **Decision rule:** If uncertainty could change the architecture, security, data, external API contract, dependency choice, or user-visible behavior, use `flutter-grill-me` or ask focused questions before proceeding. For a reversible and low-risk change, state the assumption, make the smallest safe change, and validate it; do not block solely because a numerical score is absent or low.
 
 ---
 
@@ -81,30 +80,27 @@ To prevent git history pollution and commit noise, `.agent/AGENTS_MEMORY.md` and
 
 ---
 
-## 🧹 Memory Compaction & Auto-Pruning Protocol (Zero Context Bloat)
+## 🧹 Memory Compaction Without Data Loss
 
-To prevent context window exhaustion and prompt bloat as projects scale past 100,000 lines of code, AI Agents MUST enforce automated memory pruning:
-1. **Session Log Threshold (`SESSION_LOG.md`):** Whenever `.agent/SESSION_LOG.md` exceeds **100 lines**, the agent MUST execute an auto-pruning sprint:
-   - Archive the chronological log details into `.agent/archive/session_log_archived_<date>.md`.
-   - Keep only the last 15 active lines in `.agent/SESSION_LOG.md`.
-2. **Working Ledger Threshold (`AGENTS_MEMORY.md`):** Whenever `.agent/AGENTS_MEMORY.md` exceeds **3,000 words**, the agent MUST compress completed milestones:
-   - Extract completed milestone details into a reference entry inside `.agent/KNOWLEDGE_INDEX.md` or a new ADR.
-   - Replace the verbose milestone description in `AGENTS_MEMORY.md` with a clean 1-line link: `[Milestone X Completed -> See KNOWLEDGE_INDEX.md#milestone-x]`.
-   - Reset active working memory tokens to maintain a lean (<1,000 word) operational footprint.
+Keep active state concise, but do not silently delete or rewrite history. When a session log becomes difficult to navigate, create a dated archive under `.agent/archive/`, retain a short index and the current open decisions in `SESSION_LOG.md`, and link the archive from `KNOWLEDGE_INDEX.md`. Compact completed milestones only after confirming that the summary preserves the original decision, evidence, date, owner, and reference. Never compact a record that contains unresolved risk, a pending user decision, or a requirement that has not been captured elsewhere.
 
 ---
 
 ## 💡 Lessons Learned Protocol
 
-Whenever an unexpected bug, memory leak, or architectural anti-pattern is resolved, the AI Agent MUST append a short entry to the `Lessons Learned & Anti-Regression Log` in `.agent/AGENTS_MEMORY.md` to prevent repeating past mistakes in future sessions.
+When an unexpected bug, memory leak, or architectural anti-pattern is resolved, append a concise anti-regression entry to `.agent/AGENTS_MEMORY.md` only if the lesson is reusable. Include the trigger, root cause, corrective action, validation evidence, and a link to the affected code, test, or issue when available.
 
 ---
 
 ## Related Skills
 
-- `flutter-grill-me` — Anti-hallucination interrogation gate (invoked when confidence < 0.80)
+- `flutter-grill-me` — Focused requirement-interrogation workflow for material uncertainty
 - `flutter-product-discovery-and-architecture` — PRD scaffolding (PRODUCT_REQUIREMENTS.md)
 - `flutter-domain-modeling` — Domain Map scaffolding (DOMAIN_MAP.md)
 - `flutter-production-readiness` — Production checklist verification (PRODUCTION_CHECKLIST.md)
 - `flutter-create-feature` — Triggers this skill for session initialization in Step 0
 - `flutter-code-review` — References CURRENT_STATE.md confidence matrix before review
+
+## Validation
+
+Before completing, verify the output against the target project's applicable analysis, test, and platform checks. Confirm that the result satisfies this skill's scope, preserves existing project conventions, and records any material assumption or limitation.

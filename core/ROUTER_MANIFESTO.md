@@ -1,23 +1,8 @@
 # 🧭 Flutter AI Agent Router Manifesto & Capability Matrix
 
-This document is the authoritative **Router Manifesto** for the **Flutter AI Agent Skill Framework 2026**.
-When an AI Agent or Staff Engineer receives a task, requirement, bug report, or pull request, they **must check this capability matrix first** to instantly map the user's intent to the exact orthogonal skill(s) and code template(s).
+This document is the authoritative routing matrix for the Flutter AI Agent Skill Framework. Use it to select the smallest set of skills that covers the task; do not load unrelated skills merely because a task mentions Flutter.
 
-> [!IMPORTANT]
-> **ZERO HALLUCINATION GATEKEEPER (Context Parity Header):** Before generating or modifying any Dart/Flutter code, an AI Agent MUST output the following mandatory "Context Parity Header" confirming context recovery. No code shall be generated until this verification is explicit.
->
-> ```
-> ✅ CONTEXT PARITY HEADER
-> ├─ PROJECT_PROFILE.md : Read ✓ | Stack: Flutter 3.44 / Dart 3.12
-> ├─ AGENTS.md          : Read ✓ | Architecture: Feature-First Clean Architecture
-> ├─ CURRENT_STATE.md   : Read ✓ | Confidence: [score] | Goal: [active goal]
-> ├─ Active Persona     : [Tech Lead | CPO | Principal Architect | Staff Engineer | QA/SecOps]
-> ├─ Handover Note      : [None | Summarized context from previous persona]
-> ├─ State Management   : Detected [Riverpod|Bloc|Cubit|GetX] from pubspec.yaml
-> ├─ Target Layer       : [Domain | Data | Presentation | Cross-cutting]
-> ├─ Skill(s) Activated : [skill-name-1], [skill-name-2]
-> └─ Grill-Me Gate      : [PASSED (≥0.80) | TRIGGERED (requirements unclear)]
-> ```
+> **Context before action.** For a non-trivial Dart or Flutter change, first inspect the target project's declared versions, active architecture, existing state-management usage, and relevant project-state files when they exist. A visible context header is optional and should be produced only when the user, project rule, or review workflow asks for it. Missing optional memory files are a signal to recover context from the codebase, not a reason to refuse safe work.
 
 ---
 
@@ -25,15 +10,19 @@ When an AI Agent or Staff Engineer receives a task, requirement, bug report, or 
 
 Before generating presentation layer code or wiring dependency injection, check `pubspec.yaml` or user instructions to determine the active state library.
 
-> [!WARNING]
-> **STATE MATRIX FIREWALL (Zero Overlap Rule):** Once a state management library is detected in `pubspec.yaml` (e.g., `flutter_riverpod`), all orthogonal state management skills and templates (such as Bloc, Cubit, or GetX) are strictly **locked and banned** from the active agent context. NEVER mix or import conflicting state libraries in the same workspace.
+Use this decision sequence before selecting a state-management skill:
 
-| Detected Library / Intent | Required Skill | Required Code Template(s) | Key Architectural Rule |
-|---|---|---|---|
-| **Riverpod 3.x** (`flutter_riverpod`, `riverpod_generator`) | `flutter-riverpod` | `riverpod_notifier.dart.template`, `ui_page.dart.template` | Use `@riverpod` annotations; watch providers via `ref.watch()`. |
-| **Bloc 9.x** (`flutter_bloc`, `bloc`) | `flutter-bloc` | `bloc.dart.template`, `ui_page_bloc.dart.template` | Unidirectional event-driven state; model events/states with `freezed`. |
-| **Cubit** (`flutter_bloc`, method-driven) | `flutter-cubit` | `cubit.dart.template`, `ui_page_bloc.dart.template` | Method-driven state emission; model states with `freezed`. |
-| **GetX 5.x** (`get`) | `flutter-getx` | `getx_controller.dart.template`, `ui_page_getx.dart.template` | Reactive `.obs` variables; organize dependencies in `Bindings`. |
+1. Inspect `pubspec.yaml` and the relevant feature directory. A dependency alone is not enough to distinguish Bloc from Cubit because both use `flutter_bloc`.
+2. Reuse the approach already used by the affected feature unless the user requests a documented migration. If the feature is new and the project has no established approach, ask for a choice or recommend one with stated trade-offs.
+3. Avoid introducing a second approach into the same feature. A workspace-wide migration may temporarily contain more than one approach only with an explicit boundary, migration plan, and removal target.
+
+| Evidence in target project | Select | Key rule |
+|---|---|---|
+| `flutter_riverpod` and providers/notifiers in the affected feature | `flutter-riverpod` | Preserve provider scope and lifecycle. |
+| `flutter_bloc` and event classes / `Bloc<...>` in the affected feature | `flutter-bloc` | Preserve event-driven boundaries. |
+| `flutter_bloc` and `Cubit<...>` in the affected feature | `flutter-cubit` | Preserve method-driven state emission. |
+| `get` and controllers / bindings in the affected feature | `flutter-getx` | Preserve controller lifecycle and bindings. |
+| No established evidence | Ask or state a recommendation | Do not infer a library from a generic template. |
 
 ---
 
@@ -107,7 +96,7 @@ Before generating presentation layer code or wiring dependency injection, check 
 | User Intent / Problem Domain | Authoritative Skill | What It Enforces |
 |---|---|---|
 | Planning a new feature, sprint backlog, or milestones | `flutter-feature-planner` | Engineering task breakdown, dependency graphs, estimation |
-| Interrogating user, auditing requirements, or preventing hallucination when confidence < 0.80 | `flutter-grill-me` | Grill-Me Anti-Hallucination Interrogation Protocol across 5 engineering dimensions |
+| Interrogating users or resolving missing information that could change a material decision | `flutter-grill-me` | Focused requirement interrogation across the relevant engineering dimensions |
 | Creating a new feature end-to-end across all layers | `flutter-create-feature` | Vertical-slice workflow from domain analysis to UI and testing |
 | Reviewing code or auditing a pull request | `flutter-code-review` | 6-step PR audit (analysis, architecture, state, UI, security, tests) |
 | Managing git branching, commits, or versioning | `flutter-git` | Semantic versioning, conventional commits, PR workflows |
@@ -128,5 +117,5 @@ Before generating presentation layer code or wiring dependency injection, check 
   👉 **Route:** `flutter-code-review` + `flutter-background-processing` + `flutter-media-hardware` + `flutter-security`.
 * **Scenario D: "Start a new project or build an app from scratch." (Why-What-Ready Pipeline)**
   👉 **Route:** `flutter-product-discovery-and-architecture` (WHY) ➔ `flutter-domain-modeling` (WHAT) ➔ `flutter-project-architect` (DESIGN) ➔ `flutter-feature-planner` (PLAN) ➔ Implementation Skills (CODE) ➔ `flutter-production-readiness` (READY) ➔ `flutter-code-review` (REVIEW).
-* **Scenario E: "We want to add an offline data sync feature, but specifications and state rules are unclear." (Anti-Hallucination Gate)**
-  👉 **Route:** `flutter-grill-me` (INTERROGATE & LOCK SPEC) ➔ `flutter-agent-memory` (UPDATE CONFIDENCE ≥ 0.80) ➔ `flutter-background-processing` + `flutter-local-database` + `flutter-clean-architecture` (IMPLEMENT).
+* **Scenario E: "We want to add an offline data sync feature, but specifications and state rules are unclear." (Decision readiness)**
+  👉 **Route:** `flutter-grill-me` (RESOLVE MATERIAL QUESTIONS) ➔ `flutter-agent-memory` (RECORD DECISIONS AND ASSUMPTIONS) ➔ `flutter-background-processing` + `flutter-local-database` + `flutter-clean-architecture` (IMPLEMENT AND VALIDATE).

@@ -1,6 +1,13 @@
 name: flutter-micro-interactions-ux
 version: 1.0.0
-description: Haptics, shimmers, empty states, and UX psychology heuristics.
+owner: ui-engineering-team
+flutter_version_min: 3.44.0
+
+dependencies:
+  requires:
+    - flutter-ui-engineering
+    - flutter-design-system-theming
+  conflicts_with: []
+  optional: []
+
 active_persona: "Staff Software Engineer"
-requires: ["flutter-ui-engineering", "flutter-design-system-theming"]
-conflicts_with: []
