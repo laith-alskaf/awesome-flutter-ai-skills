@@ -326,8 +326,25 @@ $dstSkills = Join-Path $agentsDir "skills"
 if (Test-Path $srcSkills) {
     if (-not (Test-Path $agentsDir)) { New-Item -ItemType Directory -Path $agentsDir -Force | Out-Null }
     if (Test-Path $dstSkills) { Remove-Item -Path $dstSkills -Recurse -Force }
-    Copy-Item -Path $srcSkills -Destination $dstSkills -Recurse -Force
-    $skillCount = (Get-ChildItem -Path $dstSkills -Filter "SKILL.md" -Recurse).Count
+    New-Item -ItemType Directory -Path $dstSkills -Force | Out-Null
+
+    # Install each discovered skill directly below .agents/skills/. Antigravity
+    # discovers skill folders at this level; repository sector folders are source-only.
+    $skillDirs = Get-ChildItem -Path $srcSkills -Filter "SKILL.md" -Recurse |
+        ForEach-Object { Get-Item $_.DirectoryName } |
+        Sort-Object FullName -Unique
+    $installedNames = @{}
+    foreach ($skillDir in $skillDirs) {
+        if ($installedNames.ContainsKey($skillDir.Name)) {
+            throw "Duplicate skill directory name '$($skillDir.Name)' cannot be installed directly under .agents/skills/."
+        }
+        $destination = Join-Path $dstSkills $skillDir.Name
+        Copy-Item -Path $skillDir.FullName -Destination $destination -Recurse -Force
+        $installedNames[$skillDir.Name] = $true
+    }
+
+    $skillCount = $installedNames.Count
+    if ($skillCount -eq 0) { throw "No SKILL.md directories were found under $srcSkills." }
     Write-Host "      [+] .agents/skills/ ($skillCount skills; Antigravity default path)" -ForegroundColor Green
 }
 
@@ -408,6 +425,7 @@ $checks = @(
     @{ Path = (Join-Path $agentDir "KNOWLEDGE_INDEX.md");          Label = ".agent/KNOWLEDGE_INDEX.md" },
     @{ Path = (Join-Path $agentDir "CURRENT_STATE.md");            Label = ".agent/CURRENT_STATE.md" },
     @{ Path = (Join-Path $agentsDir "skills");                     Label = ".agents/skills/" },
+    @{ Path = (Join-Path $dstSkills "flutter-agent-evaluation/SKILL.md"); Label = ".agents/skills/flutter-agent-evaluation/SKILL.md" },
     @{ Path = (Join-Path $agentDir "tools");                       Label = ".agent/tools/" },
     @{ Path = (Join-Path $ProjectPath ".cursorrules");             Label = ".cursorrules" },
     @{ Path = (Join-Path $githubDir "copilot-instructions.md");       Label = ".github/copilot-instructions.md" }
