@@ -281,6 +281,17 @@ def validate_repository_contracts(skill_count: int) -> None:
         fail("tools/init-project.ps1 does not install native .agents/skills/." )
     if "SKILLS LOCATION: .agent/skills/" in initializer:
         fail("tools/init-project.ps1 still advertises the legacy .agent/skills/ location.")
+    required_initializer_tokens = (
+        '$skillDirs = Get-ChildItem -Path $srcSkills -Filter "SKILL.md" -Recurse',
+        "$installedNames = @{}",
+        "Join-Path $dstSkills $skillDir.Name",
+        "flutter-agent-evaluation/SKILL.md",
+    )
+    for token in required_initializer_tokens:
+        if token not in initializer:
+            fail(f"tools/init-project.ps1: missing direct-skill installation contract {token!r}.")
+    if "Copy-Item -Path $srcSkills -Destination $dstSkills -Recurse -Force" in initializer:
+        fail("tools/init-project.ps1: skills source must not be copied as a nested directory.")
     for script in (ROOT / "tools").glob("*.ps1"):
         script_text = script.read_text(encoding="utf-8-sig")
         if "Set-StrictMode -Version Latest" not in script_text:
@@ -321,6 +332,8 @@ def validate_repository_contracts(skill_count: int) -> None:
             "deploy.ps1\" -WhatIf",
             "uninstall-global.ps1\" -Force -WhatIf",
             ".agents\\skills\\flutter-agent-evaluation\\SKILL.md",
+            "Skills were nested under an unsupported source directory",
+            "Expected 55 directly installed skills",
         )
         for token in required_workflow_tokens:
             if token not in workflow_text:
