@@ -23,10 +23,13 @@ scratch/
 
 # Local Environment & Agent Logs
 .gemini/
+# `.agent/` is legacy project state; migration keeps dated backups locally.
 .agent
 .agent/
+.agent.backup-*/
+# `.agents/` is the canonical project-agent root. This framework repository
+# tracks only its own workspace-maintenance rules; generated local artifacts stay ignored.
 .agents/
-# Version the framework-maintenance rule while keeping any local agent artifacts ignored.
 !.agents/
 .agents/*
 !.agents/rules/

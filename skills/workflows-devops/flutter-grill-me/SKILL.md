@@ -39,7 +39,7 @@ graph TD
 ```
 
 ### When to Trigger Grill-Me Mode:
-0. **Project initialization or feature start:** Read relevant `.agent/` state if it exists. Activate Grill-Me only when the new work has material unresolved requirements.
+0. **Project initialization or feature start:** Read relevant `.agents/context/` state if it exists. Activate Grill-Me only when the new work has material unresolved requirements.
 1. **Material uncertainty:** The missing information could change architecture, security, data handling, dependency selection, external contracts, deployment, or visible behavior.
 2. **Missing architectural boundaries:** A requested non-trivial feature does not specify the required presentation, domain, and data interactions.
 3. **Unspecified state management:** The relevant feature has no established approach and the choice would shape new code, or a requested change conflicts with its existing approach.

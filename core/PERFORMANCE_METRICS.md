@@ -18,7 +18,7 @@ This framework uses progressive disclosure: agents first see skill metadata, the
 | Contract validity | `python3 tools/validate_framework.py` passes. | Every pull request and push to `main`. |
 | Routing quality | Representative task prompts select the expected primary skills without unrelated activation. | Before a release and after material routing changes. |
 | Instruction safety | Workflows distinguish material uncertainty from reversible low-risk work and do not rely on invented confidence scores. | After governance or workflow changes. |
-| Installation integrity | Local initialization writes `.agent/` state and `.agents/skills/`; global deployment targets documented paths. | After installer changes. |
+| Installation integrity | Local initialization writes `.agents/context/` state and `.agents/skills/`; global deployment targets documented paths. | After installer changes. |
 | Context discipline | Long or specialized detail is moved to local resources, and no `SKILL.md` exceeds the line limit. | Every pull request. |
 
 ## Audit procedure

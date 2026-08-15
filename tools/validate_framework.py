@@ -261,14 +261,23 @@ def validate_repository_contracts(skill_count: int) -> None:
         ".ai\\\\": "obsolete Windows-style .ai project-state path",
         ".gemini/antigravity/skills": "undocumented Antigravity global skill path",
     }
-    tracked_text = "\n".join(
-        path.read_text(encoding="utf-8-sig")
-        for path in ROOT.rglob("*")
-        if path.is_file() and path.resolve() != Path(__file__).resolve() and ".git" not in path.parts and path.suffix.lower() in {".md", ".ps1", ".py", ".yaml", ".yml"}
-    )
+    legacy_exceptions = {
+        ROOT / "tools" / "init-project.ps1",
+        ROOT / "docs" / "architecture" / "unified-agents-architecture.md",
+        ROOT / "docs" / "architecture" / "unified-agents-acceptance-matrix.md",
+        ROOT / ".github" / "workflows" / "validate-framework.yml",
+    }
+    tracked_paths = [
+        path for path in ROOT.rglob("*")
+        if path.is_file() and path.resolve() != Path(__file__).resolve() and path not in legacy_exceptions
+        and ".git" not in path.parts and path.suffix.lower() in {".md", ".ps1", ".py", ".yaml", ".yml"}
+    ]
+    tracked_text = "\n".join(path.read_text(encoding="utf-8-sig") for path in tracked_paths)
     for token, label in forbidden.items():
         if token in tracked_text:
             fail(f"Repository contains {label}: {token}")
+    if ".agent/" in tracked_text or ".agent\\\\" in tracked_text:
+        fail("Repository contains a legacy .agent project path outside the migration implementation and migration documentation.")
     required_rules = ("flutter-agent-framework.md", "flutter-agent-evaluation.md")
     gitignore = (ROOT / ".gitignore").read_text(encoding="utf-8-sig")
     for rule in required_rules:
@@ -278,20 +287,38 @@ def validate_repository_contracts(skill_count: int) -> None:
             fail(f".gitignore must allow the shipped .agents/rules/{rule} rule.")
     initializer = (ROOT / "tools" / "init-project.ps1").read_text(encoding="utf-8-sig")
     if ".agents/skills/" not in initializer:
-        fail("tools/init-project.ps1 does not install native .agents/skills/." )
-    if "SKILLS LOCATION: .agent/skills/" in initializer:
-        fail("tools/init-project.ps1 still advertises the legacy .agent/skills/ location.")
+        fail("tools/init-project.ps1 does not install native .agents/skills/.")
     required_initializer_tokens = (
-        '$skillDirs = Get-ChildItem -Path $srcSkills -Filter "SKILL.md" -Recurse',
+        "[switch]$MigrateLegacy",
+        "[switch]$DryRun",
+        "Copy-LegacyContext",
+        ".agents/governance/",
+        ".agents/context/",
+        ".agents/rules/",
+        ".agents/framework-manifest.json",
+        ".agent.backup-",
+        '$skillDirs = Get-ChildItem -Path $sourceSkills -Filter "SKILL.md" -Recurse',
         "$installedNames = @{}",
-        "Join-Path $dstSkills $skillDir.Name",
+        "Join-Path $skillsDir $skillDir.Name",
         "flutter-agent-evaluation/SKILL.md",
+        "flutter-project-operating-contract.md",
+        "Write-ContextFile",
+        "if ((Test-Path $Path) -and -not $Force)",
+        "preserved as project-owned context (use -Force to regenerate it)",
+        "Write-AdapterFile",
     )
     for token in required_initializer_tokens:
         if token not in initializer:
             fail(f"tools/init-project.ps1: missing direct-skill installation contract {token!r}.")
-    if "Copy-Item -Path $srcSkills -Destination $dstSkills -Recurse -Force" in initializer:
-        fail("tools/init-project.ps1: skills source must not be copied as a nested directory.")
+    forbidden_initializer_tokens = (
+        "Copy-Item -Path $srcSkills -Destination $dstSkills -Recurse -Force",
+        "$agentDir = Join-Path $ProjectPath \".agent\"",
+    )
+    for token in forbidden_initializer_tokens:
+        if token in initializer:
+            fail(f"tools/init-project.ps1: legacy or nested installation contract remains: {token!r}.")
+    if re.search(r"Test-Path\\s+\\$[A-Za-z_][A-Za-z0-9_]*\\s+-and\\b", initializer):
+        fail("tools/init-project.ps1: parenthesize Test-Path before combining it with a PowerShell boolean operator.")
     for script in (ROOT / "tools").glob("*.ps1"):
         script_text = script.read_text(encoding="utf-8-sig")
         if "Set-StrictMode -Version Latest" not in script_text:
@@ -332,8 +359,14 @@ def validate_repository_contracts(skill_count: int) -> None:
             "deploy.ps1\" -WhatIf",
             "uninstall-global.ps1\" -Force -WhatIf",
             ".agents\\skills\\flutter-agent-evaluation\\SKILL.md",
+            ".agents\\rules\\flutter-project-operating-contract.md",
+            ".agents\\governance\\AGENTS.md",
+            ".agents\\context\\CURRENT_STATE.md",
+            ".agents\\framework-manifest.json",
             "Skills were nested under an unsupported source directory",
             "Expected 55 directly installed skills",
+            "-MigrateLegacy",
+            "-Force did not intentionally regenerate project-owned context",
         )
         for token in required_workflow_tokens:
             if token not in workflow_text:

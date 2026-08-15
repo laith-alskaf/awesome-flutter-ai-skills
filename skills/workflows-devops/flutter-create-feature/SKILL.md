@@ -38,7 +38,7 @@ Execute a complete, production-ready feature from requirements to tested impleme
 
 ### Step 0: Establish Decision Readiness
 
-Before implementing a non-trivial feature, inspect the target project's architecture, affected feature, state-management usage, data sources, routes, and relevant `.agent/` state when it exists.
+Before implementing a non-trivial feature, inspect the target project's architecture, affected feature, state-management usage, data sources, routes, and relevant `.agents/context/` state when it exists.
 
 > **Grill-Me rule:** If an unanswered question could change architecture, state management, data, security, dependencies, external contracts, deployment, or user-visible behavior, invoke **`flutter-grill-me`** or record an explicit assumption before the affected implementation step. Do not force unrelated questions or a numerical confidence threshold onto reversible low-risk work.
 
@@ -165,7 +165,7 @@ Run automated verification before marking the feature as complete:
 dart analyze
 dart format --output=none --set-exit-if-changed .
 flutter test
-dart run .agent/tools/verify_architecture.dart
+dart run .agents/tools/verify_architecture.dart
 ```
 
 Run only the checks supported by the target project and include relevant platform or integration checks. The architecture verifier applies when the project uses the framework's Clean Architecture layout.
@@ -208,7 +208,7 @@ Then request peer review against: `flutter-code-review`
 - [ ] Unit tests written for UseCases and Repository
 - [ ] Widget tests written for all UI states
 - [ ] Applicable analysis, formatting, test, and platform checks pass
-- [ ] `dart run .agent/tools/verify_architecture.dart` passes when Clean Architecture verification applies
+- [ ] `dart run .agents/tools/verify_architecture.dart` passes when Clean Architecture verification applies
 
 ## Related Skills
 

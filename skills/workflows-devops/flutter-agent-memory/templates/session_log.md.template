@@ -1,16 +1,25 @@
-# SESSION_LOG.md — Chronological Session Ledger
+# SESSION_LOG.md — Meaningful Handoffs
 
-*This log records concise chronological summaries of development sessions for historical context.*
+> Use this log only for work that spans sessions, phases, or owners. The active task state belongs in `.agents/context/CURRENT_STATE.md`.
 
 ---
 
-## 📅 Log Ledger
+## Session: {{DATE}}
 
-### Session: YYYY-MM-DD
-- **Agent / Contributor:** Antigravity AI Agent & User
-- **Objective:** Framework Optimization & Knowledge Architecture Deployment
-- **Accomplished:**
-  - Upgraded framework deployment engine (`deploy.ps1`) to support 45 skills across 6 global AI paths.
-  - Implemented 5-Tier Knowledge Architecture (`.agent/PROJECT_PROFILE`, `.agent/KNOWLEDGE_INDEX`, `.agent/AGENTS_MEMORY`, `.agent/CURRENT_STATE`, `.agent/SESSION_LOG`).
-- **Blockers Resolved:** Eliminated git commit noise by separating static identity from dynamic session state.
-- **Status:** Completed & Gold Certified (100/100).
+| Field | Record |
+|---|---|
+| Objective | [What work is being continued or handed off?] |
+| Evidence inspected | [Code, tests, CI, issue, ADR, or logs.] |
+| Decisions | [Material decisions and their reason.] |
+| Validation | [Completed, pending, and unavailable checks.] |
+| Next action | [Smallest safe continuation step.] |
+
+---
+
+## Context locations
+
+- Project facts: `.agents/context/PROJECT_PROFILE.md`
+- Active work: `.agents/context/CURRENT_STATE.md`
+- Reusable lessons: `.agents/context/AGENTS_MEMORY.md`
+- Governance: `.agents/governance/AGENTS.md`
+- Skills: `.agents/skills/`

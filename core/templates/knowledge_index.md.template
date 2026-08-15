@@ -6,16 +6,16 @@ Use this file as a compact index to durable project knowledge. Keep it current o
 
 | Item | Path or reference | Status |
 |---|---|---|
-| Project profile | `.agent/PROJECT_PROFILE.md` | Required after initialization |
-| Current state | `.agent/CURRENT_STATE.md` | Update at meaningful checkpoints |
-| Health and lessons | `.agent/AGENTS_MEMORY.md` | Add reusable lessons only |
-| Session handoffs | `.agent/SESSION_LOG.md` | Link archives when compacted |
+| Project profile | `.agents/context/PROJECT_PROFILE.md` | Required after initialization |
+| Current state | `.agents/context/CURRENT_STATE.md` | Update at meaningful checkpoints |
+| Health and lessons | `.agents/context/AGENTS_MEMORY.md` | Add reusable lessons only |
+| Session handoffs | `.agents/context/SESSION_LOG.md` | Link archives when compacted |
 | Native skills | `.agents/skills/` | Installed by the framework initializer |
-| Governance | `.agent/core/AGENTS.md` | Read when relevant to the task |
+| Governance | `.agents/governance/AGENTS.md` | Read when relevant to the task |
 
 ## Architectural decisions
 
-Add an entry only after a decision record exists. Store project ADRs in the location selected by the project, such as `docs/adr/` or `.agent/decisions/`.
+Add an entry only after a decision record exists. Store project ADRs in the location selected by the project, such as `docs/adr/` or `.agents/context/decisions/`.
 
 | Decision | Record | Date | Status |
 |---|---|---|---|

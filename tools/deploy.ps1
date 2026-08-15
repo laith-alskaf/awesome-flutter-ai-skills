@@ -56,7 +56,7 @@ $managedMarker = '.awesome-flutter-ai-skills-managed'
 $validSkillNames = @($skillDirs | ForEach-Object { $_.Name })
 
 Write-Host "Deploying $($skillDirs.Count) Agent Skills to $($targetBases.Count) global locations." -ForegroundColor Cyan
-Write-Host 'Use init-project.ps1 for project-local .agent/ state and .agents/skills/ installation.' -ForegroundColor Cyan
+Write-Host 'Use init-project.ps1 for project-local .agents/context/ state and .agents/skills/ installation.' -ForegroundColor Cyan
 
 $totalDeployed = 0
 $totalPruned = 0

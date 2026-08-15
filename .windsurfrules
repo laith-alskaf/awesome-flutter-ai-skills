@@ -1,7 +1,9 @@
-# Windsurf Cascade Rules — Flutter AI Agent Skill Framework 2026
-- CONTEXT GATE: Before modifying Flutter application code, read `.agent/PROJECT_PROFILE.md` and `.agent/CURRENT_STATE.md` when those initialized-project files exist. If either required detail is missing or requirements remain ambiguous, ask focused questions or activate `flutter-grill-me`; do not block framework maintenance because an application-state file is absent.
-- STATE MATRIX FIREWALL: Check pubspec.yaml as step zero. If Riverpod is detected, NEVER call Cubit/Bloc/GetX skills. If Bloc is detected, NEVER call Riverpod/GetX skills.
-- Enforce Clean Architecture: Presentation -> Domain -> Data. Zero Flutter UI or state imports in Domain layer.
-- Target: Flutter 3.44.x Stable, Dart 3.12.x, Material 3, Impeller Engine.
-- Sealed classes & pattern matching for async states (AsyncValue / BlocState).
-- Never mix business logic in UI widgets.
+# Flutter AI Agent Framework Repository Rules
+
+This repository packages agent assets; it is not a Flutter application. Do not require a target project's `pubspec.yaml` or `.agents/context/` files to maintain this framework.
+
+When changing a skill, read its `SKILL.md`, `metadata.yaml`, and referenced local resources first. Keep the frontmatter name equal to the folder name, keep descriptions precise about capability and trigger context, and preserve progressive disclosure.
+
+When changing project initialization or Antigravity compatibility, treat `.agents/` as the only new-install root. Keep skills in `.agents/skills/`, workspace rules in `.agents/rules/`, framework policies in `.agents/governance/`, project state in `.agents/context/`, and verification utilities in `.agents/tools/`. Retain `.agent/` only inside the explicit legacy migration path; never write new project assets there.
+
+Update the initializer, validation contracts, documentation, and Windows smoke tests together when a project path changes. Before finalizing, run `python3 tools/validate_framework.py` and report platform-specific behavior that has not been executed.
