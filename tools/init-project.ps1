@@ -71,7 +71,7 @@ function Write-ContextFile {
         [Parameter(Mandatory = $true)][string]$Content,
         [Parameter(Mandatory = $true)][string]$Label
     )
-    if (Test-Path $Path -and -not $Force) {
+    if ((Test-Path $Path) -and -not $Force) {
         Write-Host "      [=] $Label already exists; preserved as project-owned context (use -Force to regenerate it)." -ForegroundColor DarkYellow
         return
     }
@@ -88,7 +88,7 @@ function Write-AdapterFile {
         [Parameter(Mandatory = $true)][string]$Content,
         [Parameter(Mandatory = $true)][string]$Label
     )
-    if (Test-Path $Path -and -not $Force) {
+    if ((Test-Path $Path) -and -not $Force) {
         Write-Host "      [=] $Label already exists; preserved (use -Force to refresh the adapter)." -ForegroundColor DarkYellow
         return
     }

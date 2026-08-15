@@ -303,6 +303,7 @@ def validate_repository_contracts(skill_count: int) -> None:
         "flutter-agent-evaluation/SKILL.md",
         "flutter-project-operating-contract.md",
         "Write-ContextFile",
+        "if ((Test-Path $Path) -and -not $Force)",
         "preserved as project-owned context (use -Force to regenerate it)",
         "Write-AdapterFile",
     )
