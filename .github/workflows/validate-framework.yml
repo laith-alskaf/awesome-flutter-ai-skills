@@ -39,15 +39,15 @@ jobs:
           $legacyFixture = Join-Path $env:RUNNER_TEMP "flutter-skills-legacy-fixture"
           foreach ($path in @($fixture, $legacyFixture)) {
             New-Item -ItemType Directory -Path (Join-Path $path "lib") -Force | Out-Null
-            @'
-            name: flutter_skills_fixture
-            publish_to: none
-            environment:
-              sdk: ">=3.0.0 <4.0.0"
-            dependencies:
-              flutter:
-                sdk: flutter
-            '@ | Set-Content -Path (Join-Path $path "pubspec.yaml")
+            @(
+              "name: flutter_skills_fixture"
+              "publish_to: none"
+              "environment:"
+              "  sdk: `">=3.0.0 <4.0.0`""
+              "dependencies:"
+              "  flutter:"
+              "    sdk: flutter"
+            ) | Set-Content -Path (Join-Path $path "pubspec.yaml")
             "void main() {}" | Set-Content -Path (Join-Path $path "lib/main.dart")
           }
           New-Item -ItemType Directory -Path (Join-Path $legacyFixture ".agent") -Force | Out-Null
