@@ -28,7 +28,7 @@ Use this sequence:
 
 ## Evaluate Installation and Rules
 
-For installation changes, test the smallest supported setup first. Verify that project state is written to `.agent/`, workspace skills are written to `.agents/skills/`, and workspace rules are available from `.agents/rules/`. Use `-WhatIf` for deployment and uninstallation checks before a destructive run.
+For installation changes, test the smallest supported setup first. Verify that project state is written to `.agents/context/`, workspace skills are written to `.agents/skills/`, and workspace rules are available from `.agents/rules/`. Use `-WhatIf` for deployment and uninstallation checks before a destructive run.
 
 Rules should constrain reusable behavior, while skills should describe focused task workflows. Do not duplicate long technical procedures inside a workspace rule. If a rule changes, add or update a scenario that would expose a regression.
 

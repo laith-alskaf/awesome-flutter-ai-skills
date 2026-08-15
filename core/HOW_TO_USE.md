@@ -1,7 +1,7 @@
 # Flutter AI Engineering OS — How To Use
 # الدليل الشامل لاستخدام نظام التشغيل الهندسي للذكاء الاصطناعي (V2)
 
-> **For AI Agents:** This document provides deployment paths and integration instructions. In an initialized project, read `.agent/core/AGENTS.md` for project governance and use `.agents/skills/` for native skill discovery. Do not require either path while maintaining this framework repository itself.
+> **For AI Agents:** This document provides deployment paths and integration instructions. In an initialized project, read `.agents/governance/AGENTS.md` for project governance and use `.agents/skills/` for native skill discovery. Do not require either path while maintaining this framework repository itself.
 
 ---
 
@@ -19,13 +19,13 @@ This syncs the `/core` OS Kernel and all 55 modular skills to your global AI age
 ```powershell
 .\tools\init-project.ps1
 ```
-This sets up `.agent/` for project state and `.agents/skills/` for native workspace skill discovery inside your current project.
+This sets up `.agents/context/` for project state and `.agents/skills/` for native workspace skill discovery inside your current project.
 
 ---
 
 ## نظرة عامة (Arabic Overview)
 
-هذا الدليل هو مرجعك العملي لدمج **نظام التشغيل الهندسي V2 (AI Engineering OS)**. المهارات تُكتشف أصلاً من `.agents/skills/`، بينما تحفظ `.agent/` حالة المشروع وقراراته وسجلات التسليم. يحتوي كل Skill على تعليمات أساسية وموارد اختيارية تُقرأ عند الحاجة، ما يدعم الإفصاح التدريجي دون افتراض ذاكرة دائمة للوكيل.
+هذا الدليل هو مرجعك العملي لدمج **نظام التشغيل الهندسي V2 (AI Engineering OS)**. المهارات تُكتشف أصلاً من `.agents/skills/`، بينما تحفظ `.agents/context/` حالة المشروع وقراراته وسجلات التسليم. يحتوي كل Skill على تعليمات أساسية وموارد اختيارية تُقرأ عند الحاجة، ما يدعم الإفصاح التدريجي دون افتراض ذاكرة دائمة للوكيل.
 
 ---
 
@@ -78,24 +78,27 @@ This sets up `.agent/` for project state and `.agents/skills/` for native worksp
 
 ```text
 <your-flutter-project>/
-├── .agent/
-│   ├── core/                            ← نواة الحوكمة (AGENTS.md, PERSONAS.md، إلخ)
-│   ├── tools/                           ← أدوات الفحص والتأكيد
-│   ├── PROJECT_PROFILE.md               ← هويّة المشروع (عدّلها أولاً!)
-│   ├── KNOWLEDGE_INDEX.md               ← خريطة المعرفة
-│   ├── CURRENT_STATE.md                 ← الأدلة والافتراضات والأسئلة المفتوحة
-│   ├── AGENTS_MEMORY.md                 ← سجل الصحة والدروس المتكررة
-│   └── SESSION_LOG.md                   ← سجل الجلسات والتسليم
-├── .agents/
-│   └── skills/                          ← جميع الـ 55 مهارة بصيغة Agent Skills الأصلية
-├── .cursorrules                         ← قواعد Cursor المتوافقة مع حالة المشروع
-├── .windsurfrules                       ← قواعد Windsurf
-└── .clinerules                          ← قواعد Roo/Cline
+├── .agents/                             ← الجذر الموحد لكل أصول الوكيل
+│   ├── rules/                            ← قواعد Antigravity وعقد تشغيل المشروع
+│   ├── skills/                           ← جميع المهارات الـ55 بصيغة Agent Skills الأصلية
+│   ├── governance/                       ← AGENTS.md والشخصيات والتوجيه والحوكمة
+│   ├── context/                          ← حالة المشروع والمعرفة وسجل الجلسات
+│   │   ├── PROJECT_PROFILE.md            ← هويّة المشروع (عدّلها أولاً)
+│   │   ├── KNOWLEDGE_INDEX.md            ← خريطة المعرفة
+│   │   ├── CURRENT_STATE.md              ← الأدلة والافتراضات والأسئلة المفتوحة
+│   │   ├── AGENTS_MEMORY.md              ← سجل الصحة والدروس المتكررة
+│   │   └── SESSION_LOG.md                ← سجل الجلسات والتسليم
+│   ├── tools/                            ← أدوات الفحص والتأكيد
+│   └── framework-manifest.json           ← نسخة الإطار ومصدره وعدد المهارات
+├── .cursorrules                          ← قواعد Cursor المتوافقة مع حالة المشروع
+├── .windsurfrules                        ← قواعد Windsurf
+└── .clinerules                           ← قواعد Roo/Cline
 ```
 
 **الخطوات بعد التهيئة:**
-1. افتح `.agent/PROJECT_PROFILE.md` وسجّل تفاصيل المشروع المؤكدة.
-2. دع الوكيل يختار من `.agents/skills/` أقل مجموعة مهارات تغطي المهمة.
+1. اقرأ `.agents/governance/AGENTS.md` ثم افتح `.agents/context/PROJECT_PROFILE.md` وسجّل تفاصيل المشروع المؤكدة.
+2. دع الوكيل يختار من `.agents/skills/` أقل مجموعة مهارات تغطي المهمة، مع الاستفادة من قواعد `.agents/rules/` المكتشفة أصلاً في Antigravity.
 3. اطلب `flutter-grill-me` فقط عندما تؤثر المعلومات الناقصة في المعمارية أو الأمان أو البيانات أو الواجهات أو الاعتماديات أو سلوك المستخدم.
-4. ابدأ البناء والتحقق التدريجي.
+4. أعد تشغيل المهيئ بأمان عند الحاجة؛ لا تُستبدل ملفات السياق الموجودة إلا بخيار `-Force`، واستعمل `-MigrateLegacy` لترحيل مشروع قديم دون فقد بياناته.
+5. ابدأ البناء والتحقق التدريجي.
 

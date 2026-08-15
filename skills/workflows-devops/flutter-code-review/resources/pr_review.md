@@ -10,7 +10,7 @@ Reference skill: `flutter-code-review`
 - [ ] `dart analyze` passes with zero warnings, errors, or lints.
 - [ ] `dart format --output=none --set-exit-if-changed .` passes with zero changes needed.
 - [ ] `flutter test` executes and passes all unit and widget tests.
-- [ ] `dart run .agent/tools/verify_architecture.dart` passes with zero domain boundary violations.
+- [ ] `dart run .agents/tools/verify_architecture.dart` passes with zero domain boundary violations.
 
 ## 2. Code Quality & Style
 

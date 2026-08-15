@@ -1,65 +1,142 @@
 # ============================================================
-# Flutter AI Agent Framework -- Per-Project Initializer
-# Version: 2.1.0 | Date: 2026-07-27
+# Flutter AI Agent Framework -- Unified Per-Project Initializer
 #
-# PURPOSE:
-#   Injects the full Flutter AI Agent Skill Framework into any
-#   Flutter project directory so that ALL AI agents (Antigravity,
-#   Gemini, Claude, Cursor, Windsurf, Copilot, Codex, Roo) work
-#   with the complete framework locally -- per project.
-#   Project state and governance live in .agent/; native workspace skills
-#   live in .agents/skills/ for Antigravity discovery.
+# Installs all project-local agent assets under .agents/:
+#   rules/       Antigravity workspace rules
+#   skills/      Native Agent Skills
+#   governance/  Shared policies, router, personas, resources
+#   context/     Project facts, active work, and handoffs
+#   tools/       Framework verification utilities
 #
-# USAGE (from inside your Flutter project root):
-#   & "path\to\flutter-skills\tools\init-project.ps1"
-#
-# USAGE (specify project path explicitly):
-#   & "path\to\flutter-skills\tools\init-project.ps1" -ProjectPath "D:\Projects\my_flutter_app"
-#
-# WHAT IT CREATES:
-#   .agent/core/AGENTS.md            -> Framework governance rules
-#   .agent/core/ROUTER_MANIFESTO.md  -> Agent routing & skill matrix
-#   .agent/core/PERSONAS.md          -> The 5 AI Personas definitions
-#   .agent/PROJECT_PROFILE.md        -> Project identity (edit this!)
-#   .agent/KNOWLEDGE_INDEX.md        -> Navigation map to all skills
-#   .agent/CURRENT_STATE.md          -> Evidence, assumptions, and open questions
-#   .agent/AGENTS_MEMORY.md          -> Project health and reusable lessons
-#   .agent/SESSION_LOG.md            -> Chronological session handoffs
-#   .agent/tools/                    -> Executable framework utilities
-#   .agents/skills/                  -> All native Agent Skills
-#   .cursorrules                     -> Cursor IDE rules (pointing to .agent/)
-#   .windsurfrules                   -> Windsurf IDE rules (pointing to .agent/)
-#   .clinerules                      -> Roo Code / Cline rules (pointing to .agent/)
-#   .codex/instructions.md           -> OpenAI Codex rules (pointing to .agent/)
-#   .github/copilot-instructions.md  -> GitHub Copilot rules (pointing to .agent/)
+# Safe defaults: existing context files are never overwritten. Use -Force to
+# intentionally regenerate context, framework-managed directories, and editor adapters.
+# Use -MigrateLegacy to move an existing .agent/ directory into .agents/ without
+# deleting data; the original becomes a dated backup after a successful migration.
 # ============================================================
 
+[CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Medium')]
 param(
     [string]$ProjectPath = "",
-    [string]$SkillsSource = ""
+    [string]$SkillsSource = "",
+    [switch]$MigrateLegacy,
+    [switch]$Force,
+    [switch]$DryRun
 )
 
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
 
-# ---------------------------------------------
-# 1. RESOLVE PATHS
-# ---------------------------------------------
-
-# Resolve the repository root when invoked from tools/, while retaining
-# current-directory behavior for one-line streamed execution.
-$scriptDir = $PSScriptRoot
-if ([string]::IsNullOrEmpty($scriptDir)) {
-    $frameworkRoot = (Get-Location).Path
-} else {
-    $frameworkRoot = Split-Path -Parent $scriptDir
+function Write-Plan {
+    param([string]$Message)
+    Write-Host "      [PLAN] $Message" -ForegroundColor DarkYellow
 }
+
+function Ensure-Directory {
+    param([Parameter(Mandatory = $true)][string]$Path, [Parameter(Mandatory = $true)][string]$Label)
+    if (Test-Path $Path) { return }
+    if ($DryRun) { Write-Plan "Create $Label"; return }
+    if ($PSCmdlet.ShouldProcess($Path, "Create $Label")) {
+        New-Item -ItemType Directory -Path $Path -Force | Out-Null
+        Write-Host "      [+] $Label" -ForegroundColor Green
+    }
+}
+
+function Copy-FrameworkDirectory {
+    param(
+        [Parameter(Mandatory = $true)][string]$Source,
+        [Parameter(Mandatory = $true)][string]$Destination,
+        [Parameter(Mandatory = $true)][string]$Label
+    )
+    if (-not (Test-Path $Source)) { throw "Required framework source is absent: $Source" }
+    if (Test-Path $Destination) {
+        if (-not $Force) {
+            Write-Host "      [=] $Label already exists; preserved (use -Force to refresh framework-managed files)." -ForegroundColor DarkYellow
+            return
+        }
+        if ($DryRun) { Write-Plan "Replace $Label"; return }
+        if ($PSCmdlet.ShouldProcess($Destination, "Replace $Label with framework-managed files")) {
+            Remove-Item -Path $Destination -Recurse -Force
+        } else { return }
+    }
+    if ($DryRun) { Write-Plan "Copy $Label"; return }
+    if ($PSCmdlet.ShouldProcess($Destination, "Install $Label")) {
+        Copy-Item -Path $Source -Destination $Destination -Recurse -Force
+        Write-Host "      [+] $Label" -ForegroundColor Green
+    }
+}
+
+function Write-ContextFile {
+    param(
+        [Parameter(Mandatory = $true)][string]$Path,
+        [Parameter(Mandatory = $true)][string]$Content,
+        [Parameter(Mandatory = $true)][string]$Label
+    )
+    if (Test-Path $Path -and -not $Force) {
+        Write-Host "      [=] $Label already exists; preserved as project-owned context (use -Force to regenerate it)." -ForegroundColor DarkYellow
+        return
+    }
+    if ($DryRun) { Write-Plan "Write $Label"; return }
+    if ($PSCmdlet.ShouldProcess($Path, "Write $Label")) {
+        Set-Content -Path $Path -Value $Content -Encoding utf8 -Force
+        Write-Host "      [+] $Label" -ForegroundColor Green
+    }
+}
+
+function Write-AdapterFile {
+    param(
+        [Parameter(Mandatory = $true)][string]$Path,
+        [Parameter(Mandatory = $true)][string]$Content,
+        [Parameter(Mandatory = $true)][string]$Label
+    )
+    if (Test-Path $Path -and -not $Force) {
+        Write-Host "      [=] $Label already exists; preserved (use -Force to refresh the adapter)." -ForegroundColor DarkYellow
+        return
+    }
+    if ($DryRun) { Write-Plan "Write $Label"; return }
+    if ($PSCmdlet.ShouldProcess($Path, "Write $Label")) {
+        $parent = Split-Path -Parent $Path
+        if (-not (Test-Path $parent)) { New-Item -ItemType Directory -Path $parent -Force | Out-Null }
+        Set-Content -Path $Path -Value $Content -Encoding utf8 -Force
+        Write-Host "      [+] $Label" -ForegroundColor Green
+    }
+}
+
+function Copy-LegacyContext {
+    param(
+        [Parameter(Mandatory = $true)][string]$LegacyRoot,
+        [Parameter(Mandatory = $true)][string]$ContextRoot
+    )
+    $names = @("PROJECT_PROFILE.md", "CURRENT_STATE.md", "KNOWLEDGE_INDEX.md", "AGENTS_MEMORY.md", "SESSION_LOG.md")
+    $conflicts = @()
+    foreach ($name in $names) {
+        $source = Join-Path $LegacyRoot $name
+        $destination = Join-Path $ContextRoot $name
+        if (-not (Test-Path $source)) { continue }
+        if (Test-Path $destination) {
+            $conflicts += $name
+            continue
+        }
+        if ($DryRun) { Write-Plan "Migrate legacy context $name"; continue }
+        if ($PSCmdlet.ShouldProcess($destination, "Migrate legacy context $name")) {
+            Copy-Item -Path $source -Destination $destination -Force
+            Write-Host "      [+] migrated legacy context/$name" -ForegroundColor Green
+        }
+    }
+    if ($conflicts.Count -gt 0) {
+        throw "Legacy migration found project-owned context conflicts: $($conflicts -join ', '). Resolve them before running -MigrateLegacy."
+    }
+}
+
+# 1. Resolve framework source.
+$scriptDir = $PSScriptRoot
+if ([string]::IsNullOrEmpty($scriptDir)) { $frameworkRoot = (Get-Location).Path }
+else { $frameworkRoot = Split-Path -Parent $scriptDir }
 if (-not [string]::IsNullOrEmpty($SkillsSource)) { $frameworkRoot = $SkillsSource }
 
-# If run via IEX stream (no local files), clone from GitHub temporarily
 $tempCloned = $false
 if (-not (Test-Path (Join-Path $frameworkRoot "skills"))) {
-    Write-Host "[*] Framework not found locally. Fetching from GitHub..." -ForegroundColor Cyan
+    if ($DryRun) { throw "-DryRun requires -SkillsSource when the framework is not checked out locally." }
+    Write-Host "[*] Framework source not found locally. Fetching a temporary checkout from GitHub..." -ForegroundColor Cyan
     $tempDir = Join-Path $env:TEMP "flutter-skills-init-temp"
     if (Test-Path $tempDir) { Remove-Item -Path $tempDir -Recurse -Force }
     git clone --depth 1 https://github.com/laith-alskaf/awesome-flutter-ai-skills.git $tempDir | Out-Null
@@ -67,411 +144,290 @@ if (-not (Test-Path (Join-Path $frameworkRoot "skills"))) {
     $tempCloned = $true
 }
 
-# Determine the target Flutter project directory
-if ([string]::IsNullOrEmpty($ProjectPath)) {
-    $ProjectPath = (Get-Location).Path
-}
-
-# Validate it looks like a Flutter project
+if ([string]::IsNullOrEmpty($ProjectPath)) { $ProjectPath = (Get-Location).Path }
 $pubspecPath = Join-Path $ProjectPath "pubspec.yaml"
-if (-not (Test-Path $pubspecPath)) {
-    Write-Host ""
-    Write-Host "[ERROR] No pubspec.yaml found in: $ProjectPath" -ForegroundColor Red
-    Write-Host "        Run this script from inside a Flutter project root directory." -ForegroundColor Red
-    Write-Host "        Or specify: -ProjectPath 'D:\Projects\my_flutter_app'" -ForegroundColor Yellow
-    exit 1
-}
+if (-not (Test-Path $pubspecPath)) { throw "No pubspec.yaml found in: $ProjectPath. Run from a Flutter project root or use -ProjectPath." }
 
-# Read project name from pubspec.yaml
-$pubspecContent = Get-Content $pubspecPath -Raw
 $projectName = "my_flutter_app"
+$pubspecContent = Get-Content $pubspecPath -Raw
 if ($pubspecContent -match "^name:\s*(.+)$") { $projectName = $Matches[1].Trim() }
+$today = (Get-Date).ToString("yyyy-MM-dd")
+$frameworkRevision = "unknown"
+try { $frameworkRevision = (git -C $frameworkRoot rev-parse --short HEAD 2>$null).Trim() } catch { }
 
-# ---------------------------------------------
-# 2. PRINT BANNER
-# ---------------------------------------------
 Write-Host ""
 Write-Host "============================================================" -ForegroundColor Cyan
-Write-Host "  Flutter AI Agent Framework -- Per-Project Initializer" -ForegroundColor Cyan
-Write-Host "  Flutter AI Agent Skill Framework 2026 v2.1 (.agent/ Mode)" -ForegroundColor Cyan
+Write-Host "  Flutter AI Agent Framework -- Unified .agents/ Mode" -ForegroundColor Cyan
 Write-Host "============================================================" -ForegroundColor Cyan
 Write-Host "  Project : $projectName" -ForegroundColor Yellow
 Write-Host "  Path    : $ProjectPath" -ForegroundColor Yellow
-Write-Host "  Source  : $frameworkRoot" -ForegroundColor Yellow
+Write-Host "  Source  : $frameworkRoot ($frameworkRevision)" -ForegroundColor Yellow
 Write-Host "============================================================" -ForegroundColor Cyan
 Write-Host ""
 
-$agentDir = Join-Path $ProjectPath ".agent"
-if (-not (Test-Path $agentDir)) { New-Item -ItemType Directory -Path $agentDir -Force | Out-Null }
+# 2. Define the unified project layout.
+$agentsRoot = Join-Path $ProjectPath ".agents"
+$rulesDir = Join-Path $agentsRoot "rules"
+$skillsDir = Join-Path $agentsRoot "skills"
+$governanceDir = Join-Path $agentsRoot "governance"
+$contextDir = Join-Path $agentsRoot "context"
+$toolsDir = Join-Path $agentsRoot "tools"
+$manifestPath = Join-Path $agentsRoot "framework-manifest.json"
+$legacyRoot = Join-Path $ProjectPath ".agent"
 
-# ---------------------------------------------
-# 3. COPY CORE GOVERNANCE FILES INTO .agent/
-# ---------------------------------------------
-Write-Host "[1/6] Copying core governance files into .agent/..." -ForegroundColor Yellow
+foreach ($entry in @(
+    @{ Path = $agentsRoot; Label = ".agents/" },
+    @{ Path = $rulesDir; Label = ".agents/rules/" },
+    @{ Path = $skillsDir; Label = ".agents/skills/" },
+    @{ Path = $contextDir; Label = ".agents/context/" }
+)) { Ensure-Directory -Path $entry.Path -Label $entry.Label }
+# governance/ and tools/ are created by Copy-FrameworkDirectory so an empty
+# pre-created directory cannot be mistaken for an existing managed installation.
 
-foreach ($folder in @("core", "tools")) {
-    $src = Join-Path $frameworkRoot $folder
-    $dst = Join-Path $agentDir $folder
-    if (Test-Path $src) {
-        Copy-Item -Path $src -Destination $dst -Recurse -Force
-        Write-Host "      [+] .agent/$folder/" -ForegroundColor Green
-    }
+# 3. Migrate only durable user context before creating defaults.
+$legacyDetected = Test-Path $legacyRoot
+if ($MigrateLegacy) {
+    if (-not $legacyDetected) { Write-Host "      [=] No .agent/ directory found; no legacy migration is required." -ForegroundColor DarkYellow }
+    else { Copy-LegacyContext -LegacyRoot $legacyRoot -ContextRoot $contextDir }
+} elseif ($legacyDetected) {
+    Write-Host "      [!] Existing .agent/ detected. It is preserved. Re-run with -MigrateLegacy to copy durable context into .agents/context/." -ForegroundColor Yellow
 }
 
-# ---------------------------------------------
-# 4. CREATE .agent/ MEMORY FILES (Templates)
-# ---------------------------------------------
-Write-Host "[2/6] Creating .agent/ memory architecture..." -ForegroundColor Yellow
+# 4. Install framework-managed governance and tools.
+Write-Host "[1/6] Installing governance and verification tools..." -ForegroundColor Yellow
+Copy-FrameworkDirectory -Source (Join-Path $frameworkRoot "core") -Destination $governanceDir -Label ".agents/governance/"
+Copy-FrameworkDirectory -Source (Join-Path $frameworkRoot "tools") -Destination $toolsDir -Label ".agents/tools/"
 
-# Copy the maintained project knowledge-index template.
-$srcKI = Join-Path $frameworkRoot "core\templates\knowledge_index.md.template"
-if (Test-Path $srcKI) {
-    Copy-Item -Path $srcKI -Destination (Join-Path $agentDir "KNOWLEDGE_INDEX.md") -Force
-    Write-Host "      [+] .agent/KNOWLEDGE_INDEX.md" -ForegroundColor Green
-}
-
-# PROJECT_PROFILE.md -- generate as a fresh template for this project
-$today = (Get-Date).ToString("yyyy-MM-dd")
+# 5. Create project-owned context only when absent, unless -Force is explicit.
+Write-Host "[2/6] Creating project context while preserving existing records by default..." -ForegroundColor Yellow
 $projectProfile = @"
 # PROJECT_PROFILE.md -- Static Project Identity
 
-> Edit this file to match your project. This is the FIRST file any AI Agent reads.
-
----
+> Record confirmed project facts. `pubspec.yaml`, source code, tests, platform folders, and CI remain the technical source of truth.
 
 ## Project Identity
 
 ```yaml
 ProjectName: "$projectName"
-ProjectType: "Flutter Mobile App"  # [Mobile App | SaaS | Desktop | Web | SDK]
+ProjectType: "[Mobile App | SaaS | Desktop | Web | SDK]"
 InitializedDate: "$today"
-FlutterVersion: "3.44.x"
-DartVersion: "3.12.x"
 ```
 
----
-
-## Technology Stack
+## Confirmed Technology Stack
 
 ```yaml
-StateManagement: ""          # REQUIRED: Choose one -- Riverpod | Bloc | Cubit | GetX
-Routing: "go_router"
-Database: ""                 # Drift | Hive | sqflite | None
-Networking: "Dio"            # Dio | None | Supabase | Firebase
-Authentication: ""           # Firebase Auth | Supabase Auth | Custom JWT | None
-Analytics: ""                # Firebase Analytics | None
-CrashReporting: ""           # Firebase Crashlytics | None
-UITheme: "Material 3"
+StateManagement: ""
+Routing: ""
+Database: ""
+Networking: ""
+Authentication: ""
+Platforms: ""
 ```
 
----
+## Business Context
 
-## Architecture
+> [Describe the product and its primary users in one or two sentences.]
 
-```yaml
-Pattern: "Feature-First Clean Architecture"
-Layers: "Presentation -> Domain -> Data"
-DomainPurity: "ZERO Flutter imports in Domain layer"
-ErrorHandling: "Sealed Failure classes + Result pattern"
-```
+## Project-Specific Agent Constraints
 
----
-
-## Key Business Domain
-
-*Describe what this app does in 1-2 sentences for AI Agent context:*
-
-> [FILL IN: e.g., "A B2B SaaS platform for inventory management with offline-first sync."]
-
----
-
-## Active Features
-
-| Feature | Status | State Manager |
-|---|---|---|
-| Authentication | [ ] Planned | |
-| Home | [ ] Planned | |
-
----
-
-## Notes & Special Rules for AI Agent
-
-- *Add any project-specific rules here*
+> [Record only stable rules that are not already represented by code, CI, or governance.]
 "@
-Set-Content -Path (Join-Path $agentDir "PROJECT_PROFILE.md") -Value $projectProfile -Force
-Write-Host "      [+] .agent/PROJECT_PROFILE.md (template ready -- fill in stack details)" -ForegroundColor Green
 
-# CURRENT_STATE.md
 $currentState = @"
 # CURRENT_STATE.md -- Active Work State
-
----
 
 ## Current Objective
 
 ```yaml
-ActiveGoal: "[Describe the current task or leave blank until work begins]"
+ActiveGoal: "[Describe the active task]"
 LastUpdated: "$today"
-TaskRisk: "[Low / Medium / High based on change impact]"
+TaskRisk: "[Low | Medium | High]"
 ```
-
----
 
 ## Decision Record
 
 | Type | Record |
 |---|---|
-| Evidence | Project initialized. Inspect the relevant repository files before recording technical claims. |
-| Decisions | No architecture, state-management, database, authentication, or platform choice is assumed. |
-| Assumptions | Record only assumptions required for the current task and label them for validation. |
-| Open questions | Ask only when an answer could change architecture, security, data, API, dependency, or user-visible behavior. |
-| Validation status | No task validation recorded yet. |
-| Next action | Inspect the affected project context and choose the smallest relevant workflow. |
+| Evidence | Inspect affected code, tests, CI, and project facts before recording claims. |
+| Decisions | Record choices that affect future work. |
+| Assumptions | Record only assumptions needed for the active task and how to validate them. |
+| Open questions | Ask only when an answer could change a material decision. |
+| Validation status | Record completed, pending, and unavailable checks. |
+| Next action | State the smallest safe next action or handoff. |
 
-> For a reversible low-risk task, state any assumption, make the smallest safe change, and validate it. Use `flutter-grill-me` when unresolved information could change a material decision; do not use a numerical confidence score.
-
----
-
-## Active Files & Context
-
-- [ ] Record only files and decisions relevant to the active task
-- [ ] Update `.agent/PROJECT_PROFILE.md` when project-level facts are confirmed
-- [ ] Link a related ADR, issue, test, or release artifact when persistent tracking is useful
-
----
-
-## Next Actions
-
-1. Inspect the affected feature, `pubspec.yaml`, tests, CI, and relevant `.agent/` records.
-2. Select the smallest skill set that covers the task and document material decisions or assumptions.
-3. Use product discovery, a PRD, or domain modeling only when the request is a new product, materially ambiguous feature, or non-trivial business change.
-4. Record validation evidence and the next handoff action when the work spans sessions or phases.
+> Do not use numerical confidence scores as a decision gate. For reversible low-risk work, state the assumption, make the smallest safe change, and validate it.
 "@
-Set-Content -Path (Join-Path $agentDir "CURRENT_STATE.md") -Value $currentState -Force
-Write-Host "      [+] .agent/CURRENT_STATE.md" -ForegroundColor Green
 
-# AGENTS_MEMORY.md
 $agentsMemory = @"
-# AGENTS_MEMORY.md -- Project Health Ledger
+# AGENTS_MEMORY.md -- Reusable Lessons and Project Health
 
----
+## Health Snapshot
 
-## Project Health Meter
+| Area | Status | Evidence / next check |
+|---|---|---|
+| Architecture | Not assessed | |
+| Tests | Not assessed | |
+| Security | Not assessed | |
+| Documentation | Initializing | |
 
-```yaml
-Health:
-  Architecture: "Not started"
-  Tests: "Not started"
-  Documentation: "Initializing"
-  TechnicalDebt: "None"
-  Security: "Not started"
-  LastVerifiedDate: "$today"
-```
+## Reusable Lessons
 
----
-
-## Milestones
-
-- [ ] **Milestone 1:** Framework setup & .agent/PROJECT_PROFILE.md complete
-- [ ] **Milestone 2:** First feature domain layer complete
-- [ ] **Milestone 3:** First feature UI complete with all states
-- [ ] **Milestone 4:** First feature tests passing
-
----
-
-## Lessons Learned
-
-*(Add lessons here as the project evolves)*
-
----
-
-## Backlog
-
-*(Feature backlog will be added here during sprint planning)*
+> Add only durable lessons that prevent repeated mistakes. Link supporting files or decisions where useful.
 "@
-Set-Content -Path (Join-Path $agentDir "AGENTS_MEMORY.md") -Value $agentsMemory -Force
-Write-Host "      [+] .agent/AGENTS_MEMORY.md" -ForegroundColor Green
 
-# SESSION_LOG.md
 $sessionLog = @"
-# SESSION_LOG.md -- Chronological Session Log
-
----
+# SESSION_LOG.md -- Meaningful Handoffs
 
 ## Session: $today
 
-- **Action:** Project initialized with Flutter AI Agent Skill Framework 2026.
-- **Source Framework:** awesome-flutter-ai-skills.
-- **State location:** `.agent/` stores project context; `.agents/skills/` stores native workspace skills.
-- **Status:** Confirm the project profile and first feature before architecture-changing work.
+- **Action:** Unified `.agents/` framework initialized.
+- **Framework source:** awesome-flutter-ai-skills at `$frameworkRevision`.
+- **Next step:** Confirm the project profile and inspect the affected code before material work.
+
+> Add a handoff only when work spans sessions or phases. Keep it concise: objective, evidence, decisions, validation, and next action.
 "@
-Set-Content -Path (Join-Path $agentDir "SESSION_LOG.md") -Value $sessionLog -Force
-Write-Host "      [+] .agent/SESSION_LOG.md" -ForegroundColor Green
 
-# ---------------------------------------------
-# 5. COPY ALL RESOURCES INTO .agent/
-# ---------------------------------------------
-# Resources are now localized in each skill.
-# The core/ and tools/ directories were copied in Step 3.
+$knowledgeTemplate = Join-Path $frameworkRoot "core/templates/knowledge_index.md.template"
+if (Test-Path $knowledgeTemplate) {
+    $knowledgeContent = (Get-Content $knowledgeTemplate -Raw).Replace(".agent/", ".agents/").Replace(".agent\\", ".agents\\")
+    $knowledgeContent = $knowledgeContent.Replace(".agents/core/", ".agents/governance/")
+    Write-ContextFile -Path (Join-Path $contextDir "KNOWLEDGE_INDEX.md") -Content $knowledgeContent -Label ".agents/context/KNOWLEDGE_INDEX.md"
+}
+Write-ContextFile -Path (Join-Path $contextDir "PROJECT_PROFILE.md") -Content $projectProfile -Label ".agents/context/PROJECT_PROFILE.md"
+Write-ContextFile -Path (Join-Path $contextDir "CURRENT_STATE.md") -Content $currentState -Label ".agents/context/CURRENT_STATE.md"
+Write-ContextFile -Path (Join-Path $contextDir "AGENTS_MEMORY.md") -Content $agentsMemory -Label ".agents/context/AGENTS_MEMORY.md"
+Write-ContextFile -Path (Join-Path $contextDir "SESSION_LOG.md") -Content $sessionLog -Label ".agents/context/SESSION_LOG.md"
 
-# ---------------------------------------------
-# 6. COPY ALL SKILLS INTO .agents/skills/ (official Antigravity path)
-# ---------------------------------------------
-Write-Host "[4/6] Copying all skills into .agents/skills/..." -ForegroundColor Yellow
-
-$srcSkills = Join-Path $frameworkRoot "skills"
-$agentsDir = Join-Path $ProjectPath ".agents"
-$dstSkills = Join-Path $agentsDir "skills"
-
-if (Test-Path $srcSkills) {
-    if (-not (Test-Path $agentsDir)) { New-Item -ItemType Directory -Path $agentsDir -Force | Out-Null }
-    if (Test-Path $dstSkills) { Remove-Item -Path $dstSkills -Recurse -Force }
-    New-Item -ItemType Directory -Path $dstSkills -Force | Out-Null
-
-    # Install each discovered skill directly below .agents/skills/. Antigravity
-    # discovers skill folders at this level; repository sector folders are source-only.
-    $skillDirs = Get-ChildItem -Path $srcSkills -Filter "SKILL.md" -Recurse |
-        ForEach-Object { Get-Item $_.DirectoryName } |
-        Sort-Object FullName -Unique
-    $installedNames = @{}
-    foreach ($skillDir in $skillDirs) {
-        if ($installedNames.ContainsKey($skillDir.Name)) {
-            throw "Duplicate skill directory name '$($skillDir.Name)' cannot be installed directly under .agents/skills/."
-        }
-        $destination = Join-Path $dstSkills $skillDir.Name
+# 6. Install skills directly under the Antigravity discovery path.
+Write-Host "[3/6] Installing native Agent Skills..." -ForegroundColor Yellow
+$sourceSkills = Join-Path $frameworkRoot "skills"
+$skillDirs = Get-ChildItem -Path $sourceSkills -Filter "SKILL.md" -Recurse |
+    ForEach-Object { Get-Item $_.DirectoryName } |
+    Sort-Object FullName -Unique
+if ($skillDirs.Count -eq 0) { throw "No SKILL.md directories were found under $sourceSkills." }
+$installedNames = @{}
+foreach ($skillDir in $skillDirs) {
+    if ($installedNames.ContainsKey($skillDir.Name)) { throw "Duplicate skill directory name '$($skillDir.Name)' cannot be installed directly under .agents/skills/." }
+    $destination = Join-Path $skillsDir $skillDir.Name
+    if (Test-Path $destination -and -not $Force) {
+        Write-Host "      [=] skill/$($skillDir.Name) already exists; preserved (use -Force to refresh)." -ForegroundColor DarkYellow
+    } elseif ($DryRun) {
+        Write-Plan "Install skill/$($skillDir.Name)"
+    } elseif ($PSCmdlet.ShouldProcess($destination, "Install framework skill $($skillDir.Name)")) {
+        if (Test-Path $destination) { Remove-Item -Path $destination -Recurse -Force }
         Copy-Item -Path $skillDir.FullName -Destination $destination -Recurse -Force
-        $installedNames[$skillDir.Name] = $true
+        Write-Host "      [+] skill/$($skillDir.Name)" -ForegroundColor Green
     }
-
-    $skillCount = $installedNames.Count
-    if ($skillCount -eq 0) { throw "No SKILL.md directories were found under $srcSkills." }
-    Write-Host "      [+] .agents/skills/ ($skillCount skills; Antigravity default path)" -ForegroundColor Green
+    $installedNames[$skillDir.Name] = $true
 }
 
-# ---------------------------------------------
-# 7. CREATE IDE & AGENT RULES FILES
-# ---------------------------------------------
-Write-Host "[5/6] Creating IDE and agent rules..." -ForegroundColor Yellow
+# 7. Create a focused Antigravity workspace rule and editor adapters.
+Write-Host "[4/6] Creating Antigravity rule and editor adapters..." -ForegroundColor Yellow
+$operatingRule = @"
+# Flutter project operating contract
 
-$agentRulesCore = @"
-# Flutter AI Agent Skill Framework 2026 -- Project Rules
-# Project: $projectName | Initialized: $today
-#
-# CONTEXT:
-# For a non-trivial Flutter change, inspect pubspec.yaml, the affected feature,
-# and relevant .agent/ state files. Missing optional state files do not block a
-# small reversible change; state the assumption and validate the result.
-#
-# SKILLS:
-# Native workspace skills live in .agents/skills/. Select the smallest relevant
-# skill set. Inspect both pubspec.yaml and the affected feature before choosing
-# Riverpod, Bloc, Cubit, or GetX; flutter_bloc alone does not distinguish Bloc
-# from Cubit. Do not introduce a second state approach in one feature without an
-# explicit migration plan.
-#
-# ARCHITECTURE:
-# Preserve the target project's architecture. When Clean Architecture is used,
-# keep Flutter UI and state-management imports out of Domain and keep UI imports
-# out of Data. Cover loading, error, and empty states when the changed flow can
-# exhibit them.
-#
-# DEPENDENCIES:
-# Prefer flutter pub commands for ordinary changes. Preserve intentional project
-# constraints and read .agent/core/resources/011_dependency_policy.md before a
-# material dependency decision.
-#
-# GOVERNANCE: .agent/core/AGENTS.md
-# ROUTING:    .agent/core/ROUTER_MANIFESTO.md
-# VERIFY:     dart run .agent/tools/verify_architecture.dart
+For non-trivial work, inspect `pubspec.yaml`, the affected feature, relevant tests, and CI configuration. When the following files exist and are relevant, read them before making material decisions:
+
+- @/.agents/context/PROJECT_PROFILE.md
+- @/.agents/context/CURRENT_STATE.md
+- @/.agents/governance/AGENTS.md
+- @/.agents/governance/ROUTER_MANIFESTO.md
+
+Use the smallest relevant skill set from `.agents/skills/`. Preserve the architecture and state-management approach already used by the affected feature. Ask focused questions only when an answer could change architecture, security, data, external contracts, dependencies, or user-visible behavior. For a reversible low-risk change, state the assumption, make the smallest safe change, and validate it.
+
+Record evidence, decisions, validation status, and the next action in `.agents/context/CURRENT_STATE.md` only for material or multi-phase work. Do not replace codebase evidence with stale context files.
 "@
 
-# .cursorrules
-Set-Content -Path (Join-Path $ProjectPath ".cursorrules") -Value $agentRulesCore -Force
-Write-Host "      [+] .cursorrules (Cursor IDE)" -ForegroundColor Green
+$projectFilesRule = @"
+# Flutter source and test files
 
-# .windsurfrules
-Set-Content -Path (Join-Path $ProjectPath ".windsurfrules") -Value $agentRulesCore -Force
-Write-Host "      [+] .windsurfrules (Windsurf IDE)" -ForegroundColor Green
+When changing `lib/**`, inspect the affected feature and its tests before selecting a state-management or architecture skill. Keep tests, analysis, and formatter commands proportionate to the change. Treat `pubspec.yaml`, source, tests, platform folders, and CI as technical sources of truth.
+"@
 
-# .clinerules (Roo Code / Cline)
-Set-Content -Path (Join-Path $ProjectPath ".clinerules") -Value $agentRulesCore -Force
-Write-Host "      [+] .clinerules (Roo Code / Cline)" -ForegroundColor Green
+$releaseRule = @"
+# CI and release files
 
-# .codex/instructions.md (OpenAI Codex)
-$codexDir = Join-Path $ProjectPath ".codex"
-if (-not (Test-Path $codexDir)) { New-Item -ItemType Directory -Path $codexDir -Force | Out-Null }
-Set-Content -Path (Join-Path $codexDir "instructions.md") -Value $agentRulesCore -Force
-Write-Host "      [+] .codex/instructions.md (OpenAI Codex)" -ForegroundColor Green
+When changing CI, release, signing, dependency, or platform configuration, inspect the existing pipeline and relevant project constraints. Use the smallest relevant skill set, record material decisions in `.agents/context/`, and do not claim platform validation that was not executed.
+"@
 
-# .github/copilot-instructions.md (GitHub Copilot)
-$githubDir = Join-Path $ProjectPath ".github"
-if (-not (Test-Path $githubDir)) { New-Item -ItemType Directory -Path $githubDir -Force | Out-Null }
-Set-Content -Path (Join-Path $githubDir "copilot-instructions.md") -Value $agentRulesCore -Force
-Write-Host "      [+] .github/copilot-instructions.md (GitHub Copilot)" -ForegroundColor Green
+Write-AdapterFile -Path (Join-Path $rulesDir "flutter-project-operating-contract.md") -Content $operatingRule -Label ".agents/rules/flutter-project-operating-contract.md"
+Write-AdapterFile -Path (Join-Path $rulesDir "flutter-project-files.md") -Content $projectFilesRule -Label ".agents/rules/flutter-project-files.md"
+Write-AdapterFile -Path (Join-Path $rulesDir "flutter-ci-and-release.md") -Content $releaseRule -Label ".agents/rules/flutter-ci-and-release.md"
 
-# Antigravity discovers this project's skills from .agents/skills/.
-# Do not inject project context into a global Knowledge Item location: doing so
-# can leak stale project context across workspaces and is not required for skill discovery.
+$adapter = @"
+# Flutter AI Agent Project Adapter
 
-# ---------------------------------------------
-# 8. VERIFY INSTALLATION
-# ---------------------------------------------
-Write-Host "[6/6] Verifying project state and native skills..." -ForegroundColor Yellow
+Project-local agent assets are unified under `.agents/`.
 
+1. Inspect `pubspec.yaml`, the affected feature, tests, and CI first.
+2. When relevant, read `.agents/context/PROJECT_PROFILE.md`, `.agents/context/CURRENT_STATE.md`, `.agents/governance/AGENTS.md`, and `.agents/governance/ROUTER_MANIFESTO.md`.
+3. Select the smallest relevant workflow from `.agents/skills/` and preserve the existing state-management and architecture conventions.
+4. Ask only material questions. Validate each change proportionately and record a handoff only for material or multi-phase work.
+5. Run `dart run .agents/tools/verify_architecture.dart` when architectural verification is applicable.
+"@
+Write-AdapterFile -Path (Join-Path $ProjectPath ".cursorrules") -Content $adapter -Label ".cursorrules"
+Write-AdapterFile -Path (Join-Path $ProjectPath ".windsurfrules") -Content $adapter -Label ".windsurfrules"
+Write-AdapterFile -Path (Join-Path $ProjectPath ".clinerules") -Content $adapter -Label ".clinerules"
+Write-AdapterFile -Path (Join-Path $ProjectPath ".codex/instructions.md") -Content $adapter -Label ".codex/instructions.md"
+Write-AdapterFile -Path (Join-Path $ProjectPath ".github/copilot-instructions.md") -Content $adapter -Label ".github/copilot-instructions.md"
+
+# 8. Record a reproducible installation manifest after paths are present.
+Write-Host "[5/6] Writing installation manifest..." -ForegroundColor Yellow
+$manifest = @{
+    schema_version = 1
+    framework = "awesome-flutter-ai-skills"
+    framework_revision = $frameworkRevision
+    initialized_at = $today
+    project_name = $projectName
+    layout = ".agents"
+    skill_count = $installedNames.Count
+    paths = @{
+        rules = ".agents/rules"
+        skills = ".agents/skills"
+        governance = ".agents/governance"
+        context = ".agents/context"
+        tools = ".agents/tools"
+    }
+} | ConvertTo-Json -Depth 4
+Write-AdapterFile -Path $manifestPath -Content $manifest -Label ".agents/framework-manifest.json"
+
+# 9. Verify the unified layout before optionally backing up legacy state.
+Write-Host "[6/6] Verifying unified agent workspace..." -ForegroundColor Yellow
 $checks = @(
-    @{ Path = (Join-Path $agentDir "core/AGENTS.md");              Label = ".agent/core/AGENTS.md" },
-    @{ Path = (Join-Path $agentDir "core/ROUTER_MANIFESTO.md");    Label = ".agent/core/ROUTER_MANIFESTO.md" },
-    @{ Path = (Join-Path $agentDir "PROJECT_PROFILE.md");          Label = ".agent/PROJECT_PROFILE.md" },
-    @{ Path = (Join-Path $agentDir "KNOWLEDGE_INDEX.md");          Label = ".agent/KNOWLEDGE_INDEX.md" },
-    @{ Path = (Join-Path $agentDir "CURRENT_STATE.md");            Label = ".agent/CURRENT_STATE.md" },
-    @{ Path = (Join-Path $agentsDir "skills");                     Label = ".agents/skills/" },
-    @{ Path = (Join-Path $dstSkills "flutter-agent-evaluation/SKILL.md"); Label = ".agents/skills/flutter-agent-evaluation/SKILL.md" },
-    @{ Path = (Join-Path $agentDir "tools");                       Label = ".agent/tools/" },
-    @{ Path = (Join-Path $ProjectPath ".cursorrules");             Label = ".cursorrules" },
-    @{ Path = (Join-Path $githubDir "copilot-instructions.md");       Label = ".github/copilot-instructions.md" }
+    @{ Path = (Join-Path $governanceDir "AGENTS.md"); Label = ".agents/governance/AGENTS.md" },
+    @{ Path = (Join-Path $governanceDir "ROUTER_MANIFESTO.md"); Label = ".agents/governance/ROUTER_MANIFESTO.md" },
+    @{ Path = (Join-Path $contextDir "PROJECT_PROFILE.md"); Label = ".agents/context/PROJECT_PROFILE.md" },
+    @{ Path = (Join-Path $contextDir "CURRENT_STATE.md"); Label = ".agents/context/CURRENT_STATE.md" },
+    @{ Path = (Join-Path $rulesDir "flutter-project-operating-contract.md"); Label = ".agents/rules/flutter-project-operating-contract.md" },
+    @{ Path = (Join-Path $skillsDir "flutter-agent-evaluation/SKILL.md"); Label = ".agents/skills/flutter-agent-evaluation/SKILL.md" },
+    @{ Path = (Join-Path $toolsDir "verify_architecture.dart"); Label = ".agents/tools/verify_architecture.dart" },
+    @{ Path = $manifestPath; Label = ".agents/framework-manifest.json" }
 )
-
 $allPassed = $true
 foreach ($check in $checks) {
-    if (Test-Path $check.Path) {
-        Write-Host "      [OK] $($check.Label)" -ForegroundColor Green
-    } else {
-        Write-Host "      [FAIL] $($check.Label)" -ForegroundColor Red
-        $allPassed = $false
+    if (Test-Path $check.Path) { Write-Host "      [OK] $($check.Label)" -ForegroundColor Green }
+    else { Write-Host "      [FAIL] $($check.Label)" -ForegroundColor Red; $allPassed = $false }
+}
+
+if ($MigrateLegacy -and $legacyDetected -and $allPassed -and -not $DryRun) {
+    $backup = Join-Path $ProjectPath (".agent.backup-" + (Get-Date).ToString("yyyyMMdd-HHmmss"))
+    if ($PSCmdlet.ShouldProcess($legacyRoot, "Rename legacy .agent directory to $([IO.Path]::GetFileName($backup)) after migration")) {
+        Move-Item -Path $legacyRoot -Destination $backup
+        Write-Host "      [+] legacy .agent/ preserved as $([IO.Path]::GetFileName($backup))/" -ForegroundColor Green
     }
 }
 
-# Cleanup temp clone if used
-if ($tempCloned -and (Test-Path $frameworkRoot)) {
-    Remove-Item -Path $frameworkRoot -Recurse -Force
-}
+if ($tempCloned -and (Test-Path $frameworkRoot)) { Remove-Item -Path $frameworkRoot -Recurse -Force }
 
-# ---------------------------------------------
-# 9. NEXT STEPS
-# ---------------------------------------------
 Write-Host ""
 if ($allPassed) {
-    Write-Host "============================================================" -ForegroundColor Green
-    Write-Host "  [SUCCESS] Flutter AI Agent Framework initialized successfully!" -ForegroundColor Green
-    Write-Host "  Project: $projectName | State: .agent/ | Skills: .agents/skills/" -ForegroundColor Green
-    Write-Host "============================================================" -ForegroundColor Green
+    Write-Host "[SUCCESS] Unified .agents/ framework initialized for $projectName." -ForegroundColor Green
+    Write-Host "         Configure the project operating contract in Antigravity as Always On or Model Decision as appropriate for your team." -ForegroundColor Green
 } else {
-    Write-Host "============================================================" -ForegroundColor Yellow
-    Write-Host "  [WARN] Some files failed to create. Check errors above." -ForegroundColor Yellow
-    Write-Host "============================================================" -ForegroundColor Yellow
+    Write-Host "[WARN] Unified initialization did not pass all checks; inspect output before using the framework." -ForegroundColor Yellow
 }
-
-Write-Host ""
-Write-Host "  [NEXT STEPS]:" -ForegroundColor Cyan
-Write-Host "  1. Open .agent/PROJECT_PROFILE.md and fill in:" -ForegroundColor White
-Write-Host "     - StateManagement (Riverpod | Bloc | Cubit | GetX)" -ForegroundColor Gray
-Write-Host "     - Database, Networking, Authentication choices" -ForegroundColor Gray
-Write-Host "     - Project description for AI Agent context" -ForegroundColor Gray
-Write-Host "  2. Record evidence, assumptions, and open questions in .agent/CURRENT_STATE.md" -ForegroundColor White
-Write-Host "  3. Use 'flutter-grill-me' when uncertainty can change a material decision" -ForegroundColor White
-Write-Host "  4. Start building with: 'create the [feature] feature'" -ForegroundColor White
-Write-Host ""
-Write-Host "  [SKILLS]:   .agents/skills/ (native Antigravity workspace skills)" -ForegroundColor Cyan
-Write-Host "  [VERIFY]:   dart run .agent/tools/verify_architecture.dart" -ForegroundColor Cyan
-Write-Host "  [PACKAGES]: Prefer Flutter pub commands; review ADR-011 for material changes" -ForegroundColor Cyan
-Write-Host ""
+Write-Host "  Skills:     .agents/skills/" -ForegroundColor Cyan
+Write-Host "  Rules:      .agents/rules/" -ForegroundColor Cyan
+Write-Host "  Governance: .agents/governance/" -ForegroundColor Cyan
+Write-Host "  Context:    .agents/context/" -ForegroundColor Cyan
+Write-Host "  Verify:     dart run .agents/tools/verify_architecture.dart" -ForegroundColor Cyan

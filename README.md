@@ -51,13 +51,13 @@ cd awesome-flutter-ai-skills
 .\tools\deploy.ps1
 ```
 
-For project-local installation—the recommended mode—run `tools\init-project.ps1` from the Flutter project root. This writes project state to `.agent/` and native workspace skills to `.agents/skills/`.
+For project-local installation—the recommended mode—run `tools\init-project.ps1` from the Flutter project root. This writes project state to `.agents/context/` and native workspace skills to `.agents/skills/`.
 
 ---
 
 ## 🌐 Supported AI Agents & IDE Matrix
 
-`deploy.ps1` synchronizes skills to documented global paths. For Antigravity projects, use the project-local `.agents/skills/` path; `.agent/` is retained for project state and legacy compatibility.
+`deploy.ps1` synchronizes skills to documented global paths. For Antigravity projects, use the project-local `.agents/skills/` path; the same project-local `.agents/` root also holds governance, context, rules, utilities, and the framework manifest.
 
 | Agent / IDE Platform | Target Path / Rule File | Supported Format |
 |---|---|---|
@@ -89,29 +89,21 @@ For project-local installation—the recommended mode—run `tools\init-project.
 ## 🏗️ Framework Architecture & 7 Sectors (V2 AI Engineering OS)
 
 ```text
-awesome-flutter-ai-skills/
-├── .agent/                         → Project-level active working memory (PRD, domain maps)
-├── .agents/skills/                  → Native Antigravity workspace skills
-├── core/                        → The OS Kernel
-│   ├── AGENTS.md                → Master Policy, Tech Stack, and Context Protocols
-│   ├── ROUTER_MANIFESTO.md      → Global Capability Matrix & Zero-Hallucination Gatekeeper
-│   ├── ROUTING_EVALUATION.md    → Routing scenarios and evaluation protocol
-│   ├── PERSONAS.md              → Definition of 5 strict AI Roles (CPO, Architect, QA, etc.)
-│   ├── GOVERNANCE.md            → Versioning, Ownership, and Deprecation Lifecycle
-│   └── PERFORMANCE_METRICS.md   → Token Budgets and Framework KPIs
-├── tools/                       → Executable OS Utilities
-│   ├── verify_architecture.dart → Linter for Clean Architecture isolation
-│   ├── audit_framework.dart     → CI/CD validator for token limits and Knowledge Graph
-│   ├── deploy.ps1               → Global multi-agent deployment engine
-│   └── init-project.ps1         → Project-level workspace initializer
-└── skills/                      → 55 Self-Contained Modular Skills in 7 Sectors
-    ├── core-architecture/       → Clean Architecture, DI, Domain Modeling, Workspaces (9 skills)
-    ├── state-management/        → Riverpod 3.x, Bloc 9.x, Cubit, GetX 5.x (4 skills)
-    ├── ui-styling/              → UI Engineering, Responsive, Animations (9 skills)
-    ├── data-networking/         → REST API, Contract Evolution, WebSockets, Firebase, Supabase (7 skills)
-    ├── quality-testing-security/→ Unit, Widget, Integration, Security (7 skills)
-    ├── performance-maintenance/ → Performance, App Size, Debugging, Refactoring (8 skills)
-    └── workflows-devops/        → Planning, Code Review, Upgrades, Evaluation, DevOps (11 skills)
+awesome-flutter-ai-skills/                 → Framework source repository
+├── .agents/rules/                          → Rules for maintaining this repository
+├── core/                                   → Source governance, personas, and templates
+├── tools/                                  → Initializer, validator, and deployment utilities
+├── evaluation/                             → Versioned routing-contract scenarios
+└── skills/                                 → 55 source Agent Skills in seven sectors
+
+<initialized-flutter-project>/
+└── .agents/                               → Single project-local agent root
+    ├── rules/                              → Native Antigravity rules and operating contract
+    ├── skills/                             → 55 native Antigravity workspace skills
+    ├── governance/                         → AGENTS.md, personas, routing, and governance
+    ├── context/                            → Project profile, state, knowledge index, and logs
+    ├── tools/                              → Architecture and framework verification utilities
+    └── framework-manifest.json             → Installed version, source, and skill-count record
 ```
 
 > **Note on Modularity:** Every skill in `skills/` is a self-contained module containing a standard `SKILL.md` and supplemental `metadata.yaml`; optional `templates/` and `resources/` are loaded only when needed. This supports progressive disclosure without duplicating project state in every skill.
@@ -147,13 +139,13 @@ Routing expectations are versioned in [`evaluation/routing-scenarios.yaml`](eval
 
 ## 🚀 Deployment & Usage Modes (Local vs. Global)
 
-The framework supports two deployment models. **We recommend local mode** for team repositories and isolated governance: project state is stored in `.agent/` while native workspace skills are stored in `.agents/skills/`.
+The framework supports two deployment models. **We recommend local mode** for team repositories and isolated governance: all project-local agent assets live under the single `.agents/` root, with native workspace skills in `.agents/skills/`.
 
 ### 📊 Comparison & Selection Guide
 
 | Feature / Aspect | Local mode — recommended | Global mode |
 |---|---|---|
-| **Installation path** | `<project>/.agent/` for state and `<project>/.agents/skills/` for native skills. | Documented user-profile skill directories, including `~/.gemini/config/skills/`. |
+| **Installation path** | `<project>/.agents/context/` for state and `<project>/.agents/skills/` for native skills. | Documented user-profile skill directories, including `~/.gemini/config/skills/`. |
 | **Project isolation** | The project can version its own state and skill revision. | Skill revisions are shared across workspaces on the same machine. |
 | **Team collaboration** | Commit the desired files or exclude project state deliberately in `.gitignore`. | Each developer must install and update the framework separately. |
 | **Agent wiring** | Creates compatible project rule files and native workspace skills. | Installs skills only; project-specific rules remain an explicit choice. |
@@ -161,9 +153,9 @@ The framework supports two deployment models. **We recommend local mode** for te
 
 ---
 
-### 🏠 1. Local Mode (`.agent/` state + `.agents/skills/`) — ⭐ RECOMMENDED
+### 🏠 1. Local Mode (single `.agents/` root) — ⭐ RECOMMENDED
 
-In Local Mode, project memory, governance, tools, and generated workspace artifacts live in `.agent/`; the 55 native Agent Skills live in `.agents/skills/`, the default Antigravity workspace-skill location. Antigravity also retains backward compatibility with `.agent/skills/`, but the initializer uses `.agents/skills/` for new projects.
+In Local Mode, every project-local agent asset is organized under `.agents/`. Antigravity discovers workspace rules in `.agents/rules/` and the 55 native Agent Skills in `.agents/skills/`. The initializer keeps governance in `.agents/governance/`, durable project state in `.agents/context/`, verification utilities in `.agents/tools/`, and the installation record in `.agents/framework-manifest.json`.
 
 #### Safe Setup
 Clone the framework, then run the reviewed initializer from inside your target Flutter project directory:
@@ -183,13 +175,13 @@ If you have cloned this repository locally, run the script from inside your targ
 ```
 
 #### 🧭 Post-Initialization Workflow
-Once initialized, your project contains `.agent/` state, `.agents/skills/` native skills, and compatible IDE rule files. Follow these steps:
-1. **Define project identity:** Open `.agent/PROJECT_PROFILE.md` and record only confirmed stack choices and business context.
-2. **Resolve material uncertainty:** Use `flutter-grill-me` when missing information could change architecture, security, dependencies, data, API contracts, or user-visible behavior. Record assumptions for low-risk reversible work in `.agent/CURRENT_STATE.md`.
-3. **Build and validate:** Ask the agent to select the smallest relevant skill set. Audit architectural boundaries when appropriate with:
-   ```powershell
-   dart run .agent/tools/verify_architecture.dart
-   ```
+Once initialized, review `.agents/governance/AGENTS.md` for the operating contract, `.agents/context/PROJECT_PROFILE.md` for confirmed project facts, and `.agents/context/CURRENT_STATE.md` for current evidence and assumptions. Antigravity can discover the native skills and rules without an adapter. Use `flutter-grill-me` only when missing information could materially affect architecture, security, dependencies, data, API contracts, or user-visible behavior. For architectural verification, run:
+
+```powershell
+dart run .agents/tools/verify_architecture.dart
+```
+
+Re-running the initializer preserves context files by default. Use `-Force` only when intentionally regenerating framework-managed context, and use `-MigrateLegacy` to copy legacy project agent state into the unified structure before storing the prior root as a dated backup.
 
 ---
 

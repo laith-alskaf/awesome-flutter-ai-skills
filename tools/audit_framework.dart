@@ -3,7 +3,7 @@ import 'dart:io';
 /// Lightweight, dependency-free framework audit.
 ///
 /// Run from the framework repository or an initialized Flutter project:
-///   dart run .agent/tools/audit_framework.dart [project-or-framework-root]
+///   dart run .agents/tools/audit_framework.dart [project-or-framework-root]
 /// For the full repository contract, run `python3 tools/validate_framework.py`
 /// in the framework repository.
 void main(List<String> args) {
@@ -17,7 +17,7 @@ void main(List<String> args) {
   final skillsDir = _findSkillsDirectory(root);
   if (skillsDir == null) {
     stderr.writeln(
-      'ERROR: No skills directory found. Expected skills/, .agents/skills/, or .agent/skills/.',
+      'ERROR: No skills directory found. Expected skills/, .agents/skills/, or .agents/skills/.',
     );
     exitCode = 1;
     return;

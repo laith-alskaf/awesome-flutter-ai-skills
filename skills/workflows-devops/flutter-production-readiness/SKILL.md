@@ -46,9 +46,9 @@ In addition to the 6 pillars, **NO release may pass** without verifying complian
 
 ---
 
-## 📄 Scaffolding `.agent/PRODUCTION_CHECKLIST.md` (READY Phase)
+## 📄 Scaffolding `.agents/context/PRODUCTION_CHECKLIST.md` (READY Phase)
 
-Before authorizing production deployment, the AI Agent MUST generate and verify `PRODUCTION_CHECKLIST.md` in the `.agent/` workspace directory (`.agent/PRODUCTION_CHECKLIST.md`):
+Before authorizing production deployment, the AI Agent MUST generate and verify `PRODUCTION_CHECKLIST.md` in the `.agents/context/` workspace directory (`.agents/context/PRODUCTION_CHECKLIST.md`):
 
 ```markdown
 # PRODUCTION_CHECKLIST.md — Enterprise Go-Live Verification
@@ -80,7 +80,7 @@ Before authorizing production deployment, the AI Agent MUST generate and verify 
 
 ## 🧭 Next Pipeline Phase Routing
 
-Once `.agent/PRODUCTION_CHECKLIST.md` passes all 6 pillars and accessibility gates, the AI Agent routes to:
+Once `.agents/context/PRODUCTION_CHECKLIST.md` passes all 6 pillars and accessibility gates, the AI Agent routes to:
 👉 **`flutter-code-review`** (For final Principal Engineer architectural review before store submission).
 
 ---

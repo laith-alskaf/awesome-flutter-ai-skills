@@ -22,43 +22,81 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Validate skill, routing, and installation contracts
+      - name: Validate skill, routing, and unified installation contracts
         run: python3 tools/validate_framework.py
 
   powershell-installation-smoke:
-    name: Smoke Test PowerShell Project Initialization
+    name: Smoke Test Unified PowerShell Initialization and Migration
     runs-on: windows-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Create minimal Flutter-shaped project fixture
+      - name: Create minimal Flutter-shaped fixtures
         shell: pwsh
         run: |
           $fixture = Join-Path $env:RUNNER_TEMP "flutter-skills-fixture"
-          New-Item -ItemType Directory -Path (Join-Path $fixture "lib") -Force | Out-Null
-          @'
-          name: flutter_skills_fixture
-          publish_to: none
-          environment:
-            sdk: ">=3.0.0 <4.0.0"
-          dependencies:
-            flutter:
-              sdk: flutter
-          '@ | Set-Content -Path (Join-Path $fixture "pubspec.yaml")
-          "void main() {}" | Set-Content -Path (Join-Path $fixture "lib/main.dart")
+          $legacyFixture = Join-Path $env:RUNNER_TEMP "flutter-skills-legacy-fixture"
+          foreach ($path in @($fixture, $legacyFixture)) {
+            New-Item -ItemType Directory -Path (Join-Path $path "lib") -Force | Out-Null
+            @'
+            name: flutter_skills_fixture
+            publish_to: none
+            environment:
+              sdk: ">=3.0.0 <4.0.0"
+            dependencies:
+              flutter:
+                sdk: flutter
+            '@ | Set-Content -Path (Join-Path $path "pubspec.yaml")
+            "void main() {}" | Set-Content -Path (Join-Path $path "lib/main.dart")
+          }
+          New-Item -ItemType Directory -Path (Join-Path $legacyFixture ".agent") -Force | Out-Null
+          "legacy-project-profile" | Set-Content -Path (Join-Path $legacyFixture ".agent/PROJECT_PROFILE.md")
           "FIXTURE=$fixture" | Out-File -FilePath $env:GITHUB_ENV -Append
+          "LEGACY_FIXTURE=$legacyFixture" | Out-File -FilePath $env:GITHUB_ENV -Append
 
-      - name: Initialize project-local framework
+      - name: Initialize unified project-local framework
         shell: pwsh
         run: |
           & "$env:GITHUB_WORKSPACE\tools\init-project.ps1" -ProjectPath "$env:FIXTURE"
-          if (-not (Test-Path "$env:FIXTURE\.agent\CURRENT_STATE.md")) { throw "Missing project state" }
-          if (-not (Test-Path "$env:FIXTURE\.agents\skills\flutter-agent-evaluation\SKILL.md")) { throw "Missing native workspace skill" }
+          if (Test-Path "$env:FIXTURE\.agent") { throw "Legacy .agent directory was written during new initialization" }
+          foreach ($path in @(
+            ".agents\context\CURRENT_STATE.md",
+            ".agents\governance\AGENTS.md",
+            ".agents\rules\flutter-project-operating-contract.md",
+            ".agents\skills\flutter-agent-evaluation\SKILL.md",
+            ".agents\tools\verify_architecture.dart",
+            ".agents\framework-manifest.json",
+            ".github\copilot-instructions.md"
+          )) {
+            if (-not (Test-Path (Join-Path $env:FIXTURE $path))) { throw "Missing unified project asset: $path" }
+          }
           if (Test-Path "$env:FIXTURE\.agents\skills\skills") { throw "Skills were nested under an unsupported source directory" }
-          if (-not (Test-Path "$env:FIXTURE\.github\copilot-instructions.md")) { throw "Missing generated IDE instructions" }
           $skillCount = @(Get-ChildItem "$env:FIXTURE\.agents\skills" -Directory).Count
           if ($skillCount -ne 55) { throw "Expected 55 directly installed skills, found $skillCount" }
+
+      - name: Verify non-destructive reinitialization
+        shell: pwsh
+        run: |
+          $profile = Join-Path $env:FIXTURE ".agents\context\PROJECT_PROFILE.md"
+          "team-owned-context" | Set-Content -Path $profile
+          $before = (Get-FileHash $profile -Algorithm SHA256).Hash
+          & "$env:GITHUB_WORKSPACE\tools\init-project.ps1" -ProjectPath "$env:FIXTURE"
+          $after = (Get-FileHash $profile -Algorithm SHA256).Hash
+          if ($before -ne $after) { throw "Reinitialization overwrote project-owned context without -Force" }
+          & "$env:GITHUB_WORKSPACE\tools\init-project.ps1" -ProjectPath "$env:FIXTURE" -Force
+          if ((Get-Content $profile -Raw).Trim() -eq "team-owned-context") { throw "-Force did not intentionally regenerate project-owned context" }
+
+      - name: Migrate legacy project state without data loss
+        shell: pwsh
+        run: |
+          & "$env:GITHUB_WORKSPACE\tools\init-project.ps1" -ProjectPath "$env:LEGACY_FIXTURE" -MigrateLegacy
+          $profile = Join-Path $env:LEGACY_FIXTURE ".agents\context\PROJECT_PROFILE.md"
+          if (-not (Test-Path $profile)) { throw "-MigrateLegacy did not create unified project context" }
+          if ((Get-Content $profile -Raw).Trim() -ne "legacy-project-profile") { throw "-MigrateLegacy did not preserve legacy context content" }
+          if (Test-Path "$env:LEGACY_FIXTURE\.agent") { throw "-MigrateLegacy did not remove the legacy root after creating backup" }
+          $backups = @(Get-ChildItem $env:LEGACY_FIXTURE -Directory -Filter ".agent.backup-*")
+          if ($backups.Count -ne 1) { throw "-MigrateLegacy did not create exactly one legacy backup" }
 
       - name: Preview global deployment and uninstallation safely
         shell: pwsh

@@ -20,7 +20,7 @@ negative_triggers:
 
 This skill acts as the **Principal Domain Engineer and Software Architect** for autonomous AI Agents (**Antigravity**, **Gemini**, **Claude**, **OpenAI Codex**, **Cursor**, **Windsurf**, **Roo Code**, **GitHub Copilot**).
 
-**Core Mandate:** Transform abstract business concepts from `.agent/PRODUCT_REQUIREMENTS.md` into rich, type-safe, immutable domain models adhering to Clean Architecture and SOLID principles.
+**Core Mandate:** Transform abstract business concepts from `.agents/context/PRODUCT_REQUIREMENTS.md` into rich, type-safe, immutable domain models adhering to Clean Architecture and SOLID principles.
 
 ---
 
@@ -56,9 +56,9 @@ When modeling any feature domain, the AI Agent MUST systematically map out the 6
 
 ---
 
-## 📄 Scaffolding `.agent/DOMAIN_MAP.md`
+## 📄 Scaffolding `.agents/context/DOMAIN_MAP.md`
 
-Upon completing the domain design, the AI Agent MUST scaffold a structured domain specification inside the `.agent/` workspace directory (`.agent/DOMAIN_MAP.md`):
+Upon completing the domain design, the AI Agent MUST scaffold a structured domain specification inside the `.agents/context/` workspace directory (`.agents/context/DOMAIN_MAP.md`):
 
 ```markdown
 # DOMAIN_MAP.md — Enterprise Domain Architecture Blueprint
@@ -104,21 +104,21 @@ graph LR
 
 ## ✅ Checklist
 
-- [ ] Business concepts from `.agent/PRODUCT_REQUIREMENTS.md` mapped through all 6 Pipeline stages
+- [ ] Business concepts from `.agents/context/PRODUCT_REQUIREMENTS.md` mapped through all 6 Pipeline stages
 - [ ] All Domain Entities are immutable (all fields `final`), pure Dart, no framework imports
 - [ ] Value Objects created for all primitive-obsession candidates (IDs, currencies, enums)
 - [ ] Sealed failure classes defined with `userMessage` property for UI consumption
 - [ ] One abstract Repository interface per aggregate root (in `domain/repositories/`)
 - [ ] One Use Case class per business action (single `call()` or `execute()` method)
 - [ ] Dependency Injection graph documented (Data Source → Repo → UseCase → Notifier/Bloc)
-- [ ] `.agent/DOMAIN_MAP.md` scaffolded with entities, value objects, use cases, and DI graph
-- [ ] `dart run .agent/tools/verify_architecture.dart` passes with zero domain boundary violations
+- [ ] `.agents/context/DOMAIN_MAP.md` scaffolded with entities, value objects, use cases, and DI graph
+- [ ] `dart run .agents/tools/verify_architecture.dart` passes with zero domain boundary violations
 
 ---
 
 ## 🧭 Next Pipeline Phase Routing
 
-Once `.agent/DOMAIN_MAP.md` is complete and verified, the AI Agent routes to:
+Once `.agents/context/DOMAIN_MAP.md` is complete and verified, the AI Agent routes to:
 👉 **`flutter-project-architect`** (To select scalable packages and define folder structure for the implementation phase).
 
 ---

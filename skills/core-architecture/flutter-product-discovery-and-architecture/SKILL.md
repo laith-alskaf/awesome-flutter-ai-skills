@@ -38,13 +38,13 @@ Before designing any system architecture or writing Dart code, the AI Agent MUST
 6. **What are the main user journeys?** (Step-by-step interactive progression from onboarding to core habit loop).
 7. **What are the success metrics?** (Daily Active Users DAU, retention rate, conversion rate, crash-free user sessions).
 
-> **Discovery decision rule:** If a missing answer would change the product scope, architecture, data, security, launch plan, or user-visible behavior, use **`flutter-grill-me`** to obtain an answer or record an explicit assumption before creating the relevant section of `.agent/PRODUCT_REQUIREMENTS.md`. Do not fabricate product requirements or require unrelated discovery answers for a narrowly scoped task.
+> **Discovery decision rule:** If a missing answer would change the product scope, architecture, data, security, launch plan, or user-visible behavior, use **`flutter-grill-me`** to obtain an answer or record an explicit assumption before creating the relevant section of `.agents/context/PRODUCT_REQUIREMENTS.md`. Do not fabricate product requirements or require unrelated discovery answers for a narrowly scoped task.
 
 ---
 
-## 📄 Scaffolding `.agent/PRODUCT_REQUIREMENTS.md` (PRD)
+## 📄 Scaffolding `.agents/context/PRODUCT_REQUIREMENTS.md` (PRD)
 
-Upon completing the Discovery Phase, the AI Agent MUST scaffold a comprehensive Product Requirements Document inside the `.agent/` workspace directory (`.agent/PRODUCT_REQUIREMENTS.md`):
+Upon completing the Discovery Phase, the AI Agent MUST scaffold a comprehensive Product Requirements Document inside the `.agents/context/` workspace directory (`.agents/context/PRODUCT_REQUIREMENTS.md`):
 
 ```markdown
 # PRODUCT_REQUIREMENTS.md — Product Strategy & Architecture Blueprint
@@ -101,7 +101,7 @@ graph TD
 - [ ] Revenue model and monetization strategy documented
 - [ ] Step-by-step user journeys mapped (using Mermaid or equivalent)
 - [ ] Success metrics defined (DAU, retention, conversion, crash-free sessions)
-- [ ] `.agent/PRODUCT_REQUIREMENTS.md` scaffolded and user-approved
+- [ ] `.agents/context/PRODUCT_REQUIREMENTS.md` scaffolded and user-approved
 - [ ] Data Strategy documented (Local-First vs Remote-First vs Hybrid)
 - [ ] Material unknowns were resolved through `flutter-grill-me` or recorded as explicit assumptions before PRD scaffolding
 
@@ -109,7 +109,7 @@ graph TD
 
 ## 🧭 Next Pipeline Phase Routing
 
-Once `.agent/PRODUCT_REQUIREMENTS.md` is approved by the user, the AI Agent immediately routes to:
+Once `.agents/context/PRODUCT_REQUIREMENTS.md` is approved by the user, the AI Agent immediately routes to:
 👉 **`flutter-domain-modeling`** (To transform business requirements into rich domain entities and use cases).
 
 ---

@@ -4,7 +4,7 @@
 
 This document defines how maintainers evaluate changes to skills, routing, rules, installers, and validation contracts. It measures **repository contracts and observed evidence**; it does not claim to expose a model's private reasoning or guarantee identical routing across agents and model versions.
 
-Antigravity discovers workspace skills from `.agents/skills/` and workspace rules from `.agents/rules/`; it uses progressive disclosure, where skill metadata supports discovery and detailed instructions load only after activation.[1][2] This repository keeps project state under `.agent/` and treats `.agents/skills/` as the native workspace skill location.
+Antigravity discovers workspace skills from `.agents/skills/` and workspace rules from `.agents/rules/`; it uses progressive disclosure, where skill metadata supports discovery and detailed instructions load only after activation.[1][2] This repository keeps project state under `.agents/context/` and treats `.agents/skills/` as the native workspace skill location.
 
 ## Evaluation Layers
 
@@ -32,7 +32,7 @@ Add or revise a scenario whenever a change affects a skill description, trigger,
 
 ## Design Constraints
 
-Skill descriptions must state what the skill does and when it should be used, because descriptions drive discovery.[1][3] Keep `SKILL.md` focused and move uncommon detail to a shallow local resource; the Agent Skills specification recommends keeping the main file below 500 lines.[3] Rules remain concise reusable constraints, while detailed task procedure belongs in skills and durable project facts belong in `.agent/`.[2]
+Skill descriptions must state what the skill does and when it should be used, because descriptions drive discovery.[1][3] Keep `SKILL.md` focused and move uncommon detail to a shallow local resource; the Agent Skills specification recommends keeping the main file below 500 lines.[3] Rules remain concise reusable constraints, while detailed task procedure belongs in skills and durable project facts belong in `.agents/context/`.[2]
 
 ## References
 

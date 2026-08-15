@@ -24,17 +24,17 @@ This skill governs state persistence, context recovery, and project health track
 
 ## 🏛️ The 8-Step Context Recovery Priority Protocol
 
-For a resumed, multi-file, or high-risk task in an initialized project, recover only the relevant context in the following order. All project-state files live in `.agent/`; native Antigravity skills live in `.agents/skills/`. If a state file does not exist, inspect the repository and create it only when persistent tracking is requested.
+For a resumed, multi-file, or high-risk task in an initialized project, recover only the relevant context in the following order. All project-state files live in `.agents/context/`; native Antigravity skills live in `.agents/skills/`. If a state file does not exist, inspect the repository and create it only when persistent tracking is requested.
 
 ```text
-1. .agent/PROJECT_PROFILE.md  → Static Project Identity & Tech Stack (Flutter/Dart version, DB, Routing)
+1. .agents/context/PROJECT_PROFILE.md  → Static Project Identity & Tech Stack (Flutter/Dart version, DB, Routing)
 2. AGENTS.md               → Core Governance Laws, Quality Rules & Behavioral Constraints
-3. .agent/CURRENT_STATE.md    → Active work goal, evidence, decisions, assumptions, and open questions
-4. .agent/KNOWLEDGE_INDEX.md  → Fast Context Map to ADRs, Skills, and Source Folders
-5. .agent/AGENTS_MEMORY.md    → Working Ledger, Milestones, Health Meter & Lessons Learned
-6. Relevant ADRs           → Architectural Decision Records in decisions/ or .agent/decisions/
+3. .agents/context/CURRENT_STATE.md    → Active work goal, evidence, decisions, assumptions, and open questions
+4. .agents/context/KNOWLEDGE_INDEX.md  → Fast Context Map to ADRs, Skills, and Source Folders
+5. .agents/context/AGENTS_MEMORY.md    → Working Ledger, Milestones, Health Meter & Lessons Learned
+6. Relevant ADRs           → Architectural Decision Records in decisions/ or .agents/context/decisions/
 7. Relevant Skills         → Orthogonal Domain Skills in skills/
-8. .agent/SESSION_LOG.md      → Chronological Session History
+8. .agents/context/SESSION_LOG.md      → Chronological Session History
 ```
 
 ---
@@ -74,7 +74,7 @@ Health:
 
 ## 🛡️ Controlled Checkpoint Rules (Zero Git Noise)
 
-To prevent git history pollution and commit noise, `.agent/AGENTS_MEMORY.md` and `.agent/CURRENT_STATE.md` are updated **ONLY** under the following triggers:
+To prevent git history pollution and commit noise, `.agents/context/AGENTS_MEMORY.md` and `.agents/context/CURRENT_STATE.md` are updated **ONLY** under the following triggers:
 1. **Feature Completion:** A full feature or milestone is completed and verified.
 2. **Architecture Change:** A major architectural pattern, dependency, or DB schema changes.
 3. **Explicit User Request:** The user types `checkpoint state` or `save progress`.
@@ -84,13 +84,13 @@ To prevent git history pollution and commit noise, `.agent/AGENTS_MEMORY.md` and
 
 ## 🧹 Memory Compaction Without Data Loss
 
-Keep active state concise, but do not silently delete or rewrite history. When a session log becomes difficult to navigate, create a dated archive under `.agent/archive/`, retain a short index and the current open decisions in `SESSION_LOG.md`, and link the archive from `KNOWLEDGE_INDEX.md`. Compact completed milestones only after confirming that the summary preserves the original decision, evidence, date, owner, and reference. Never compact a record that contains unresolved risk, a pending user decision, or a requirement that has not been captured elsewhere.
+Keep active state concise, but do not silently delete or rewrite history. When a session log becomes difficult to navigate, create a dated archive under `.agents/context/archive/`, retain a short index and the current open decisions in `SESSION_LOG.md`, and link the archive from `KNOWLEDGE_INDEX.md`. Compact completed milestones only after confirming that the summary preserves the original decision, evidence, date, owner, and reference. Never compact a record that contains unresolved risk, a pending user decision, or a requirement that has not been captured elsewhere.
 
 ---
 
 ## 💡 Lessons Learned Protocol
 
-When an unexpected bug, memory leak, or architectural anti-pattern is resolved, append a concise anti-regression entry to `.agent/AGENTS_MEMORY.md` only if the lesson is reusable. Include the trigger, root cause, corrective action, validation evidence, and a link to the affected code, test, or issue when available.
+When an unexpected bug, memory leak, or architectural anti-pattern is resolved, append a concise anti-regression entry to `.agents/context/AGENTS_MEMORY.md` only if the lesson is reusable. Include the trigger, root cause, corrective action, validation evidence, and a link to the affected code, test, or issue when available.
 
 ---
 

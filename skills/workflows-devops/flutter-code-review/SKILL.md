@@ -36,10 +36,10 @@ Systematically verify code quality across architecture, performance, security, a
 ## Master Checklist
 
 ### 👑 Principal Engineer & Product Alignment
-- [ ] Code directly serves the Product Requirements Document (`.agent/PRODUCT_REQUIREMENTS.md`)
+- [ ] Code directly serves the Product Requirements Document (`.agents/context/PRODUCT_REQUIREMENTS.md`)
 - [ ] Rich Domain Models used only when business rules/transitions exist (no overengineered DTOs)
 - [ ] Zero overengineering or speculative complexity (YAGNI & KISS respected)
-- [ ] Technical debt explicitly documented in `.agent/AGENTS_MEMORY.md` if shortcuts taken
+- [ ] Technical debt explicitly documented in `.agents/context/AGENTS_MEMORY.md` if shortcuts taken
 - [ ] Scalability verified: Database queries and state trees scale to 100,000+ DAU without rewriting
 
 ### Architecture
@@ -108,7 +108,7 @@ Before manual architectural review, ensure basic automated quality gates pass:
 - Run `dart analyze` — must return zero warnings or informational notices
 - Run `dart format --output=none --set-exit-if-changed .` — code must be formatted
 - Run `flutter test` — all existing unit and widget tests must pass
-- Run `dart run .agent/tools/verify_architecture.dart` — must return zero domain layer violations (no Flutter or state management imports in `domain/`)
+- Run `dart run .agents/tools/verify_architecture.dart` — must return zero domain layer violations (no Flutter or state management imports in `domain/`)
 
 ### Step 2: Architecture & Boundary Review
 Check layer separation against `flutter-clean-architecture`:
