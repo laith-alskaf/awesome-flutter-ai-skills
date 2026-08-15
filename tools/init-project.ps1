@@ -309,7 +309,7 @@ $installedNames = @{}
 foreach ($skillDir in $skillDirs) {
     if ($installedNames.ContainsKey($skillDir.Name)) { throw "Duplicate skill directory name '$($skillDir.Name)' cannot be installed directly under .agents/skills/." }
     $destination = Join-Path $skillsDir $skillDir.Name
-    if (Test-Path $destination -and -not $Force) {
+    if ((Test-Path $destination) -and -not $Force) {
         Write-Host "      [=] skill/$($skillDir.Name) already exists; preserved (use -Force to refresh)." -ForegroundColor DarkYellow
     } elseif ($DryRun) {
         Write-Plan "Install skill/$($skillDir.Name)"

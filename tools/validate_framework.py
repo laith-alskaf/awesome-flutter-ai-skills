@@ -317,6 +317,8 @@ def validate_repository_contracts(skill_count: int) -> None:
     for token in forbidden_initializer_tokens:
         if token in initializer:
             fail(f"tools/init-project.ps1: legacy or nested installation contract remains: {token!r}.")
+    if re.search(r"Test-Path\\s+\\$[A-Za-z_][A-Za-z0-9_]*\\s+-and\\b", initializer):
+        fail("tools/init-project.ps1: parenthesize Test-Path before combining it with a PowerShell boolean operator.")
     for script in (ROOT / "tools").glob("*.ps1"):
         script_text = script.read_text(encoding="utf-8-sig")
         if "Set-StrictMode -Version Latest" not in script_text:
